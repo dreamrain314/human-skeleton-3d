@@ -22,6 +22,12 @@
     font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--txt)}
   #app{position:fixed;inset:0}
   canvas{display:block}
+  /* 移动端：拾取绑在满屏 canvas 上，浏览器默认 tap highlight（半透明蓝）会盖满整页造成"闪蓝"，
+     必须关掉；touch-action:manipulation 消除 UI 上的双击缩放（保留双指捏合）；
+     禁止拖动/连点时选中文本（蓝色 ::selection 同样会被当成闪蓝），信息面板文字仍可复制 */
+  html{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  body{-webkit-user-select:none;user-select:none}
+  #info{-webkit-user-select:text;user-select:text}
 
   /* 加载层 */
   #loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
