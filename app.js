@@ -159,7 +159,8 @@ async function boot() {
       new GLTFLoader().load('./models/skeleton.glb', res,
         p => {
           if (p.total) {
-            const pct = (p.loaded / p.total * 100).toFixed(0);
+            // Pages 对 glb 走 gzip 时 loaded 按解压字节计、total 是压缩大小，比值可能 >100%，需截断
+            const pct = Math.min(100, p.loaded / p.total * 100).toFixed(0);
             barEl.style.width = pct + '%';
             loadTxt.textContent = `正在加载骨骼模型… ${pct}%`;
           }
