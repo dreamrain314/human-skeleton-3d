@@ -6,6 +6,12 @@
 - 数据来自权威开源解剖数据库 **BodyParts3D 4.0**（DBCLS，[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)）
 - 基于 **Three.js r160**（MIT，已本地化），**纯静态、零构建、零联网、零依赖**
 
+## 🌐 在线体验
+
+**无需安装任何东西，直接打开：[https://dreamrain314.github.io/human-skeleton-3d/](https://dreamrain314.github.io/human-skeleton-3d/)**
+
+（由 GitHub Pages 自动部署 main 分支；首次加载需下载约 9MB 模型，请耐心等待）
+
 ## 快速开始
 
 任选一种方式在本目录起一个静态服务器，然后用浏览器打开提示的地址：
