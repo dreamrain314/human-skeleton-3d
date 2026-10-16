@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>人体骨骼 3D 交互模型</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🦴</text></svg>">
+<script>
+  // file:// 直接双击打开时，ES module 与 glb 加载会被浏览器同源策略拦截，
+  // 这里提前切到提示模式，避免只留一个永远转圈的加载动画。
+  if (location.protocol === 'file:') {
+    document.documentElement.classList.add('file-mode');
+  }
+</script>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:rgba(18,22,32,.92); --line:rgba(120,140,180,.22);
+    --txt:#e6ebf5; --dim:#8b96ad; --accent:#ff4d4f; --accent2:#4da3ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--txt)}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+
+  /* 加载层 */
+  #loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;background:var(--bg);z-index:50;transition:opacity .6s}
+  #loader.hide{opacity:0;pointer-events:none}
+  .spin{width:42px;height:42px;border:3px solid var(--line);border-top-color:var(--accent2);
+    border-radius:50%;animation:sp .9s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  #loadTxt{margin-top:16px;font-size:14px;color:var(--dim);letter-spacing:.5px}
+  #barWrap{margin-top:14px;width:220px;height:4px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .2s}
+
+  /* 顶部标题 */
+  #title{position:fixed;top:18px;left:22px;z-index:10;pointer-events:none}
+  #title h1{font-size:17px;font-weight:600;letter-spacing:.5px}
+  #title p{font-size:11.5px;color:var(--dim);margin-top:4px}
+
+  /* 左侧工具面板 */
+  #tools{position:fixed;top:78px;left:22px;z-index:12;width:186px;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;
+    backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45);transform:translateX(0)}
+  #tools h2{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1.2px;
+    text-transform:uppercase;margin-bottom:9px}
+  .reg{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;
+    font-size:12.5px;transition:background .15s;user-select:none}
+  .reg:hover{background:rgba(255,255,255,.06)}
+  .reg .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex:0 0 auto}
+  .reg.off{opacity:.38}
+  .reg .n{margin-left:auto;font-size:10.5px;color:var(--dim)}
+  .divider{height:1px;background:var(--line);margin:10px 0}
+  .tbtn{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;
+    font-size:12.5px;transition:background .15s;user-select:none}
+  .tbtn:hover{background:rgba(255,255,255,.06)}
+  .tbtn.on{background:rgba(77,163,255,.15)}
+  .tbtn .ic{font-size:13px;width:15px;text-align:center;opacity:.85}
+
+  /* 右侧信息面板 */
+  #info{position:fixed;top:18px;right:22px;z-index:12;width:300px;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;padding:18px;
+    backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45);
+    opacity:0;transform:translateY(-8px);transition:.25s;pointer-events:none}
+  #info.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  #info .tag{display:inline-block;font-size:10.5px;padding:2.5px 8px;border-radius:20px;
+    background:rgba(77,163,255,.18);color:#8fc4ff;letter-spacing:.5px;margin-bottom:11px}
+  #info h3{font-size:20px;font-weight:600;letter-spacing:.5px;line-height:1.25}
+  #info .latin{font-size:12px;color:var(--dim);font-style:italic;margin-top:5px}
+  #info .desc{font-size:13px;line-height:1.72;color:#c3ccdd;margin-top:14px;
+    padding-top:14px;border-top:1px solid var(--line)}
+  #info .fma{font-size:10.5px;color:#5a6478;margin-top:13px;letter-spacing:.4px}
+  #close{position:absolute;top:13px;right:14px;width:22px;height:22px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dim);
+    font-size:16px;line-height:1;transition:.15s}
+  #close:hover{background:rgba(255,255,255,.09);color:var(--txt)}
+
+  /* 206 口径说明 */
+  #note{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:11;
+    max-width:min(620px,52vw);background:rgba(18,22,32,.86);border:1px solid var(--line);
+    border-radius:10px;padding:9px 15px;font-size:11.5px;line-height:1.6;color:#a8b4c8;
+    backdrop-filter:blur(12px);box-shadow:0 4px 18px rgba(0,0,0,.35)}
+  #note b{color:#cdd8ea;font-weight:600}
+  #noteCnt{color:var(--accent2)}
+
+  /* 悬浮提示 */
+  #hover{position:fixed;z-index:20;pointer-events:none;padding:5px 10px;border-radius:7px;
+    background:rgba(18,22,32,.95);border:1px solid var(--line);font-size:12px;
+    white-space:nowrap;opacity:0;transition:opacity .12s;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  #hover.show{opacity:1}
+
+  /* 右侧垂直滑块：控制视角上下移动 */
+  #vpan{position:fixed;right:22px;top:50%;transform:translateY(-50%);margin-top:26px;z-index:12;
+    display:flex;flex-direction:column;align-items:center;gap:7px;padding:11px 7px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45)}
+  #vpan .lab{font-size:10px;color:var(--dim);letter-spacing:1px;line-height:1;user-select:none}
+  #vpan .track{position:relative;width:22px;height:170px}
+  #vpRange{position:absolute;top:50%;left:50%;width:170px;height:22px;margin:0;
+    transform:translate(-50%,-50%) rotate(-90deg);
+    -webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  #vpRange::-webkit-slider-runnable-track{height:4px;border-radius:3px;background:rgba(255,255,255,.15)}
+  #vpRange::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--accent2);margin-top:-6px;box-shadow:0 0 0 3px rgba(77,163,255,.18)}
+  #vpRange::-moz-range-track{height:4px;border-radius:3px;background:rgba(255,255,255,.15)}
+  #vpRange::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;
+    background:var(--accent2);box-shadow:0 0 0 3px rgba(77,163,255,.18)}
+
+  /* 底部提示 */
+  #hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;
+    font-size:11.5px;color:var(--dim);background:rgba(18,22,32,.8);padding:7px 16px;
+    border-radius:20px;border:1px solid var(--line);backdrop-filter:blur(10px);white-space:nowrap}
+  #hint b{color:#9fb0cc;font-weight:500}
+
+  /* 计数徽标 */
+  #count{position:fixed;bottom:16px;right:22px;z-index:10;font-size:11px;color:var(--dim);
+    background:rgba(18,22,32,.8);padding:7px 13px;border-radius:20px;
+    border:1px solid var(--line);backdrop-filter:blur(10px)}
+  #count b{color:var(--accent2);font-weight:600}
+
+  /* 双击 index.html 时的引导页 */
+  #fileWarn{position:fixed;inset:0;z-index:99;display:none;flex-direction:column;
+    align-items:center;justify-content:center;background:var(--bg);padding:28px;text-align:center}
+  html.file-mode #fileWarn{display:flex}
+  html.file-mode #loader,html.file-mode #app,html.file-mode #title,html.file-mode #tools,
+  html.file-mode #info,html.file-mode #note,html.file-mode #hint,html.file-mode #count,
+  html.file-mode #mobileBtn,html.file-mode #hover,html.file-mode #vpan{display:none!important}
+  #fileWarn .badge{font-size:34px;margin-bottom:18px}
+  #fileWarn h2{font-size:19px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+  #fileWarn .why{font-size:13px;line-height:1.85;color:#a8b4c8;max-width:540px}
+  #fileWarn ol{margin-top:20px;text-align:left;font-size:13.5px;line-height:2.05;color:#c3ccdd;max-width:540px}
+  #fileWarn code{background:rgba(255,255,255,.09);border:1px solid var(--line);border-radius:5px;
+    padding:2px 7px;font-size:12.5px;color:#8fc4ff}
+
+  #mobileBtn{display:none}
+  @media(max-width:720px){
+    #tools{transform:translateX(-120%);transition:.25s}
+    #tools.open{transform:translateX(0)}
+    #info{width:calc(100vw - 32px);right:16px;top:auto;bottom:16px}
+    #title{left:66px;top:20px}
+    #title h1{font-size:15px}
+    #mobileBtn{display:flex;position:fixed;top:18px;left:22px;z-index:13;width:34px;height:34px;
+      align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--line);
+      border-radius:9px;cursor:pointer;font-size:15px}
+    #tools{top:78px}
+    #hint{display:none}
+    #note{top:auto;bottom:52px;max-width:calc(100vw - 32px);font-size:11px}
+    /* 移动端信息面板在底部，滑块挪到右上避免遮挡 */
+    #vpan{right:8px;top:14px;transform:none;margin-top:0;padding:9px 6px}
+    #vpan .track{height:118px}
+    #vpRange{width:118px}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="loader">
+  <div class="spin"></div>
+  <div id="loadTxt">正在加载骨骼模型…</div>
+  <div id="barWrap"><div id="bar"></div></div>
+</div>
+
+<div id="fileWarn">
+  <div class="badge">🦴</div>
+  <h2>请用本地服务器打开</h2>
+  <p class="why">
+    浏览器不允许 <code>file://</code> 页面加载 <code>ES module</code> 和 <code>.glb</code> 模型文件，
+    所以直接双击 index.html 只会停在这一页。
+  </p>
+  <ol>
+    <li>回到本文件夹，双击 <code>start.bat</code>（Windows）</li>
+    <li>macOS / Linux 双击 <code>start.command</code></li>
+    <li>或在本文件夹里执行 <code>python -m http.server 8765</code>，再访问 <code>http://localhost:8765</code></li>
+  </ol>
+</div>
+
+<div id="title">
+  <h1>人体骨骼 3D 交互模型</h1>
+  <p>点击任意骨骼查看名称与说明</p>
+</div>
+
+<div id="note">
+  <b>为什么不是 206 块？</b>教科书标准：人体共有 <b>206</b> 块骨。
+  本模型含 <b id="noteCnt">200</b> 块可独立点击的骨 —
+  差异为埋藏在颞骨内的 <b>6 块听小骨</b>（锤骨/砧骨/镫骨各 2）未被单独分离建模。
+</div>
+
+<div id="mobileBtn">☰</div>
+
+<div id="tools">
+  <h2>显示区域</h2>
+  <div id="regions"></div>
+  <div class="divider"></div>
+  <h2>选项</h2>
+  <div class="tbtn on" id="btnLabel"><span class="ic">🏷</span>骨骼名称标签</div>
+  <div class="tbtn" id="btnXray"><span class="ic">◍</span>X 光透视模式</div>
+  <div class="tbtn" id="btnReset"><span class="ic">⟲</span>重置视角</div>
+  <div class="tbtn" id="btnSpin"><span class="ic">↻</span>自动旋转</div>
+</div>
+
+<div id="info">
+  <div id="close">×</div>
+  <div class="tag" id="tag">—</div>
+  <h3 id="cn">—</h3>
+  <div class="latin" id="latin">—</div>
+  <div class="desc" id="desc">—</div>
+  <div class="fma" id="fma">—</div>
+</div>
+
+<div id="hover"></div>
+
+<div id="vpan" title="拖动可上下移动视角，双击回中">
+  <div class="lab">上</div>
+  <div class="track"><input type="range" id="vpRange" min="-100" max="100" value="0" step="1"></div>
+  <div class="lab">下</div>
+</div>
+
+<div id="hint">
+  <b>左键拖动</b> 旋转 · <b>滚轮</b> 缩放 · <b>右侧滑块</b> 上下移动视角 · <b>点击骨骼</b> 查看信息
+</div>
+<div id="count">可交互骨骼 <b id="cnt">—</b> 块</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./lib/three.module.js",
+    "three/addons/controls/OrbitControls.js": "./lib/OrbitControls.js",
+    "three/addons/loaders/GLTFLoader.js": "./lib/GLTFLoader.js"
+  }
+}
+</script>
+<script src="./app.js" type="module"></script>
+</body>
+</html>
