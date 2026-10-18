@@ -13,20 +13,21 @@ const state = {
   showLabel: true,
   xray: false,
   spin: false,
+  keyMode: false,       // 重点标红模式：重点骨持久染橙红
+  onlyKey: false,       // 仅看重点：隐藏非重点骨（叠加在区域显隐之上）
+  keySet: new Set(),    // 重点骨骼 FMA 集合（来自 key-bones.json）
+  detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
   homeDist: 0,          // 默认视距，重置视角时回到这里
   panRange: 1,          // 滑块满行程对应的世界单位
 };
 const REGIONS = ['颅骨', '脊柱', '胸廓', '上肢', '下肢'];
-const REGION_COLOR = {
-  '颅骨': 0xdfe6f0, '脊柱': 0xc8d4e6, '胸廓': 0xd2dae8,
-  '上肢': 0xcfd8e6, '下肢': 0xd6dfec, '其他': 0xcccccc,
-};
 
 /* 骨骼外观：干骨的象牙米黄，而不是纯白或灰蓝 */
 const BASE_COLOR = new THREE.Color(0xe8ddc3);
 const SEL_COLOR  = new THREE.Color(0xff4d4f);
 const HOV_COLOR  = new THREE.Color(0x4da3ff);
+const KEY_COLOR  = new THREE.Color(0xff7043);  // 重点标红的橙红，与选中红区分
 const XRAY_OPACITY = 0.34;   // X 光模式透明度（统一常量）
 const XRAY_TINT  = new THREE.Color(0x9fd8e8);  // X 光下的冷青色
 const SEL_EMISSIVE = new THREE.Color(0x551010);
@@ -148,11 +149,18 @@ async function boot() {
       return;
     }
 
-    const bones = await fetch('./data/bones.json').then(r => {
-      if (!r.ok) throw new Error('bones.json 加载失败 HTTP ' + r.status);
-      return r.json();
-    });
+    const [bones, keyDef] = await Promise.all([
+      fetch('./data/bones.json').then(r => {
+        if (!r.ok) throw new Error('bones.json 加载失败 HTTP ' + r.status);
+        return r.json();
+      }),
+      // 重点清单加载失败不阻塞主流程，只是没有标红功能
+      fetch('./data/key-bones.json')
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null),
+    ]);
     state.bones = bones;
+    (keyDef?.bones || []).forEach(fma => state.keySet.add(fma));
 
     const gltf = await new Promise((res, rej) => {
       // 正确的回调顺序: load(url, onLoad, onProgress, onError)
@@ -224,33 +232,76 @@ async function boot() {
 }
 
 /* ============ 区域面板 ============ */
+/* 两级结构：区域行（点击切换显隐 / 点箭头展开骨骼清单）+ 骨骼清单（点击直接选中）。
+   骨骼清单解决颅骨等互相遮挡区域"看得见点不中"的问题。 */
 function buildRegionUI() {
-  const counts = {};
+  const byRegion = {};
   for (const fma of state.byFma.keys()) {
     const r = state.bones[fma]?.region || '其他';
-    counts[r] = (counts[r] || 0) + 1;
+    (byRegion[r] = byRegion[r] || []).push(fma);
   }
   const wrap = $('regions');
   wrap.innerHTML = '';
   REGIONS.forEach(r => {
     state.regionVisible[r] = true;
-    const n = counts[r] || 0;
+    const list = (byRegion[r] || []).slice()
+      .sort((a, b) => (state.bones[a]?.cn || a).localeCompare(state.bones[b]?.cn || b, 'zh'));
     const d = document.createElement('div');
     d.className = 'reg';
-    d.innerHTML = `<span class="dot"></span><span>${r}</span><span class="n">${n}</span>`;
+    d.innerHTML = `<span class="dot"></span><span class="reg-name">${r}</span>` +
+      `<span class="n">${list.length}</span><span class="chev">▸</span>`;
+    // 点区域行主体：显隐切换（保持老习惯）
     d.onclick = () => {
       state.regionVisible[r] = !state.regionVisible[r];
       d.classList.toggle('off', !state.regionVisible[r]);
       applyVisibility();
     };
+    // 点箭头：展开/收起骨骼清单
+    d.querySelector('.chev').onclick = e => {
+      e.stopPropagation();
+      d.classList.toggle('open');
+    };
+    // 骨骼清单
+    const listBox = document.createElement('div');
+    listBox.className = 'reg-list';
+    if (list.length > 30) {
+      const filter = document.createElement('input');
+      filter.className = 'reg-filter';
+      filter.type = 'text';
+      filter.placeholder = `筛选${r}骨骼…`;
+      filter.onclick = e => e.stopPropagation();
+      filter.oninput = () => {
+        const q = filter.value.trim();
+        listBox.querySelectorAll('.bone-item').forEach(it => {
+          it.style.display = !q || it.textContent.includes(q) ? '' : 'none';
+        });
+      };
+      listBox.appendChild(filter);
+    }
+    list.forEach(fma => {
+      const b = state.bones[fma];
+      const item = document.createElement('div');
+      item.className = 'bone-item';
+      item.innerHTML = (state.keySet.has(fma) ? '<span class="star">★</span>' : '') +
+        `<span>${b?.cn || fma}</span>`;
+      item.title = b?.en || fma;
+      item.onclick = e => {
+        e.stopPropagation();
+        selectBone(fma);
+      };
+      listBox.appendChild(item);
+    });
     wrap.appendChild(d);
+    wrap.appendChild(listBox);
   });
 }
 
 function applyVisibility() {
   state.meshes.forEach(({ mesh, fma }) => {
     const r = state.bones[fma]?.region || '其他';
-    mesh.visible = state.regionVisible[r] !== false;
+    const regionOk = state.regionVisible[r] !== false;
+    const keyOk = !state.onlyKey || state.keySet.has(fma);
+    mesh.visible = regionOk && keyOk;
   });
 }
 
@@ -266,6 +317,27 @@ function bindUI() {
     e.currentTarget.classList.toggle('on', state.xray);
     updateMaterials();
   };
+  $('btnKey').onclick = e => {
+    state.keyMode = !state.keyMode;
+    e.currentTarget.classList.toggle('on', state.keyMode);
+    if (!state.keyMode && state.onlyKey) {          // 关标红时连带退出"仅看重点"
+      state.onlyKey = false;
+      $('btnOnlyKey').classList.remove('on');
+      applyVisibility();
+    }
+    updateMaterials();
+  };
+  $('btnOnlyKey').onclick = e => {
+    state.onlyKey = !state.onlyKey;
+    e.currentTarget.classList.toggle('on', state.onlyKey);
+    if (state.onlyKey && !state.keyMode) {          // 仅看重点时自动带上标红更直观
+      state.keyMode = true;
+      $('btnKey').classList.add('on');
+      updateMaterials();
+    }
+    applyVisibility();
+  };
+  $('moreBtn').onclick = () => toggleDetail();
   $('btnReset').onclick = () => resetView();
   $('btnSpin').onclick = e => {
     state.spin = !state.spin;
@@ -344,8 +416,12 @@ function setMeshColor(mesh, color) {
   mesh.material.color.copy(color);
 }
 
-/* 一块骨在「当前状态下」应该是什么底色 */
-function baseFor() {
+const isKey = fma => state.keySet.has(fma);
+
+/* 一块骨在「当前状态下」应该是什么底色。
+   三种持久态叠加：重点标红 > X 光冷青 > 普通米黄（选中/悬停色在调用处另行覆盖） */
+function baseFor(fma) {
+  if (state.keyMode && isKey(fma)) return KEY_COLOR;
   return state.xray ? XRAY_TINT : BASE_COLOR;
 }
 
@@ -356,9 +432,21 @@ function refreshEmissive(mesh, fma) {
   else mesh.material.emissive.copy(NO_EMISSIVE);
 }
 
+/* X 光透明度按骨区分：选中的骨保持不透明，
+   这样从列表点选被包住的骨头（如筛骨）开 X 光后能直接看清目标 */
+function applyXrayToMesh(mesh, fma) {
+  const dim = state.xray && fma !== state.selected;
+  // transparent 标志变化会改变着色器编译产物，必须置 needsUpdate，否则透明不生效
+  const needRecompile = mesh.material.transparent !== !!dim;
+  mesh.material.transparent = !!dim;
+  mesh.material.opacity = dim ? XRAY_OPACITY : 1;
+  mesh.material.depthWrite = !dim;
+  if (needRecompile) mesh.material.needsUpdate = true;
+}
+
 function highlightHover(fma) {
   if (state.hovered && state.hovered !== state.selected) {
-    state.byFma.get(state.hovered)?.forEach(m => setMeshColor(m, baseFor()));
+    state.byFma.get(state.hovered)?.forEach(m => setMeshColor(m, baseFor(state.hovered)));
   }
   state.hovered = fma;
   if (fma && fma !== state.selected) {
@@ -369,36 +457,29 @@ function highlightHover(fma) {
 function selectBone(fma) {
   clearSelection(false);
   state.selected = fma;
-  state.byFma.get(fma)?.forEach(m => {
-    setMeshColor(m, SEL_COLOR);
-    refreshEmissive(m, fma);
-  });
   const b = state.bones[fma];
   if (b) {
     $('tag').textContent = b.region;
-    $('cn').textContent = b.cn;
+    $('cn').textContent = (isKey(fma) ? '★ ' : '') + b.cn;
     $('latin').textContent = b.latin;
+    $('enName').textContent = b.en ? b.en.replace(/\b\w/g, c => c.toUpperCase()) : '';
+    $('enName').style.display = b.en ? '' : 'none';
     $('desc').textContent = b.desc;
-    $('fma').textContent = 'FMA ' + fma.replace('FMA', '') + ' · BodyParts3D';
+    $('fma').textContent = 'FMA ' + fma.replace('FMA', '') + ' · BodyParts3D' + (isKey(fma) ? ' · 教学重点' : '');
   } else {
     $('cn').textContent = fma;
-    $('latin').textContent = ''; $('desc').textContent = '(无描述)';
+    $('latin').textContent = ''; $('enName').textContent = '';
+    $('desc').textContent = '(无描述)';
   }
+  resetDetail();
+  updateMaterials();   // 统一刷新：覆盖 X 光下选中骨不透明、标红模式底色等
   infoEl.classList.add('show');
   placeLabel(fma);
 }
 
 function clearSelection(alsoHidePanel = true) {
-  if (state.selected) {
-    const prev = state.selected;
-    state.selected = null;   // 先解绑状态，再还原外观，否则会被判定为仍处于选中态
-    state.byFma.get(prev)?.forEach(m => {
-      setMeshColor(m, baseFor());
-      refreshEmissive(m, prev);
-      if (state.xray) m.material.opacity = XRAY_OPACITY;
-    });
-  }
   state.selected = null;
+  updateMaterials();   // 统一还原全部骨骼的底色/透明度/自发光
   if (alsoHidePanel) {
     infoEl.classList.remove('show');
     removeLabel();
@@ -467,14 +548,66 @@ function placeLabel(fma) {
 
 function updateMaterials() {
   state.meshes.forEach(({ mesh, fma }) => {
-    mesh.material.transparent = state.xray;
-    mesh.material.opacity = state.xray ? XRAY_OPACITY : 1;
-    mesh.material.depthWrite = !state.xray;
-    mesh.material.needsUpdate = true;
-    // 选中 / 悬停的骨保留各自的强调色，其余跟随当前模式
-    if (fma !== state.selected && fma !== state.hovered) setMeshColor(mesh, baseFor());
+    applyXrayToMesh(mesh, fma);
+    // 选中 / 悬停的骨保留各自的强调色，其余跟随当前模式（含重点标红）
+    if (fma !== state.selected && fma !== state.hovered) setMeshColor(mesh, baseFor(fma));
     refreshEmissive(mesh, fma);
   });
+}
+
+/* ============ 完整介绍（懒加载 + 展开） ============ */
+function loadDetails() {
+  if (!state.detailCache) {
+    state.detailCache = fetch('./data/bones-detail.json').then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
+  return state.detailCache;
+}
+
+function resetDetail() {
+  const box = $('detail');
+  box.classList.remove('open');
+  $('moreBtn').classList.remove('open');
+  $('moreBtn').textContent = '查看完整介绍 ▸';
+}
+
+async function toggleDetail() {
+  const box = $('detail');
+  const btn = $('moreBtn');
+  if (box.classList.contains('open')) {          // 已展开 → 收起
+    box.classList.remove('open');
+    btn.classList.remove('open');
+    btn.textContent = '查看完整介绍 ▸';
+    return;
+  }
+  const fma = state.selected;
+  if (!fma) return;
+  btn.textContent = '正在加载…';
+  try {
+    const details = await loadDetails();
+    if (state.selected !== fma) return;          // 等待期间用户已切换选中骨
+    const d = details[fma];
+    if (d) {
+      $('dFn').textContent = d.function || '（暂无）';
+      $('dPts').innerHTML = '';
+      (d.points || []).forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = p;
+        $('dPts').appendChild(li);
+      });
+      $('dCli').textContent = d.clinical || '（暂无）';
+      box.classList.add('open');
+      btn.classList.add('open');
+      btn.textContent = '收起完整介绍 ▾';
+    } else {
+      btn.textContent = '暂无该骨骼的完整介绍';
+    }
+  } catch (e) {
+    if (state.selected !== fma) return;
+    btn.textContent = '详情加载失败，请检查网络后重试';
+  }
 }
 
 /* 垂直平移：相机与注视点同步上下移动，视线方向保持不变。

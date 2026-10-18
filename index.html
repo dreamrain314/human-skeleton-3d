@@ -48,7 +48,8 @@
   /* 左侧工具面板 */
   #tools{position:fixed;top:78px;left:22px;z-index:12;width:186px;background:var(--panel);
     border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;
-    backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45);transform:translateX(0)}
+    backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45);transform:translateX(0);
+    max-height:calc(100vh - 100px);overflow-y:auto}
   #tools h2{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1.2px;
     text-transform:uppercase;margin-bottom:9px}
   .reg{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;
@@ -57,6 +58,19 @@
   .reg .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex:0 0 auto}
   .reg.off{opacity:.38}
   .reg .n{margin-left:auto;font-size:10.5px;color:var(--dim)}
+  .reg .chev{font-size:10px;color:var(--dim);width:14px;text-align:center;cursor:pointer;
+    transition:transform .15s;flex:0 0 auto}
+  .reg .chev:hover{color:var(--txt)}
+  .reg.open .chev{transform:rotate(90deg)}
+  .reg-list{display:none;padding:2px 0 4px 15px}
+  .reg-list.open,.reg.open + .reg-list{display:block}
+  .bone-item{display:flex;align-items:center;gap:4px;padding:3.5px 8px;border-radius:6px;cursor:pointer;
+    font-size:11.5px;color:#c3ccdd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bone-item:hover{background:rgba(255,255,255,.07);color:var(--txt)}
+  .bone-item .star{color:#ff7043;font-size:10px;flex:0 0 auto}
+  .reg-filter{width:100%;margin:3px 0 5px;padding:4px 8px;border-radius:6px;font-size:11px;
+    background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--txt);outline:none}
+  .reg-filter:focus{border-color:var(--accent2)}
   .divider{height:1px;background:var(--line);margin:10px 0}
   .tbtn{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;
     font-size:12.5px;transition:background .15s;user-select:none}
@@ -68,14 +82,24 @@
   #info{position:fixed;top:18px;right:22px;z-index:12;width:300px;background:var(--panel);
     border:1px solid var(--line);border-radius:12px;padding:18px;
     backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.45);
-    opacity:0;transform:translateY(-8px);transition:.25s;pointer-events:none}
+    opacity:0;transform:translateY(-8px);transition:.25s;pointer-events:none;
+    max-height:calc(100vh - 40px);overflow-y:auto}
   #info.show{opacity:1;transform:translateY(0);pointer-events:auto}
   #info .tag{display:inline-block;font-size:10.5px;padding:2.5px 8px;border-radius:20px;
     background:rgba(77,163,255,.18);color:#8fc4ff;letter-spacing:.5px;margin-bottom:11px}
   #info h3{font-size:20px;font-weight:600;letter-spacing:.5px;line-height:1.25}
-  #info .latin{font-size:12px;color:var(--dim);font-style:italic;margin-top:5px}
+  .en-name{font-size:13px;color:#8fc4ff;margin-top:3px}
+  #info .latin{font-size:12px;color:var(--dim);font-style:italic;margin-top:3px}
   #info .desc{font-size:13px;line-height:1.72;color:#c3ccdd;margin-top:14px;
     padding-top:14px;border-top:1px solid var(--line)}
+  #moreBtn{margin-top:10px;font-size:12px;color:var(--accent2);cursor:pointer;user-select:none}
+  #moreBtn:hover{text-decoration:underline}
+  #detail{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:4px}
+  #detail.open{display:block}
+  #detail .d-sec{margin-top:10px}
+  #detail h4{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1px;margin-bottom:5px}
+  #detail p{font-size:12.5px;line-height:1.7;color:#c3ccdd}
+  #detail ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.7;color:#c3ccdd}
   #info .fma{font-size:10.5px;color:#5a6478;margin-top:13px;letter-spacing:.4px}
   #close{position:absolute;top:13px;right:14px;width:22px;height:22px;border-radius:6px;
     display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--dim);
@@ -143,7 +167,8 @@
   @media(max-width:720px){
     #tools{transform:translateX(-120%);transition:.25s}
     #tools.open{transform:translateX(0)}
-    #info{width:calc(100vw - 32px);right:16px;top:auto;bottom:16px}
+    #tools{top:78px;max-height:calc(100vh - 96px)}
+    #info{width:calc(100vw - 32px);right:16px;top:auto;bottom:16px;max-height:46vh;overflow-y:auto}
     #title{left:66px;top:20px}
     #title h1{font-size:15px}
     #mobileBtn{display:flex;position:fixed;top:18px;left:22px;z-index:13;width:34px;height:34px;
@@ -202,6 +227,8 @@
   <h2>选项</h2>
   <div class="tbtn on" id="btnLabel"><span class="ic">🏷</span>骨骼名称标签</div>
   <div class="tbtn" id="btnXray"><span class="ic">◍</span>X 光透视模式</div>
+  <div class="tbtn" id="btnKey"><span class="ic">★</span>重点标红</div>
+  <div class="tbtn" id="btnOnlyKey"><span class="ic">◎</span>仅看重点</div>
   <div class="tbtn" id="btnReset"><span class="ic">⟲</span>重置视角</div>
   <div class="tbtn" id="btnSpin"><span class="ic">↻</span>自动旋转</div>
 </div>
@@ -210,8 +237,15 @@
   <div id="close">×</div>
   <div class="tag" id="tag">—</div>
   <h3 id="cn">—</h3>
+  <div class="en-name" id="enName">—</div>
   <div class="latin" id="latin">—</div>
   <div class="desc" id="desc">—</div>
+  <div id="moreBtn">查看完整介绍 ▸</div>
+  <div id="detail">
+    <div class="d-sec"><h4>功能作用</h4><p id="dFn">—</p></div>
+    <div class="d-sec"><h4>知识点</h4><ul id="dPts"></ul></div>
+    <div class="d-sec"><h4>临床关联</h4><p id="dCli">—</p></div>
+  </div>
   <div class="fma" id="fma">—</div>
 </div>
 
