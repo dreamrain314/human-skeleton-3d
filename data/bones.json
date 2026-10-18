@@ -383,6 +383,14 @@
   "en": "sacrum",
   "group": "骶骨"
  },
+ "FMA7371": {
+  "cn": "胸骨",
+  "latin": "Sternum",
+  "en": "sternum",
+  "desc": "位于胸前壁正中的扁骨，自上而下分为胸骨柄、胸骨体和剑突，与锁骨及第 1-7 肋软骨相连。",
+  "region": "胸廓",
+  "group": "胸骨"
+ },
  "FMA7987": {
   "cn": "第一肋（左）",
   "latin": "First rib",

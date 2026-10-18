@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { store } from './store.js';
 
 /* ============ 全局状态 ============ */
 const state = {
-  bones: null,          // FMA -> {cn, latin, desc, region, en}
+  bones: null,          // FMA -> {cn, latin, desc, region, group, en}
   meshes: [],           // {mesh, fma}
   byFma: new Map(),     // FMA -> [mesh]
   selected: null,
@@ -13,9 +14,11 @@ const state = {
   showLabel: true,
   xray: false,
   spin: false,
-  keyMode: false,       // 重点标红模式：重点骨持久染橙红
-  onlyKey: false,       // 仅看重点：隐藏非重点骨（叠加在区域显隐之上）
-  keySet: new Set(),    // 重点骨骼 FMA 集合（来自 key-bones.json）
+  keyMode: false,       // 标记标红模式：用户标记的骨持久染橙红
+  onlyKey: false,       // 仅看标记：隐藏未标记骨（叠加在区域显隐之上）
+  keySet: new Set(),    // 用户自定义标记集（来自 store，localStorage 持久化）
+  hiddenSet: new Set(), // 会话级：用户手动隐藏的骨（不持久化）
+  isolated: null,       // 单骨隔离模式：仅显示该骨
   detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
   homeDist: 0,          // 默认视距，重置视角时回到这里
@@ -147,19 +150,14 @@ async function boot() {
       return;
     }
 
-    const [bones, keyDef] = await Promise.all([
-      // no-cache = 协商缓存：数据更新后刷新页面即可拿到新版本（命中 ETag 时只是轻量 304）
-      fetch('./data/bones.json', { cache: 'no-cache' }).then(r => {
-        if (!r.ok) throw new Error('bones.json 加载失败 HTTP ' + r.status);
-        return r.json();
-      }),
-      // 重点清单加载失败不阻塞主流程，只是没有标红功能
-      fetch('./data/key-bones.json', { cache: 'no-cache' })
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null),
-    ]);
+    // bones.json 带协商缓存：数据更新后普通刷新即可拿到新版
+    const bones = await fetch('./data/bones.json', { cache: 'no-cache' }).then(r => {
+      if (!r.ok) throw new Error('bones.json 加载失败 HTTP ' + r.status);
+      return r.json();
+    });
     state.bones = bones;
-    (keyDef?.bones || []).forEach(fma => state.keySet.add(fma));
+    store.init();
+    state.keySet = new Set(store.getMarked());
 
     const gltf = await new Promise((res, rej) => {
       // 正确的回调顺序: load(url, onLoad, onProgress, onError)
@@ -205,7 +203,7 @@ async function boot() {
     scene.add(model);
 
     const maxDim = Math.max(size.x, size.y, size.z);
-    controls.minDistance = maxDim * 0.35;
+    controls.minDistance = maxDim * 0.08;   // 允许凑近到单块骨细节级别
     controls.maxDistance = maxDim * 6;
     camera.position.set(0, 0, maxDim * 1.55);
     controls.target.set(0, 0, 0);
@@ -292,13 +290,18 @@ function buildRegionUI() {
       g.bones.forEach(fma => {
         const b = state.bones[fma];
         const item = document.createElement('div');
-        item.className = 'bone-item';
+        item.className = 'bone-item' + (state.hiddenSet.has(fma) ? ' hid' : '');
+        item.dataset.fma = fma;
         item.innerHTML = (state.keySet.has(fma) ? '<span class="star">★</span>' : '') +
           `<span>${b?.cn || fma}</span>`;
         item.title = b?.en || fma;
         item.onclick = e => {
           e.stopPropagation();
           selectBone(fma);
+        };
+        item.ondblclick = e => {
+          e.stopPropagation();
+          enterIsolate(fma);
         };
         grp.appendChild(item);
       });
@@ -318,8 +321,10 @@ function applyVisibility() {
   state.meshes.forEach(({ mesh, fma }) => {
     const r = state.bones[fma]?.region || '其他';
     const regionOk = state.regionVisible[r] !== false;
-    const keyOk = !state.onlyKey || state.keySet.has(fma);
-    mesh.visible = regionOk && keyOk;
+    const markOk = !state.onlyKey || state.keySet.has(fma);
+    const notHidden = !state.hiddenSet.has(fma);
+    const isolateOk = !state.isolated || state.isolated === fma;
+    mesh.visible = regionOk && markOk && notHidden && isolateOk;
   });
 }
 
@@ -338,7 +343,7 @@ function bindUI() {
   $('btnKey').onclick = e => {
     state.keyMode = !state.keyMode;
     e.currentTarget.classList.toggle('on', state.keyMode);
-    if (!state.keyMode && state.onlyKey) {          // 关标红时连带退出"仅看重点"
+    if (!state.keyMode && state.onlyKey) {          // 关标记标红时连带退出"仅看标记"
       state.onlyKey = false;
       $('btnOnlyKey').classList.remove('on');
       applyVisibility();
@@ -348,7 +353,7 @@ function bindUI() {
   $('btnOnlyKey').onclick = e => {
     state.onlyKey = !state.onlyKey;
     e.currentTarget.classList.toggle('on', state.onlyKey);
-    if (state.onlyKey && !state.keyMode) {          // 仅看重点时自动带上标红更直观
+    if (state.onlyKey && !state.keyMode) {          // 仅看标记时自动带上标红更直观
       state.keyMode = true;
       $('btnKey').classList.add('on');
       updateMaterials();
@@ -356,6 +361,61 @@ function bindUI() {
     applyVisibility();
   };
   $('moreBtn').onclick = () => toggleDetail();
+
+  /* 用户动作行：标记 / 隐藏 / 单骨隔离 */
+  $('actMark').onclick = () => { if (state.selected) toggleMark(state.selected); };
+  $('actHide').onclick = () => { if (state.selected) toggleHideSelected(state.selected); };
+  $('actIsolate').onclick = () => {
+    if (!state.selected) return;
+    state.isolated === state.selected ? exitIsolate() : enterIsolate(state.selected);
+  };
+  $('isolateBar').onclick = () => exitIsolate();
+  addEventListener('keydown', e => { if (e.key === 'Escape' && state.isolated) exitIsolate(); });
+
+  /* 每骨笔记 */
+  $('noteSave').onclick = () => {
+    if (!state.selected) return;
+    const ok = store.setNote(state.selected, $('noteBox').value);
+    $('noteSaved').textContent = ok ? '已保存 ✓' : '保存失败';
+    setTimeout(() => { $('noteSaved').textContent = ''; }, 2000);
+  };
+
+  /* 恢复全部显示（清除会话内手动隐藏） */
+  $('btnShowAll').onclick = () => restoreShow();
+
+  /* 我的数据：导出 / 导入（JSON 备份，未来共享格式的雏形） */
+  $('btnExport').onclick = () => {
+    const blob = new Blob([store.exportJSON()], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'skeleton-mydata.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  $('btnImport').onclick = () => $('importFile').click();
+  $('importFile').onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const r = store.importJSON(reader.result);
+        state.keySet = new Set(store.getMarked());
+        updateMaterials();
+        const rv = { ...state.regionVisible };
+        buildRegionUI();                            // 重建清单刷新 ★/隐藏态
+        Object.assign(state.regionVisible, rv);     // 保留区域显隐
+        applyVisibility();
+        if (state.selected) { refreshActionRow(state.selected); $('noteBox').value = store.getNote(state.selected); }
+        $('importStat').textContent = `已导入：标记 ${r.marks} 条、笔记 ${r.notes} 条`;
+      } catch (err) {
+        $('importStat').textContent = '导入失败：' + err.message;
+      }
+      setTimeout(() => { $('importStat').textContent = ''; }, 4000);
+    };
+    reader.readAsText(f);
+    e.target.value = '';
+  };
   $('btnReset').onclick = () => resetView();
   $('btnSpin').onclick = e => {
     state.spin = !state.spin;
@@ -483,16 +543,108 @@ function selectBone(fma) {
     $('enName').textContent = b.en ? b.en.replace(/\b\w/g, c => c.toUpperCase()) : '';
     $('enName').style.display = b.en ? '' : 'none';
     $('desc').textContent = b.desc;
-    $('fma').textContent = 'FMA ' + fma.replace('FMA', '') + ' · BodyParts3D' + (isKey(fma) ? ' · 教学重点' : '');
+    $('fma').textContent = 'FMA ' + fma.replace('FMA', '') + ' · BodyParts3D';
   } else {
     $('cn').textContent = fma;
     $('latin').textContent = ''; $('enName').textContent = '';
     $('desc').textContent = '(无描述)';
   }
   resetDetail();
-  updateMaterials();   // 统一刷新：覆盖 X 光下选中骨不透明、标红模式底色等
+  refreshActionRow(fma);
+  $('noteBox').value = store.getNote(fma);
+  $('noteSaved').textContent = '';
+  updateMaterials();   // 统一刷新：覆盖 X 光下选中骨不透明、标记标红底色等
   infoEl.classList.add('show');
   placeLabel(fma);
+}
+
+/* ============ 用户动作：标记 / 隐藏 / 隔离 ============ */
+/* 标记：写入 store（localStorage 持久化），标红/★/仅看标记全部读用户标记集 */
+function toggleMark(fma) {
+  const marked = store.toggleMark(fma);
+  state.keySet = new Set(store.getMarked());
+  updateMaterials();
+  syncListItem(fma);
+  if (state.onlyKey) applyVisibility();
+  if (state.selected === fma) {
+    $('cn').textContent = (marked ? '★ ' : '') + (state.bones[fma]?.cn || fma);
+    refreshActionRow(fma);
+  }
+}
+
+function syncListItem(fma) {
+  const el = document.querySelector(`.bone-item[data-fma="${fma}"]`);
+  if (!el) return;
+  el.classList.toggle('hid', state.hiddenSet.has(fma));
+  const star = el.querySelector('.star');
+  if (state.keySet.has(fma) && !star) {
+    const s = document.createElement('span');
+    s.className = 'star'; s.textContent = '★';
+    el.prepend(s);
+  } else if (!state.keySet.has(fma) && star) {
+    star.remove();
+  }
+}
+
+function refreshActionRow(fma) {
+  if (!fma) return;
+  const marked = store.isMarked(fma);
+  $('actMark').classList.toggle('on', marked);
+  $('actMark').querySelector('.act-txt').textContent = marked ? '已标记' : '标记';
+  const hidden = state.hiddenSet.has(fma);
+  $('actHide').querySelector('.act-txt').textContent = hidden ? '取消隐藏' : '隐藏';
+  const iso = state.isolated === fma;
+  $('actIsolate').querySelector('.act-txt').textContent = iso ? '退出隔离' : '单独查看';
+}
+
+/* 隐藏：会话级视图状态。被隐藏的骨仍可在清单中点选（选后可取消隐藏） */
+function toggleHideSelected(fma) {
+  if (state.hiddenSet.has(fma)) state.hiddenSet.delete(fma);
+  else {
+    state.hiddenSet.add(fma);
+    if (state.isolated === fma) exitIsolate();
+  }
+  applyVisibility();
+  syncListItem(fma);
+  refreshActionRow(fma);
+}
+
+function restoreShow() {
+  state.hiddenSet.clear();
+  applyVisibility();
+  document.querySelectorAll('.bone-item.hid').forEach(el => el.classList.remove('hid'));
+  if (state.selected) refreshActionRow(state.selected);
+}
+
+/* 隔离：只显示这一块骨，相机对准它；退出后恢复 */
+function enterIsolate(fma) {
+  state.isolated = fma;
+  applyVisibility();
+  const list = state.byFma.get(fma);
+  if (list && list.length) {
+    const box = new THREE.Box3();
+    list.forEach(m => box.expandByObject(m));
+    const c = box.getCenter(new THREE.Vector3());
+    const r = Math.max(box.getBoundingSphere(new THREE.Sphere()).radius, 0.02);
+    controls.target.copy(c);
+    const dir = camera.position.clone().sub(c);
+    if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+    dir.setLength(r * 3.2 + 0.05);
+    camera.position.copy(c).add(dir);
+    controls.update();
+  }
+  $('isolateBar').textContent = `⤢ 隔离查看：${state.bones[fma]?.cn || fma} —— 点击此处退出`;
+  $('isolateBar').classList.add('show');
+  if (state.selected === fma) refreshActionRow(fma);
+}
+
+function exitIsolate() {
+  if (!state.isolated) return;
+  state.isolated = null;
+  applyVisibility();
+  $('isolateBar').classList.remove('show');
+  if (state.selected) refreshActionRow(state.selected);
+  resetView();
 }
 
 function clearSelection(alsoHidePanel = true) {
