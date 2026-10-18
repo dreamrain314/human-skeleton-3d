@@ -67,8 +67,14 @@
   .reg-list.open,.reg.open + .reg-list{display:block}
   .reg-sub{display:flex;align-items:center;gap:6px;padding:5px 8px 3px;margin-top:3px;
     font-size:10.5px;color:var(--accent2);letter-spacing:1px;
-    border-top:1px dashed var(--line)}
+    border-top:1px dashed var(--line);cursor:pointer;user-select:none;border-radius:6px}
+  .reg-sub:hover{background:rgba(255,255,255,.05)}
+  .reg-sub .chev{font-size:9px;width:12px;transition:transform .15s;flex:0 0 auto}
+  .reg-sub.open .chev{transform:rotate(90deg)}
   .reg-sub .n{margin-left:auto;font-size:9.5px;color:var(--dim)}
+  .reg-group{display:none}
+  .reg-sub.open + .reg-group{display:block}
+  .reg-list.searching .reg-group{display:block}
   .bone-item{display:flex;align-items:center;gap:4px;padding:3.5px 8px 3.5px 14px;border-radius:6px;
     cursor:pointer;font-size:11.5px;color:#c3ccdd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bone-item:hover{background:rgba(255,255,255,.07);color:var(--txt)}
@@ -172,8 +178,9 @@
   @media(max-width:720px){
     #tools{transform:translateX(-120%);transition:.25s}
     #tools.open{transform:translateX(0)}
-    #tools{top:78px;max-height:calc(100vh - 96px)}
+    #tools{top:78px;bottom:12px;max-height:none}
     #info{width:calc(100vw - 32px);right:16px;top:auto;bottom:16px;max-height:46vh;overflow-y:auto}
+    #note{display:none}
     #title{left:66px;top:20px}
     #title h1{font-size:15px}
     #mobileBtn{display:flex;position:fixed;top:18px;left:22px;z-index:13;width:34px;height:34px;

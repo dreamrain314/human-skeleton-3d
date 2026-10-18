@@ -39,7 +39,7 @@ const NO_EMISSIVE  = new THREE.Color(0x000000);
 const BONE_MAT = {
   roughness: 0.62,
   metalness: 0.0,
-  envMapIntensity: 1.15,
+  envMapIntensity: 1.0,
   flatShading: false,
 };
 
@@ -49,7 +49,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerP
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.0;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -83,10 +83,11 @@ controls.touches = {
 };
 
 /* ============ 灯光 ============ */
-/* 有了环境贴图之后，平行光只负责「方向感」和轮廓，不再承担全部照明 */
-scene.add(new THREE.HemisphereLight(0xd8e6ff, 0x2a2418, 0.45));
-const key = new THREE.DirectionalLight(0xfff6e8, 2.1); key.position.set(3, 5, 4); scene.add(key);
-const fill = new THREE.DirectionalLight(0xa8c6ff, 0.75); fill.position.set(-4, 1, -3); scene.add(fill);
+/* 有了环境贴图之后，平行光只负责「方向感」和轮廓，不再承担全部照明。
+   正面偏亮会显得扁平，所以主光加强、补光压暗，拉开明暗对比 */
+scene.add(new THREE.HemisphereLight(0xd8e6ff, 0x2a2418, 0.32));
+const key = new THREE.DirectionalLight(0xfff6e8, 2.35); key.position.set(3, 5, 4); scene.add(key);
+const fill = new THREE.DirectionalLight(0xa8c6ff, 0.55); fill.position.set(-4, 1, -3); scene.add(fill);
 const rim = new THREE.DirectionalLight(0xffffff, 1.0); rim.position.set(0, -3, 2); scene.add(rim);
 const rim2 = new THREE.DirectionalLight(0xffe9cf, 0.6); rim2.position.set(-2, 2, -4); scene.add(rim2);
 
@@ -106,7 +107,7 @@ function buildStudioEnvScene() {
     envScene.add(m);
   };
   panel(0xffffff, 3.6, [0, 7, 0], [Math.PI / 2, 0, 0]);        // 顶部主光
-  panel(0xfff2df, 1.5, [0, 0.6, 7], [0, 0, 0]);                // 正面柔光
+  panel(0xfff2df, 1.15, [0, 0.6, 7], [0, 0, 0]);               // 正面柔光（过亮会冲掉正面立体感）
   panel(0xdce8ff, 1.15, [-7, 1, 0], [0, Math.PI / 2, 0]);      // 左侧冷补
   panel(0xffe7d3, 1.05, [7, 1, 0], [0, -Math.PI / 2, 0]);      // 右侧暖补
   panel(0x2b303b, 0.8, [0, -7, 0], [-Math.PI / 2, 0, 0]);      // 地面反弹光
@@ -273,6 +274,7 @@ function buildRegionUI() {
       filter.onclick = e => e.stopPropagation();
       filter.oninput = () => {
         const q = filter.value.trim();
+        listBox.classList.toggle('searching', !!q);   // 搜索时强制展开所有分组
         listBox.querySelectorAll('.bone-item').forEach(it => {
           it.style.display = !q || it.textContent.includes(q) ? '' : 'none';
         });
@@ -280,10 +282,13 @@ function buildRegionUI() {
       listBox.appendChild(filter);
     }
     groups.forEach(g => {
-      const head = document.createElement('div');
-      head.className = 'reg-sub';
-      head.innerHTML = `<span>${g.name}</span><span class="n">${g.bones.length}</span>`;
-      listBox.appendChild(head);
+      // 分组标题可点击折叠，默认收起，避免一个区域展开后几十行平铺
+      const sub = document.createElement('div');
+      sub.className = 'reg-sub';
+      sub.innerHTML = `<span class="chev">▸</span><span>${g.name}</span>` +
+        `<span class="n">${g.bones.length}</span>`;
+      const grp = document.createElement('div');
+      grp.className = 'reg-group';
       g.bones.forEach(fma => {
         const b = state.bones[fma];
         const item = document.createElement('div');
@@ -295,8 +300,14 @@ function buildRegionUI() {
           e.stopPropagation();
           selectBone(fma);
         };
-        listBox.appendChild(item);
+        grp.appendChild(item);
       });
+      sub.onclick = e => {
+        e.stopPropagation();
+        sub.classList.toggle('open');
+      };
+      listBox.appendChild(sub);
+      listBox.appendChild(grp);
     });
     wrap.appendChild(d);
     wrap.appendChild(listBox);
@@ -521,7 +532,8 @@ function removeLabel() {
 function makeLabel(text) {
   // 注意：这里不再调用 removeLabel()——旧标签的清理由 placeLabel 开头统一负责，
   // 否则会把 placeLabel 刚算好的 labelAnchor 清空导致空引用
-  const dpr = 2;
+  // 画布按设备像素比绘制（至少 3x），高 DPR 手机上文字才不会发虚
+  const dpr = Math.min(3, Math.max(2, devicePixelRatio || 1));
   const pad = 12, fs = 28;
   const cv = document.createElement('canvas');
   const ctx = cv.getContext('2d');
@@ -575,23 +587,57 @@ function placeLabel(fma) {
   updateLabelPose();
 }
 
-/* 每帧根据当前相机重算：标签始终落在骨的屏幕左/右空白侧 */
+/* 每帧根据当前相机重算：标签始终落在骨的屏幕左/右空白侧，
+   并且整颗药丸被裁剪进可视区域内（手机上边缘骨不再被推出屏幕外） */
 function updateLabelPose() {
   if (!labelSprite || !labelAnchor) return;
-  const ndc = labelAnchor.clone().project(camera);
-  if (ndc.z > 1) {                       // 锚点在相机背后，整体隐藏
+  const anchorCam = labelAnchor.clone().applyMatrix4(camera.matrixWorldInverse);
+  if (anchorCam.z >= -0.01) {            // 锚点在相机背后或过近，整体隐藏
     labelSprite.visible = false;
     labelLine.visible = false;
     return;
   }
   labelSprite.visible = true;
   labelLine.visible = true;
-  // 骨在屏幕右半 → 标签放右侧；在左半 → 放左侧
-  // 偏移量 = 骨半径 + 标签药丸半宽 + 间隙，保证药丸完全不压骨头
+  // 骨在屏幕右半 → 标签放右侧；在左半 → 放左侧（用世界投影判断一次）
+  const ndc = labelAnchor.clone().project(camera);
   const side = ndc.x >= 0 ? 1 : -1;
-  const camRight = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
-  const dist = labelRadius + labelSprite.scale.x / 2 + 0.02;
-  const labelPos = labelAnchor.clone().addScaledVector(camRight, side * dist);
+  // 相机空间：x 向右、y 向上；按可视锥体把标签中心夹进屏幕（留出药丸半宽 + 余量）
+  const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * -anchorCam.z;
+  const halfW = halfH * camera.aspect;
+  const padX = labelSprite.scale.x / 2 + 0.015;
+  const padY = labelSprite.scale.y / 2 + 0.012;
+  let cx = anchorCam.x + side * (labelRadius + labelSprite.scale.x / 2 + 0.02);
+  cx = Math.min(halfW - padX, Math.max(-halfW + padX, cx));
+  let cy = Math.min(halfH - padY, Math.max(-halfH + padY, anchorCam.y));
+
+  /* 避开信息面板：桌面在右侧、手机是底部抽屉。若标签与面板相交，
+     先换到另一侧；仍相交则把标签挪到面板上缘之外 */
+  const infoEl = document.getElementById('info');
+  if (infoEl && infoEl.classList.contains('show')) {
+    const r = infoEl.getBoundingClientRect();
+    const pxPerWorldX = innerWidth / (2 * halfW);
+    const pxPerWorldY = innerHeight / (2 * halfH);
+    const pillW = labelSprite.scale.x * pxPerWorldX;
+    const pillH = labelSprite.scale.y * pxPerWorldY;
+    const sx = () => (cx / halfW * 0.5 + 0.5) * innerWidth;
+    const sy = () => (0.5 - cy / halfH * 0.5) * innerHeight;
+    const hit = () => Math.abs(sx() - (r.left + r.width / 2)) < pillW / 2 + r.width / 2 + 6 &&
+                      Math.abs(sy() - (r.top + r.height / 2)) < pillH / 2 + r.height / 2 + 6;
+    if (hit() && side === 1) {
+      cx = Math.min(halfW - padX, Math.max(-halfW + padX,
+        anchorCam.x - (labelRadius + labelSprite.scale.x / 2 + 0.02)));
+    }
+    if (hit()) {
+      const topY = (0.5 - (r.top - pillH / 2 - 8) / innerHeight * 2) * halfH;  // 面板上缘之上
+      const botY = (0.5 - (r.bottom + pillH / 2 + 8) / innerHeight * 2) * halfH; // 面板下缘之下
+      cy = Math.abs(topY - cy) <= Math.abs(botY - cy)
+        ? Math.min(topY, halfH - padY)
+        : Math.max(botY, -halfH + padY);
+    }
+  }
+
+  const labelPos = new THREE.Vector3(cx, cy, anchorCam.z).applyMatrix4(camera.matrixWorld);
   labelSprite.position.copy(labelPos);
   const posAttr = labelLine.geometry.attributes.position;
   posAttr.setXYZ(0, labelAnchor.x, labelAnchor.y, labelAnchor.z);
