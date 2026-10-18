@@ -34,22 +34,19 @@ const SEL_EMISSIVE = new THREE.Color(0x551010);
 const XRAY_EMISSIVE = new THREE.Color(0x16404d);
 const NO_EMISSIVE  = new THREE.Color(0x000000);
 
-/* 所有骨共用同一套 PBR 参数（干骨质感：哑光、微糙、几乎无金属感） */
+/* 所有骨共用同一套 PBR 参数（干骨质感：哑光、微糙、几乎无金属感）。
+   不启用 clearcoat / sheen：这两个特性会显著增加片元着色开销，200 块骨很吃帧率 */
 const BONE_MAT = {
   roughness: 0.62,
   metalness: 0.0,
-  clearcoat: 0.10,          // 只留极淡的一层油润，多了会变成陶瓷
-  clearcoatRoughness: 0.5,
-  sheen: 0.28,              // 边缘细微绒感，避免塑料感
-  sheenRoughness: 0.78,
   envMapIntensity: 1.15,
   flatShading: false,
 };
 
 /* ============ 场景 ============ */
 const app = document.getElementById('app');
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -65,7 +62,7 @@ camera.position.set(0, 0.05, 1.9);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.06;
+controls.dampingFactor = 0.3;   // 0.06 太"滑"，拖动有明显迟滞；0.3 接近跟手且保留一点平滑
 controls.minDistance = 0.15;
 controls.maxDistance = 6;
 controls.target.set(0, 0.05, 0);
@@ -150,12 +147,13 @@ async function boot() {
     }
 
     const [bones, keyDef] = await Promise.all([
-      fetch('./data/bones.json').then(r => {
+      // no-cache = 协商缓存：数据更新后刷新页面即可拿到新版本（命中 ETag 时只是轻量 304）
+      fetch('./data/bones.json', { cache: 'no-cache' }).then(r => {
         if (!r.ok) throw new Error('bones.json 加载失败 HTTP ' + r.status);
         return r.json();
       }),
       // 重点清单加载失败不阻塞主流程，只是没有标红功能
-      fetch('./data/key-bones.json')
+      fetch('./data/key-bones.json', { cache: 'no-cache' })
         .then(r => r.ok ? r.json() : null)
         .catch(() => null),
     ]);
@@ -232,39 +230,42 @@ async function boot() {
 }
 
 /* ============ 区域面板 ============ */
-/* 两级结构：区域行（点击切换显隐 / 点箭头展开骨骼清单）+ 骨骼清单（点击直接选中）。
-   骨骼清单解决颅骨等互相遮挡区域"看得见点不中"的问题。 */
+/* 三级结构：区域行（点击切换显隐 / 点箭头展开清单）→ 专业分组（脑颅骨/腕骨/跗骨…）
+   → 骨骼项（点击直接选中）。分组解决上肢/下肢几十块骨平铺难以定位的问题。 */
 function buildRegionUI() {
   const byRegion = {};
   for (const fma of state.byFma.keys()) {
-    const r = state.bones[fma]?.region || '其他';
-    (byRegion[r] = byRegion[r] || []).push(fma);
+    const b = state.bones[fma] || { region: '其他', group: '其他' };
+    (byRegion[b.region] = byRegion[b.region] || []).push({ fma, group: b.group || '其他' });
   }
   const wrap = $('regions');
   wrap.innerHTML = '';
   REGIONS.forEach(r => {
     state.regionVisible[r] = true;
-    const list = (byRegion[r] || []).slice()
-      .sort((a, b) => (state.bones[a]?.cn || a).localeCompare(state.bones[b]?.cn || b, 'zh'));
+    const items = byRegion[r] || [];
+    // 组按首次出现顺序排列，组内保持数据原始顺序（符合解剖学计数习惯）
+    const groups = [];
+    for (const it of items) {
+      let g = groups.find(x => x.name === it.group);
+      if (!g) { g = { name: it.group, bones: [] }; groups.push(g); }
+      g.bones.push(it.fma);
+    }
     const d = document.createElement('div');
     d.className = 'reg';
     d.innerHTML = `<span class="dot"></span><span class="reg-name">${r}</span>` +
-      `<span class="n">${list.length}</span><span class="chev">▸</span>`;
-    // 点区域行主体：显隐切换（保持老习惯）
+      `<span class="n">${items.length}</span><span class="chev">▸</span>`;
     d.onclick = () => {
       state.regionVisible[r] = !state.regionVisible[r];
       d.classList.toggle('off', !state.regionVisible[r]);
       applyVisibility();
     };
-    // 点箭头：展开/收起骨骼清单
     d.querySelector('.chev').onclick = e => {
       e.stopPropagation();
       d.classList.toggle('open');
     };
-    // 骨骼清单
     const listBox = document.createElement('div');
     listBox.className = 'reg-list';
-    if (list.length > 30) {
+    if (items.length > 30) {
       const filter = document.createElement('input');
       filter.className = 'reg-filter';
       filter.type = 'text';
@@ -278,18 +279,24 @@ function buildRegionUI() {
       };
       listBox.appendChild(filter);
     }
-    list.forEach(fma => {
-      const b = state.bones[fma];
-      const item = document.createElement('div');
-      item.className = 'bone-item';
-      item.innerHTML = (state.keySet.has(fma) ? '<span class="star">★</span>' : '') +
-        `<span>${b?.cn || fma}</span>`;
-      item.title = b?.en || fma;
-      item.onclick = e => {
-        e.stopPropagation();
-        selectBone(fma);
-      };
-      listBox.appendChild(item);
+    groups.forEach(g => {
+      const head = document.createElement('div');
+      head.className = 'reg-sub';
+      head.innerHTML = `<span>${g.name}</span><span class="n">${g.bones.length}</span>`;
+      listBox.appendChild(head);
+      g.bones.forEach(fma => {
+        const b = state.bones[fma];
+        const item = document.createElement('div');
+        item.className = 'bone-item';
+        item.innerHTML = (state.keySet.has(fma) ? '<span class="star">★</span>' : '') +
+          `<span>${b?.cn || fma}</span>`;
+        item.title = b?.en || fma;
+        item.onclick = e => {
+          e.stopPropagation();
+          selectBone(fma);
+        };
+        listBox.appendChild(item);
+      });
     });
     wrap.appendChild(d);
     wrap.appendChild(listBox);
@@ -486,8 +493,13 @@ function clearSelection(alsoHidePanel = true) {
   }
 }
 
-/* ============ 3D 骨骼名称标签（跟随选中的骨） ============ */
+/* ============ 3D 骨骼名称标签（跟随选中的骨） ============
+   标签不再压在骨头上：锚点为骨的中心，每帧把标签推到屏幕左右
+   空白侧，并用一根蓝色细线把骨和标签连起来（类似专业解剖软件）。 */
 let labelSprite = null;
+let labelLine = null;
+let labelAnchor = null;   // 骨中心（世界坐标）
+let labelRadius = 0;      // 骨包围球半径（决定标签推开的距离）
 
 function removeLabel() {
   if (labelSprite) {
@@ -497,12 +509,20 @@ function removeLabel() {
     labelSprite.geometry.dispose();
     labelSprite = null;
   }
+  if (labelLine) {
+    scene.remove(labelLine);
+    labelLine.geometry.dispose();
+    labelLine.material.dispose();
+    labelLine = null;
+  }
+  labelAnchor = null;
 }
 
 function makeLabel(text) {
-  removeLabel();
+  // 注意：这里不再调用 removeLabel()——旧标签的清理由 placeLabel 开头统一负责，
+  // 否则会把 placeLabel 刚算好的 labelAnchor 清空导致空引用
   const dpr = 2;
-  const pad = 14, fs = 34;
+  const pad = 12, fs = 28;
   const cv = document.createElement('canvas');
   const ctx = cv.getContext('2d');
   const font = `600 ${fs}px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif`;
@@ -526,24 +546,57 @@ function makeLabel(text) {
   tex.colorSpace = THREE.SRGBColorSpace;
   const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
   const sp = new THREE.Sprite(mat);
-  const scale = 0.055;
+  const scale = 0.042;
   sp.scale.set((w / h) * scale, scale, 1);
   sp.renderOrder = 999;
   return sp;
 }
 
 function placeLabel(fma) {
-  if (!state.showLabel) { removeLabel(); return; }
+  removeLabel();                       // 先清旧标签（注意：会同时清掉 labelAnchor）
+  if (!state.showLabel) return;
   const list = state.byFma.get(fma);
   if (!list || !list.length) return;
   const b = state.bones[fma];
   if (!b) return;
   const box = new THREE.Box3();
   list.forEach(m => box.expandByObject(m));
-  const c = box.getCenter(new THREE.Vector3());
+  labelAnchor = box.getCenter(new THREE.Vector3());
+  labelRadius = box.getBoundingSphere(new THREE.Sphere()).radius || 0.01;
   labelSprite = makeLabel(b.cn);
-  labelSprite.position.copy(c);
   scene.add(labelSprite);
+  // 蓝色细牵引线：骨中心 → 标签（线宽在多数平台固定为 1px，正合适）
+  const geo = new THREE.BufferGeometry().setFromPoints([labelAnchor.clone(), labelAnchor.clone()]);
+  labelLine = new THREE.Line(geo, new THREE.LineBasicMaterial({
+    color: 0x4da3ff, transparent: true, opacity: 0.85, depthTest: false,
+  }));
+  labelLine.renderOrder = 998;
+  scene.add(labelLine);
+  updateLabelPose();
+}
+
+/* 每帧根据当前相机重算：标签始终落在骨的屏幕左/右空白侧 */
+function updateLabelPose() {
+  if (!labelSprite || !labelAnchor) return;
+  const ndc = labelAnchor.clone().project(camera);
+  if (ndc.z > 1) {                       // 锚点在相机背后，整体隐藏
+    labelSprite.visible = false;
+    labelLine.visible = false;
+    return;
+  }
+  labelSprite.visible = true;
+  labelLine.visible = true;
+  // 骨在屏幕右半 → 标签放右侧；在左半 → 放左侧
+  // 偏移量 = 骨半径 + 标签药丸半宽 + 间隙，保证药丸完全不压骨头
+  const side = ndc.x >= 0 ? 1 : -1;
+  const camRight = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+  const dist = labelRadius + labelSprite.scale.x / 2 + 0.02;
+  const labelPos = labelAnchor.clone().addScaledVector(camRight, side * dist);
+  labelSprite.position.copy(labelPos);
+  const posAttr = labelLine.geometry.attributes.position;
+  posAttr.setXYZ(0, labelAnchor.x, labelAnchor.y, labelAnchor.z);
+  posAttr.setXYZ(1, labelPos.x, labelPos.y, labelPos.z);
+  posAttr.needsUpdate = true;
 }
 
 function updateMaterials() {
@@ -558,7 +611,7 @@ function updateMaterials() {
 /* ============ 完整介绍（懒加载 + 展开） ============ */
 function loadDetails() {
   if (!state.detailCache) {
-    state.detailCache = fetch('./data/bones-detail.json').then(r => {
+    state.detailCache = fetch('./data/bones-detail.json', { cache: 'no-cache' }).then(r => {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     });
@@ -635,7 +688,11 @@ function resetView() {
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
+  updateLabelPose();
   renderer.render(scene, camera);
 }
 
 boot();
+
+/* 调试出口：控制台可直接查运行时状态（不影响功能） */
+window.__skel = { state, camera, scene, controls, THREE };

@@ -58,14 +58,19 @@
   .reg .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex:0 0 auto}
   .reg.off{opacity:.38}
   .reg .n{margin-left:auto;font-size:10.5px;color:var(--dim)}
-  .reg .chev{font-size:10px;color:var(--dim);width:14px;text-align:center;cursor:pointer;
-    transition:transform .15s;flex:0 0 auto}
-  .reg .chev:hover{color:var(--txt)}
+  .reg .chev{font-size:13px;color:var(--dim);width:22px;height:22px;line-height:20px;
+    text-align:center;border-radius:6px;cursor:pointer;transition:transform .15s,background .15s;
+    flex:0 0 auto}
+  .reg .chev:hover{background:rgba(255,255,255,.1);color:var(--txt)}
   .reg.open .chev{transform:rotate(90deg)}
-  .reg-list{display:none;padding:2px 0 4px 15px}
+  .reg-list{display:none;padding:2px 0 4px 10px}
   .reg-list.open,.reg.open + .reg-list{display:block}
-  .bone-item{display:flex;align-items:center;gap:4px;padding:3.5px 8px;border-radius:6px;cursor:pointer;
-    font-size:11.5px;color:#c3ccdd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .reg-sub{display:flex;align-items:center;gap:6px;padding:5px 8px 3px;margin-top:3px;
+    font-size:10.5px;color:var(--accent2);letter-spacing:1px;
+    border-top:1px dashed var(--line)}
+  .reg-sub .n{margin-left:auto;font-size:9.5px;color:var(--dim)}
+  .bone-item{display:flex;align-items:center;gap:4px;padding:3.5px 8px 3.5px 14px;border-radius:6px;
+    cursor:pointer;font-size:11.5px;color:#c3ccdd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bone-item:hover{background:rgba(255,255,255,.07);color:var(--txt)}
   .bone-item .star{color:#ff7043;font-size:10px;flex:0 0 auto}
   .reg-filter{width:100%;margin:3px 0 5px;padding:4px 8px;border-radius:6px;font-size:11px;

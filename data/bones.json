@@ -1,1402 +1,1602 @@
 {
- "FMA12519": {
-  "cn": "寰椎",
-  "latin": "Atlas (C1)",
-  "desc": "第一颈椎，呈环状无椎体，承托颅骨并允许头部点头（“是”的动作）。",
-  "region": "脊柱",
-  "en": "atlas"
- },
- "FMA12520": {
-  "cn": "枢椎",
-  "latin": "Axis (C2)",
-  "desc": "第二颈椎，其向上的齿突构成头部左右旋转（“否”的动作）的枢轴。",
-  "region": "脊柱",
-  "en": "axis"
- },
- "FMA32651": {
-  "cn": "左大趾远节骨",
-  "latin": "Distal phalanx of Left Big Toe",
-  "desc": "左大趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of left big toe"
- },
- "FMA32657": {
-  "cn": "左第四趾远节骨",
-  "latin": "Distal phalanx of Left Fourth Toe",
-  "desc": "左第四趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of left fourth toe"
- },
- "FMA23953": {
-  "cn": "左食指远节骨",
-  "latin": "Distal phalanx of Left Index Finger",
-  "desc": "左食指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of left index finger"
- },
- "FMA23959": {
-  "cn": "左小指远节骨",
-  "latin": "Distal phalanx of Left Little Finger",
-  "desc": "左小指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of left little finger"
- },
- "FMA32659": {
-  "cn": "左小趾远节骨",
-  "latin": "Distal phalanx of Left Little Toe",
-  "desc": "左小趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of left little toe"
- },
- "FMA23955": {
-  "cn": "左中指远节骨",
-  "latin": "Distal phalanx of Left Middle Finger",
-  "desc": "左中指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of left middle finger"
- },
- "FMA23957": {
-  "cn": "左无名指远节骨",
-  "latin": "Distal phalanx of Left Ring Finger",
-  "desc": "左无名指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of left ring finger"
- },
- "FMA32653": {
-  "cn": "左第二趾远节骨",
-  "latin": "Distal phalanx of Left Second Toe",
-  "desc": "左第二趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of left second toe"
- },
- "FMA32655": {
-  "cn": "左第三趾远节骨",
-  "latin": "Distal phalanx of Left Third Toe",
-  "desc": "左第三趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of left third toe"
- },
- "FMA23951": {
-  "cn": "左拇指远节骨",
-  "latin": "Distal phalanx of Left Thumb",
-  "desc": "左拇指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of left thumb"
- },
- "FMA32650": {
-  "cn": "右大趾远节骨",
-  "latin": "Distal phalanx of Right Big Toe",
-  "desc": "右大趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of right big toe"
- },
- "FMA32656": {
-  "cn": "右第四趾远节骨",
-  "latin": "Distal phalanx of Right Fourth Toe",
-  "desc": "右第四趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of right fourth toe"
- },
- "FMA24460": {
-  "cn": "右食指远节骨",
-  "latin": "Distal phalanx of Right Index Finger",
-  "desc": "右食指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of right index finger"
- },
- "FMA24463": {
-  "cn": "右小指远节骨",
-  "latin": "Distal phalanx of Right Little Finger",
-  "desc": "右小指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of right little finger"
- },
- "FMA32658": {
-  "cn": "右小趾远节骨",
-  "latin": "Distal phalanx of Right Little Toe",
-  "desc": "右小趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of right little toe"
- },
- "FMA24461": {
-  "cn": "右中指远节骨",
-  "latin": "Distal phalanx of Right Middle Finger",
-  "desc": "右中指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of right middle finger"
- },
- "FMA24462": {
-  "cn": "右无名指远节骨",
-  "latin": "Distal phalanx of Right Ring Finger",
-  "desc": "右无名指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of right ring finger"
- },
- "FMA32652": {
-  "cn": "右第二趾远节骨",
-  "latin": "Distal phalanx of Right Second Toe",
-  "desc": "右第二趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of right second toe"
- },
- "FMA32654": {
-  "cn": "右第三趾远节骨",
-  "latin": "Distal phalanx of Right Third Toe",
-  "desc": "右第三趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "下肢",
-  "en": "distal phalanx of right third toe"
- },
- "FMA24459": {
-  "cn": "右拇指远节骨",
-  "latin": "Distal phalanx of Right Thumb",
-  "desc": "右拇指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
-  "region": "上肢",
-  "en": "distal phalanx of right thumb"
- },
- "FMA9991": {
-  "cn": "八胸椎",
-  "latin": "Eighth thoracic vertebra",
-  "desc": "第 八 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "eighth thoracic vertebra"
- },
- "FMA10059": {
-  "cn": "十一胸椎",
-  "latin": "Eleventh thoracic vertebra",
-  "desc": "第 十一 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "eleventh thoracic vertebra"
- },
- "FMA52740": {
-  "cn": "筛骨",
-  "latin": "Ethmoid bone",
-  "desc": "位于两眼眶之间、颅腔前部的含气骨，构成鼻腔顶部与鼻中隔上部。",
-  "region": "颅骨",
-  "en": "ethmoid"
- },
- "FMA12523": {
-  "cn": "五颈椎",
-  "latin": "Fifth cervical vertebra",
-  "desc": "第 五 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
-  "region": "脊柱",
-  "en": "fifth cervical vertebra"
- },
- "FMA13076": {
-  "cn": "五腰椎",
-  "latin": "Fifth lumbar vertebra",
-  "desc": "第 五 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
-  "region": "脊柱",
-  "en": "fifth lumbar vertebra"
- },
- "FMA9922": {
-  "cn": "五胸椎",
-  "latin": "Fifth thoracic vertebra",
-  "desc": "第 五 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "fifth thoracic vertebra"
- },
- "FMA13072": {
-  "cn": "一腰椎",
-  "latin": "First lumbar vertebra",
-  "desc": "第 一 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
-  "region": "脊柱",
-  "en": "first lumbar vertebra"
- },
- "FMA9165": {
-  "cn": "一胸椎",
-  "latin": "First thoracic vertebra",
-  "desc": "第 一 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "first thoracic vertebra"
- },
- "FMA12522": {
-  "cn": "四颈椎",
-  "latin": "Fourth cervical vertebra",
-  "desc": "第 四 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
-  "region": "脊柱",
-  "en": "fourth cervical vertebra"
- },
- "FMA13075": {
-  "cn": "四腰椎",
-  "latin": "Fourth lumbar vertebra",
-  "desc": "第 四 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
-  "region": "脊柱",
-  "en": "fourth lumbar vertebra"
- },
- "FMA9248": {
-  "cn": "四胸椎",
-  "latin": "Fourth thoracic vertebra",
-  "desc": "第 四 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "fourth thoracic vertebra"
- },
  "FMA52734": {
   "cn": "额骨",
   "latin": "Frontal bone",
   "desc": "构成前额、眼眶顶部与颅腔前壁的扁骨，内有额窦。",
   "region": "颅骨",
-  "en": "frontal bone"
- },
- "FMA52749": {
-  "cn": "舌骨",
-  "latin": "Hyoid bone",
-  "desc": "位于颈前部、不与其他骨直接相连的 U 形小骨，是舌与喉部肌肉的附着点。",
-  "region": "颅骨",
-  "en": "hyoid bone"
- },
- "FMA24498": {
-  "cn": "跟骨（左）",
-  "latin": "Left Calcaneus",
-  "desc": "足部最大的跗骨，构成足跟并传导行走时的冲击力。",
-  "region": "下肢",
-  "en": "left calcaneus"
- },
- "FMA24447": {
-  "cn": "头状骨（左）",
-  "latin": "Left Capitate",
-  "desc": "腕骨中最大的一块，位于腕中央，参与腕关节活动。",
-  "region": "上肢",
-  "en": "left capitate"
- },
- "FMA13323": {
-  "cn": "锁骨（左）",
-  "latin": "Left Clavicle",
-  "desc": "横架于胸廓前上方的 S 形长骨，是上肢与躯干间唯一的骨性连接。",
-  "region": "上肢",
-  "en": "left clavicle"
- },
- "FMA24529": {
-  "cn": "骰骨（左）",
-  "latin": "Left Cuboid bone",
-  "desc": "足外侧的立方状跗骨，位于跟骨前方。",
-  "region": "下肢",
-  "en": "left cuboid bone"
- },
- "FMA8310": {
-  "cn": "第八肋",
-  "latin": "Eighth rib",
-  "desc": "假肋（第 8 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "left eighth rib"
- },
- "FMA8532": {
-  "cn": "第十一肋",
-  "latin": "Eleventh rib",
-  "desc": "浮肋（第 11 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
-  "region": "胸廓",
-  "en": "left eleventh rib"
- },
- "FMA24475": {
-  "cn": "股骨（左）",
-  "latin": "Left Femur",
-  "desc": "人体最长最粗壮的长骨，构成大腿，上接髋关节、下连膝关节。",
-  "region": "下肢",
-  "en": "left femur"
- },
- "FMA24481": {
-  "cn": "腓骨（左）",
-  "latin": "Left Fibula",
-  "desc": "小腿外侧细长的长骨，不直接承重，主要起肌肉附着与稳定踝关节的作用。",
-  "region": "下肢",
-  "en": "left fibula"
- },
- "FMA24473": {
-  "cn": "第五掌骨",
-  "latin": "Fifth metacarpal bone",
-  "desc": "构成第五指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "left fifth metacarpal bone"
- },
- "FMA24516": {
-  "cn": "第五跖骨",
-  "latin": "Fifth metatarsal bone",
-  "desc": "构成第五趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "left fifth metatarsal bone"
- },
- "FMA8093": {
-  "cn": "第五肋",
-  "latin": "Fifth rib",
-  "desc": "真肋（第 5 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left fifth rib"
- },
- "FMA24465": {
-  "cn": "第一掌骨",
-  "latin": "First metacarpal bone",
-  "desc": "构成第一指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "left first metacarpal bone"
- },
- "FMA24508": {
-  "cn": "第一跖骨",
-  "latin": "First metatarsal bone",
-  "desc": "构成第一趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "left first metatarsal bone"
- },
- "FMA7987": {
-  "cn": "第一肋",
-  "latin": "First rib",
-  "desc": "真肋（第 1 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left first rib"
- },
- "FMA24471": {
-  "cn": "第四掌骨",
-  "latin": "Fourth metacarpal bone",
-  "desc": "构成第四指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "left fourth metacarpal bone"
- },
- "FMA24514": {
-  "cn": "第四跖骨",
-  "latin": "Fourth metatarsal bone",
-  "desc": "构成第四趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "left fourth metatarsal bone"
- },
- "FMA8148": {
-  "cn": "第四肋",
-  "latin": "Fourth rib",
-  "desc": "真肋（第 4 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left fourth rib"
- },
- "FMA24449": {
-  "cn": "钩骨（左）",
-  "latin": "Left Hamate",
-  "desc": "位于腕骨尺侧远端的骨，掌面有钩状突，是屈肌支持带的附着点。",
-  "region": "上肢",
-  "en": "left hamate"
- },
- "FMA16587": {
-  "cn": "髋骨（左）",
-  "latin": "Left Hip bone",
-  "desc": "由髂骨、坐骨、耻骨融合而成的扁骨，构成骨盆侧壁。",
-  "region": "下肢",
-  "en": "left hip bone"
- },
- "FMA23131": {
-  "cn": "肱骨（左）",
-  "latin": "Left Humerus",
-  "desc": "上臂唯一的长骨，上端构成肩关节、下端构成肘关节。",
-  "region": "上肢",
-  "en": "left humerus"
- },
- "FMA54738": {
-  "cn": "下鼻甲（左）",
-  "latin": "Left Inferior nasal concha",
-  "desc": "鼻腔侧壁独立的小骨，可增大鼻腔黏膜表面积以温暖湿润空气。",
-  "region": "颅骨",
-  "en": "left inferior nasal concha"
- },
- "FMA24524": {
-  "cn": "中间楔骨（左）",
-  "latin": "Left Intermediate cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于中央。",
-  "region": "下肢",
-  "en": "left intermediate cuneiform bone"
- },
- "FMA53646": {
-  "cn": "泪骨（左）",
-  "latin": "Left Lacrimal bone",
-  "desc": "位于眼眶内侧壁前部的小骨，含泪囊窝导流泪液。",
-  "region": "颅骨",
-  "en": "left lacrimal bone"
- },
- "FMA24526": {
-  "cn": "外侧楔骨（左）",
-  "latin": "Left Lateral cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于最外侧。",
-  "region": "下肢",
-  "en": "left lateral cuneiform bone"
- },
- "FMA24438": {
-  "cn": "月骨（左）",
-  "latin": "Left Lunate",
-  "desc": "腕骨中呈半月形的骨，位于近侧列，与桡骨直接形成关节。",
-  "region": "上肢",
-  "en": "left lunate"
- },
- "FMA53650": {
-  "cn": "上颌骨（左）",
-  "latin": "Left Maxilla",
-  "desc": "构成上腭、鼻腔侧壁与眼眶底的面颅骨，上列牙齿即植于此。",
-  "region": "颅骨",
-  "en": "left maxilla"
- },
- "FMA24522": {
-  "cn": "内侧楔骨（左）",
-  "latin": "Left Medial cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于最内侧，与第一跖骨相连。",
-  "region": "下肢",
-  "en": "left medial cuneiform bone"
- },
- "FMA53648": {
-  "cn": "鼻骨（左）",
-  "latin": "Left Nasal bone",
-  "desc": "构成鼻梁上部的小长方形骨，左右各一是鼻部外形的基础。",
-  "region": "颅骨",
-  "en": "left nasal bone"
- },
- "FMA8391": {
-  "cn": "第九肋",
-  "latin": "Ninth rib",
-  "desc": "假肋（第 9 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "left ninth rib"
- },
- "FMA53656": {
-  "cn": "腭骨（左）",
-  "latin": "Left Palatine bone",
-  "desc": "构成硬腭后部与鼻腔侧壁的 L 形小骨。",
-  "region": "颅骨",
-  "en": "left palatine bone"
+  "en": "frontal bone",
+  "group": "脑颅骨"
  },
  "FMA52789": {
   "cn": "顶骨（左）",
   "latin": "Left Parietal bone",
   "desc": "构成颅顶与颅侧壁上部的方形扁骨，左右各一。",
   "region": "颅骨",
-  "en": "left parietal bone"
- },
- "FMA24487": {
-  "cn": "髌骨（左）",
-  "latin": "Left Patella",
-  "desc": "膝关节前方最大的一块籽骨，可保护膝关节并增大股四头肌的力臂。",
-  "region": "下肢",
-  "en": "left patella"
- },
- "FMA24442": {
-  "cn": "豌豆骨（左）",
-  "latin": "Left Pisiform",
-  "desc": "腕骨中最小的豆状骨，位于腕掌侧，是尺侧腕屈肌腱内的籽骨。",
-  "region": "上肢",
-  "en": "left pisiform"
- },
- "FMA23465": {
-  "cn": "桡骨（左）",
-  "latin": "Left Radius",
-  "desc": "前臂外侧的长骨，可绕尺骨旋转，是实现前臂旋前旋后的关键。",
-  "region": "上肢",
-  "en": "left radius"
- },
- "FMA24436": {
-  "cn": "手舟骨（左）",
-  "latin": "Left Scaphoid",
-  "desc": "腕骨近侧列外侧的舟形骨，是常见的腕部骨折部位。",
-  "region": "上肢",
-  "en": "left scaphoid"
- },
- "FMA13396": {
-  "cn": "肩胛骨（左）",
-  "latin": "Left Scapula",
-  "desc": "位于胸廓后方的三角形扁骨，与肱骨构成肩关节。",
-  "region": "上肢",
-  "en": "left scapula"
- },
- "FMA24467": {
-  "cn": "第二掌骨",
-  "latin": "Second metacarpal bone",
-  "desc": "构成第二指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "left second metacarpal bone"
- },
- "FMA24510": {
-  "cn": "第二跖骨",
-  "latin": "Second metatarsal bone",
-  "desc": "构成第二趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "left second metatarsal bone"
- },
- "FMA8012": {
-  "cn": "第二肋",
-  "latin": "Second rib",
-  "desc": "真肋（第 2 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left second rib"
- },
- "FMA8256": {
-  "cn": "第七肋",
-  "latin": "Seventh rib",
-  "desc": "真肋（第 7 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left seventh rib"
- },
- "FMA8202": {
-  "cn": "第六肋",
-  "latin": "Sixth rib",
-  "desc": "真肋（第 6 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left sixth rib"
- },
- "FMA24483": {
-  "cn": "距骨（左）",
-  "latin": "Left Talus",
-  "desc": "连接小腿与足部的跗骨，上承胫腓骨构成踝关节，下接跟骨。",
-  "region": "下肢",
-  "en": "left talus"
- },
- "FMA52739": {
-  "cn": "颞骨（左）",
-  "latin": "Left Temporal bone",
-  "desc": "构成颅侧壁与颅底的骨，内含听觉与平衡器官。",
-  "region": "颅骨",
-  "en": "left temporal bone"
- },
- "FMA8472": {
-  "cn": "第十肋",
-  "latin": "Tenth rib",
-  "desc": "假肋（第 10 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "left tenth rib"
- },
- "FMA24469": {
-  "cn": "第三掌骨",
-  "latin": "Third metacarpal bone",
-  "desc": "构成第三指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "left third metacarpal bone"
- },
- "FMA24512": {
-  "cn": "第三跖骨",
-  "latin": "Third metatarsal bone",
-  "desc": "构成第三趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "left third metatarsal bone"
- },
- "FMA8039": {
-  "cn": "第三肋",
-  "latin": "Third rib",
-  "desc": "真肋（第 3 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "left third rib"
- },
- "FMA24478": {
-  "cn": "胫骨（左）",
-  "latin": "Left Tibia",
-  "desc": "小腿内侧粗大的长骨，是下肢的主要承重骨。",
-  "region": "下肢",
-  "en": "left tibia"
- },
- "FMA24444": {
-  "cn": "大多角骨（左）",
-  "latin": "Left Trapezium",
-  "desc": "腕骨远端列外侧的骨，与第一掌骨形成拇指的鞍状关节。",
-  "region": "上肢",
-  "en": "left trapezium"
- },
- "FMA24445": {
-  "cn": "小多角骨（左）",
-  "latin": "Left Trapezoid",
-  "desc": "腕骨远端列的小骨，位于大多角骨与头状骨之间。",
-  "region": "上肢",
-  "en": "left trapezoid"
- },
- "FMA24440": {
-  "cn": "三角骨（左）",
-  "latin": "Left Triquetral",
-  "desc": "腕骨近侧列内侧的三角形骨，位于尺侧。",
-  "region": "上肢",
-  "en": "left triquetral"
- },
- "FMA8534": {
-  "cn": "第十二肋",
-  "latin": "Twelfth rib",
-  "desc": "浮肋（第 12 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
-  "region": "胸廓",
-  "en": "left twelfth rib"
- },
- "FMA23468": {
-  "cn": "尺骨（左）",
-  "latin": "Left Ulna",
-  "desc": "前臂内侧的长骨，上端鹰嘴构成肘尖，是肘关节稳定的支点。",
-  "region": "上肢",
-  "en": "left ulna"
- },
- "FMA52893": {
-  "cn": "颧骨（左）",
-  "latin": "Left Zygomatic bone",
-  "desc": "构成面颊隆起与眼眶外侧壁的骨，俗称“颊骨”。",
-  "region": "颅骨",
-  "en": "left zygomatic bone"
- },
- "FMA52748": {
-  "cn": "下颌骨",
-  "latin": "Mandible",
-  "desc": "面颅中唯一能活动的骨，通过颞下颌关节开合形成咀嚼运动。",
-  "region": "颅骨",
-  "en": "mandible"
- },
- "FMA32647": {
-  "cn": "左第四趾中节骨",
-  "latin": "Middle phalanx of Left Fourth Toe",
-  "desc": "左第四趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of left fourth toe"
- },
- "FMA23938": {
-  "cn": "左食指中节骨",
-  "latin": "Middle phalanx of Left Index Finger",
-  "desc": "左食指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of left index finger"
- },
- "FMA23944": {
-  "cn": "左小指中节骨",
-  "latin": "Middle phalanx of Left Little Finger",
-  "desc": "左小指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of left little finger"
- },
- "FMA230988": {
-  "cn": "左小趾中节骨",
-  "latin": "Middle phalanx of Left Little Toe",
-  "desc": "左小趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of left little toe"
- },
- "FMA23940": {
-  "cn": "左中指中节骨",
-  "latin": "Middle phalanx of Left Middle Finger",
-  "desc": "左中指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of left middle finger"
- },
- "FMA23942": {
-  "cn": "左无名指中节骨",
-  "latin": "Middle phalanx of Left Ring Finger",
-  "desc": "左无名指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of left ring finger"
- },
- "FMA32643": {
-  "cn": "左第二趾中节骨",
-  "latin": "Middle phalanx of Left Second Toe",
-  "desc": "左第二趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of left second toe"
- },
- "FMA32645": {
-  "cn": "左第三趾中节骨",
-  "latin": "Middle phalanx of Left Third Toe",
-  "desc": "左第三趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of left third toe"
- },
- "FMA32646": {
-  "cn": "右第四趾中节骨",
-  "latin": "Middle phalanx of Right Fourth Toe",
-  "desc": "右第四趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of right fourth toe"
- },
- "FMA24455": {
-  "cn": "右食指中节骨",
-  "latin": "Middle phalanx of Right Index Finger",
-  "desc": "右食指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of right index finger"
- },
- "FMA24458": {
-  "cn": "右小指中节骨",
-  "latin": "Middle phalanx of Right Little Finger",
-  "desc": "右小指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of right little finger"
- },
- "FMA230986": {
-  "cn": "右小趾中节骨",
-  "latin": "Middle phalanx of Right Little Toe",
-  "desc": "右小趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of right little toe"
- },
- "FMA24456": {
-  "cn": "右中指中节骨",
-  "latin": "Middle phalanx of Right Middle Finger",
-  "desc": "右中指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of right middle finger"
- },
- "FMA24457": {
-  "cn": "右无名指中节骨",
-  "latin": "Middle phalanx of Right Ring Finger",
-  "desc": "右无名指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "上肢",
-  "en": "middle phalanx of right ring finger"
- },
- "FMA32642": {
-  "cn": "右第二趾中节骨",
-  "latin": "Middle phalanx of Right Second Toe",
-  "desc": "右第二趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of right second toe"
- },
- "FMA32644": {
-  "cn": "右第三趾中节骨",
-  "latin": "Middle phalanx of Right Third Toe",
-  "desc": "右第三趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
-  "region": "下肢",
-  "en": "middle phalanx of right third toe"
- },
- "FMA24501": {
-  "cn": "左足舟骨",
-  "latin": "Left Navicular bone of foot",
-  "desc": "左足部的舟状跗骨，位于距骨前方、三块楔骨后方，是足内侧纵弓的关键结构。",
-  "region": "下肢",
-  "en": "navicular bone of left foot"
- },
- "FMA24500": {
-  "cn": "右足舟骨",
-  "latin": "Right Navicular bone of foot",
-  "desc": "右足部的舟状跗骨，位于距骨前方、三块楔骨后方，是足内侧纵弓的关键结构。",
-  "region": "下肢",
-  "en": "navicular bone of right foot"
- },
- "FMA10014": {
-  "cn": "九胸椎",
-  "latin": "Ninth thoracic vertebra",
-  "desc": "第 九 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "ninth thoracic vertebra"
- },
- "FMA52735": {
-  "cn": "枕骨",
-  "latin": "Occipital bone",
-  "desc": "构成颅后下方的扁骨，中央的枕骨大孔是脑与脊髓相连的通道。",
-  "region": "颅骨",
-  "en": "occipital bone"
- },
- "FMA43254": {
-  "cn": "左大趾近节骨",
-  "latin": "Proximal phalanx of Left Big Toe",
-  "desc": "左大趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of left big toe"
- },
- "FMA32639": {
-  "cn": "左第四趾近节骨",
-  "latin": "Proximal phalanx of Left Fourth Toe",
-  "desc": "左第四趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of left fourth toe"
- },
- "FMA71915": {
-  "cn": "左食指近节骨",
-  "latin": "Proximal phalanx of Left Index Finger",
-  "desc": "左食指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of left index finger"
- },
- "FMA66791": {
-  "cn": "左小指近节骨",
-  "latin": "Proximal phalanx of Left Little Finger",
-  "desc": "左小指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of left little finger"
- },
- "FMA32641": {
-  "cn": "左小趾近节骨",
-  "latin": "Proximal phalanx of Left Little Toe",
-  "desc": "左小趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of left little toe"
- },
- "FMA71908": {
-  "cn": "左中指近节骨",
-  "latin": "Proximal phalanx of Left Middle Finger",
-  "desc": "左中指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of left middle finger"
- },
- "FMA71916": {
-  "cn": "左无名指近节骨",
-  "latin": "Proximal phalanx of Left Ring Finger",
-  "desc": "左无名指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of left ring finger"
- },
- "FMA32635": {
-  "cn": "左第二趾近节骨",
-  "latin": "Proximal phalanx of Left Second Toe",
-  "desc": "左第二趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of left second toe"
- },
- "FMA32637": {
-  "cn": "左第三趾近节骨",
-  "latin": "Proximal phalanx of Left Third Toe",
-  "desc": "左第三趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of left third toe"
- },
- "FMA65470": {
-  "cn": "左拇指近节骨",
-  "latin": "Proximal phalanx of Left Thumb",
-  "desc": "左拇指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of left thumb"
- },
- "FMA43253": {
-  "cn": "右大趾近节骨",
-  "latin": "Proximal phalanx of Right Big Toe",
-  "desc": "右大趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of right big toe"
- },
- "FMA32638": {
-  "cn": "右第四趾近节骨",
-  "latin": "Proximal phalanx of Right Fourth Toe",
-  "desc": "右第四趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of right fourth toe"
- },
- "FMA24451": {
-  "cn": "右食指近节骨",
-  "latin": "Proximal phalanx of Right Index Finger",
-  "desc": "右食指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of right index finger"
- },
- "FMA24454": {
-  "cn": "右小指近节骨",
-  "latin": "Proximal phalanx of Right Little Finger",
-  "desc": "右小指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of right little finger"
- },
- "FMA32640": {
-  "cn": "右小趾近节骨",
-  "latin": "Proximal phalanx of Right Little Toe",
-  "desc": "右小趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of right little toe"
- },
- "FMA24452": {
-  "cn": "右中指近节骨",
-  "latin": "Proximal phalanx of Right Middle Finger",
-  "desc": "右中指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of right middle finger"
- },
- "FMA24453": {
-  "cn": "右无名指近节骨",
-  "latin": "Proximal phalanx of Right Ring Finger",
-  "desc": "右无名指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of right ring finger"
- },
- "FMA32634": {
-  "cn": "右第二趾近节骨",
-  "latin": "Proximal phalanx of Right Second Toe",
-  "desc": "右第二趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of right second toe"
- },
- "FMA32636": {
-  "cn": "右第三趾近节骨",
-  "latin": "Proximal phalanx of Right Third Toe",
-  "desc": "右第三趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "下肢",
-  "en": "proximal phalanx of right third toe"
- },
- "FMA24450": {
-  "cn": "右拇指近节骨",
-  "latin": "Proximal phalanx of Right Thumb",
-  "desc": "右拇指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
-  "region": "上肢",
-  "en": "proximal phalanx of right thumb"
- },
- "FMA24497": {
-  "cn": "跟骨（右）",
-  "latin": "Right Calcaneus",
-  "desc": "足部最大的跗骨，构成足跟并传导行走时的冲击力。",
-  "region": "下肢",
-  "en": "right calcaneus"
- },
- "FMA24446": {
-  "cn": "头状骨（右）",
-  "latin": "Right Capitate",
-  "desc": "腕骨中最大的一块，位于腕中央，参与腕关节活动。",
-  "region": "上肢",
-  "en": "right capitate"
- },
- "FMA13322": {
-  "cn": "锁骨（右）",
-  "latin": "Right Clavicle",
-  "desc": "横架于胸廓前上方的 S 形长骨，是上肢与躯干间唯一的骨性连接。",
-  "region": "上肢",
-  "en": "right clavicle"
- },
- "FMA24528": {
-  "cn": "骰骨（右）",
-  "latin": "Right Cuboid bone",
-  "desc": "足外侧的立方状跗骨，位于跟骨前方。",
-  "region": "下肢",
-  "en": "right cuboid bone"
- },
- "FMA8283": {
-  "cn": "第八肋",
-  "latin": "Eighth rib",
-  "desc": "假肋（第 8 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "right eighth rib"
- },
- "FMA8531": {
-  "cn": "第十一肋",
-  "latin": "Eleventh rib",
-  "desc": "浮肋（第 11 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
-  "region": "胸廓",
-  "en": "right eleventh rib"
- },
- "FMA24474": {
-  "cn": "股骨（右）",
-  "latin": "Right Femur",
-  "desc": "人体最长最粗壮的长骨，构成大腿，上接髋关节、下连膝关节。",
-  "region": "下肢",
-  "en": "right femur"
- },
- "FMA24480": {
-  "cn": "腓骨（右）",
-  "latin": "Right Fibula",
-  "desc": "小腿外侧细长的长骨，不直接承重，主要起肌肉附着与稳定踝关节的作用。",
-  "region": "下肢",
-  "en": "right fibula"
- },
- "FMA24472": {
-  "cn": "第五掌骨",
-  "latin": "Fifth metacarpal bone",
-  "desc": "构成第五指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "right fifth metacarpal bone"
- },
- "FMA24515": {
-  "cn": "第五跖骨",
-  "latin": "Fifth metatarsal bone",
-  "desc": "构成第五趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "right fifth metatarsal bone"
- },
- "FMA8066": {
-  "cn": "第五肋",
-  "latin": "Fifth rib",
-  "desc": "真肋（第 5 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right fifth rib"
- },
- "FMA24464": {
-  "cn": "第一掌骨",
-  "latin": "First metacarpal bone",
-  "desc": "构成第一指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "right first metacarpal bone"
- },
- "FMA24507": {
-  "cn": "第一跖骨",
-  "latin": "First metatarsal bone",
-  "desc": "构成第一趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "right first metatarsal bone"
- },
- "FMA7857": {
-  "cn": "第一肋",
-  "latin": "First rib",
-  "desc": "真肋（第 1 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right first rib"
- },
- "FMA24470": {
-  "cn": "第四掌骨",
-  "latin": "Fourth metacarpal bone",
-  "desc": "构成第四指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "right fourth metacarpal bone"
- },
- "FMA24513": {
-  "cn": "第四跖骨",
-  "latin": "Fourth metatarsal bone",
-  "desc": "构成第四趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "right fourth metatarsal bone"
- },
- "FMA7957": {
-  "cn": "第四肋",
-  "latin": "Fourth rib",
-  "desc": "真肋（第 4 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right fourth rib"
- },
- "FMA24448": {
-  "cn": "钩骨（右）",
-  "latin": "Right Hamate",
-  "desc": "位于腕骨尺侧远端的骨，掌面有钩状突，是屈肌支持带的附着点。",
-  "region": "上肢",
-  "en": "right hamate"
- },
- "FMA16586": {
-  "cn": "髋骨（右）",
-  "latin": "Right Hip bone",
-  "desc": "由髂骨、坐骨、耻骨融合而成的扁骨，构成骨盆侧壁。",
-  "region": "下肢",
-  "en": "right hip bone"
- },
- "FMA23130": {
-  "cn": "肱骨（右）",
-  "latin": "Right Humerus",
-  "desc": "上臂唯一的长骨，上端构成肩关节、下端构成肘关节。",
-  "region": "上肢",
-  "en": "right humerus"
- },
- "FMA54737": {
-  "cn": "下鼻甲（右）",
-  "latin": "Right Inferior nasal concha",
-  "desc": "鼻腔侧壁独立的小骨，可增大鼻腔黏膜表面积以温暖湿润空气。",
-  "region": "颅骨",
-  "en": "right inferior nasal concha"
- },
- "FMA24523": {
-  "cn": "中间楔骨（右）",
-  "latin": "Right Intermediate cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于中央。",
-  "region": "下肢",
-  "en": "right intermediate cuneiform bone"
- },
- "FMA53645": {
-  "cn": "泪骨（右）",
-  "latin": "Right Lacrimal bone",
-  "desc": "位于眼眶内侧壁前部的小骨，含泪囊窝导流泪液。",
-  "region": "颅骨",
-  "en": "right lacrimal bone"
- },
- "FMA24525": {
-  "cn": "外侧楔骨（右）",
-  "latin": "Right Lateral cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于最外侧。",
-  "region": "下肢",
-  "en": "right lateral cuneiform bone"
- },
- "FMA24437": {
-  "cn": "月骨（右）",
-  "latin": "Right Lunate",
-  "desc": "腕骨中呈半月形的骨，位于近侧列，与桡骨直接形成关节。",
-  "region": "上肢",
-  "en": "right lunate"
- },
- "FMA53649": {
-  "cn": "上颌骨（右）",
-  "latin": "Right Maxilla",
-  "desc": "构成上腭、鼻腔侧壁与眼眶底的面颅骨，上列牙齿即植于此。",
-  "region": "颅骨",
-  "en": "right maxilla"
- },
- "FMA24521": {
-  "cn": "内侧楔骨（右）",
-  "latin": "Right Medial cuneiform bone",
-  "desc": "足舟骨前方的三块楔骨之一，位于最内侧，与第一跖骨相连。",
-  "region": "下肢",
-  "en": "right medial cuneiform bone"
- },
- "FMA53647": {
-  "cn": "鼻骨（右）",
-  "latin": "Right Nasal bone",
-  "desc": "构成鼻梁上部的小长方形骨，左右各一是鼻部外形的基础。",
-  "region": "颅骨",
-  "en": "right nasal bone"
- },
- "FMA8364": {
-  "cn": "第九肋",
-  "latin": "Ninth rib",
-  "desc": "假肋（第 9 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "right ninth rib"
- },
- "FMA53655": {
-  "cn": "腭骨（右）",
-  "latin": "Right Palatine bone",
-  "desc": "构成硬腭后部与鼻腔侧壁的 L 形小骨。",
-  "region": "颅骨",
-  "en": "right palatine bone"
+  "en": "left parietal bone",
+  "group": "脑颅骨"
  },
  "FMA52788": {
   "cn": "顶骨（右）",
   "latin": "Right Parietal bone",
   "desc": "构成颅顶与颅侧壁上部的方形扁骨，左右各一。",
   "region": "颅骨",
-  "en": "right parietal bone"
+  "en": "right parietal bone",
+  "group": "脑颅骨"
  },
- "FMA24486": {
-  "cn": "髌骨（右）",
-  "latin": "Right Patella",
-  "desc": "膝关节前方最大的一块籽骨，可保护膝关节并增大股四头肌的力臂。",
-  "region": "下肢",
-  "en": "right patella"
+ "FMA52735": {
+  "cn": "枕骨",
+  "latin": "Occipital bone",
+  "desc": "构成颅后下方的扁骨，中央的枕骨大孔是脑与脊髓相连的通道。",
+  "region": "颅骨",
+  "en": "occipital bone",
+  "group": "脑颅骨"
  },
- "FMA24441": {
-  "cn": "豌豆骨（右）",
-  "latin": "Right Pisiform",
-  "desc": "腕骨中最小的豆状骨，位于腕掌侧，是尺侧腕屈肌腱内的籽骨。",
-  "region": "上肢",
-  "en": "right pisiform"
- },
- "FMA23464": {
-  "cn": "桡骨（右）",
-  "latin": "Right Radius",
-  "desc": "前臂外侧的长骨，可绕尺骨旋转，是实现前臂旋前旋后的关键。",
-  "region": "上肢",
-  "en": "right radius"
- },
- "FMA24435": {
-  "cn": "手舟骨（右）",
-  "latin": "Right Scaphoid",
-  "desc": "腕骨近侧列外侧的舟形骨，是常见的腕部骨折部位。",
-  "region": "上肢",
-  "en": "right scaphoid"
- },
- "FMA13395": {
-  "cn": "肩胛骨（右）",
-  "latin": "Right Scapula",
-  "desc": "位于胸廓后方的三角形扁骨，与肱骨构成肩关节。",
-  "region": "上肢",
-  "en": "right scapula"
- },
- "FMA24466": {
-  "cn": "第二掌骨",
-  "latin": "Second metacarpal bone",
-  "desc": "构成第二指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "right second metacarpal bone"
- },
- "FMA24509": {
-  "cn": "第二跖骨",
-  "latin": "Second metatarsal bone",
-  "desc": "构成第二趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "right second metatarsal bone"
- },
- "FMA7882": {
-  "cn": "第二肋",
-  "latin": "Second rib",
-  "desc": "真肋（第 2 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right second rib"
- },
- "FMA8229": {
-  "cn": "第七肋",
-  "latin": "Seventh rib",
-  "desc": "真肋（第 7 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right seventh rib"
- },
- "FMA8175": {
-  "cn": "第六肋",
-  "latin": "Sixth rib",
-  "desc": "真肋（第 6 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right sixth rib"
- },
- "FMA24482": {
-  "cn": "距骨（右）",
-  "latin": "Right Talus",
-  "desc": "连接小腿与足部的跗骨，上承胫腓骨构成踝关节，下接跟骨。",
-  "region": "下肢",
-  "en": "right talus"
+ "FMA52739": {
+  "cn": "颞骨（左）",
+  "latin": "Left Temporal bone",
+  "desc": "构成颅侧壁与颅底的骨，内含听觉与平衡器官。",
+  "region": "颅骨",
+  "en": "left temporal bone",
+  "group": "脑颅骨"
  },
  "FMA52738": {
   "cn": "颞骨（右）",
   "latin": "Right Temporal bone",
   "desc": "构成颅侧壁与颅底的骨，内含听觉与平衡器官。",
   "region": "颅骨",
-  "en": "right temporal bone"
- },
- "FMA8445": {
-  "cn": "第十肋",
-  "latin": "Tenth rib",
-  "desc": "假肋（第 10 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
-  "region": "胸廓",
-  "en": "right tenth rib"
- },
- "FMA24468": {
-  "cn": "第三掌骨",
-  "latin": "Third metacarpal bone",
-  "desc": "构成第三指掌部的手掌骨，是手指与腕骨之间的桥梁。",
-  "region": "上肢",
-  "en": "right third metacarpal bone"
- },
- "FMA24511": {
-  "cn": "第三跖骨",
-  "latin": "Third metatarsal bone",
-  "desc": "构成第三趾足弓的跖骨，负责将体重从踝部传向趾端。",
-  "region": "下肢",
-  "en": "right third metatarsal bone"
- },
- "FMA7909": {
-  "cn": "第三肋",
-  "latin": "Third rib",
-  "desc": "真肋（第 3 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
-  "region": "胸廓",
-  "en": "right third rib"
- },
- "FMA24477": {
-  "cn": "胫骨（右）",
-  "latin": "Right Tibia",
-  "desc": "小腿内侧粗大的长骨，是下肢的主要承重骨。",
-  "region": "下肢",
-  "en": "right tibia"
- },
- "FMA24443": {
-  "cn": "大多角骨（右）",
-  "latin": "Right Trapezium",
-  "desc": "腕骨远端列外侧的骨，与第一掌骨形成拇指的鞍状关节。",
-  "region": "上肢",
-  "en": "right trapezium"
- },
- "FMA23725": {
-  "cn": "小多角骨（右）",
-  "latin": "Right Trapezoid",
-  "desc": "腕骨远端列的小骨，位于大多角骨与头状骨之间。",
-  "region": "上肢",
-  "en": "right trapezoid"
- },
- "FMA24439": {
-  "cn": "三角骨（右）",
-  "latin": "Right Triquetral",
-  "desc": "腕骨近侧列内侧的三角形骨，位于尺侧。",
-  "region": "上肢",
-  "en": "right triquetral"
- },
- "FMA8533": {
-  "cn": "第十二肋",
-  "latin": "Twelfth rib",
-  "desc": "浮肋（第 12 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
-  "region": "胸廓",
-  "en": "right twelfth rib"
- },
- "FMA23467": {
-  "cn": "尺骨（右）",
-  "latin": "Right Ulna",
-  "desc": "前臂内侧的长骨，上端鹰嘴构成肘尖，是肘关节稳定的支点。",
-  "region": "上肢",
-  "en": "right ulna"
- },
- "FMA52892": {
-  "cn": "颧骨（右）",
-  "latin": "Right Zygomatic bone",
-  "desc": "构成面颊隆起与眼眶外侧壁的骨，俗称“颊骨”。",
-  "region": "颅骨",
-  "en": "right zygomatic bone"
- },
- "FMA16202": {
-  "cn": "骶骨",
-  "latin": "Sacrum",
-  "desc": "由 5 块骶椎融合而成的三角形骨，构成骨盆后壁。",
-  "region": "脊柱",
-  "en": "sacrum"
- },
- "FMA13073": {
-  "cn": "二腰椎",
-  "latin": "Second lumbar vertebra",
-  "desc": "第 二 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
-  "region": "脊柱",
-  "en": "second lumbar vertebra"
- },
- "FMA9187": {
-  "cn": "二胸椎",
-  "latin": "Second thoracic vertebra",
-  "desc": "第 二 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "second thoracic vertebra"
- },
- "FMA45098": {
-  "cn": "左足籽骨",
-  "latin": "Left Sesamoid bone of foot",
-  "desc": "左足第一跖骨头下方的籽骨，包埋于肌腱内，起改变肌腱方向、减少摩擦的作用。",
-  "region": "下肢",
-  "en": "sesamoid bone of left foot"
- },
- "FMA45097": {
-  "cn": "右足籽骨",
-  "latin": "Right Sesamoid bone of foot",
-  "desc": "右足第一跖骨头下方的籽骨，包埋于肌腱内，起改变肌腱方向、减少摩擦的作用。",
-  "region": "下肢",
-  "en": "sesamoid bone of right foot"
- },
- "FMA12525": {
-  "cn": "七颈椎",
-  "latin": "Seventh cervical vertebra",
-  "desc": "第 七 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
-  "region": "脊柱",
-  "en": "seventh cervical vertebra"
- },
- "FMA9968": {
-  "cn": "七胸椎",
-  "latin": "Seventh thoracic vertebra",
-  "desc": "第 七 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "seventh thoracic vertebra"
- },
- "FMA12524": {
-  "cn": "六颈椎",
-  "latin": "Sixth cervical vertebra",
-  "desc": "第 六 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
-  "region": "脊柱",
-  "en": "sixth cervical vertebra"
- },
- "FMA9945": {
-  "cn": "六胸椎",
-  "latin": "Sixth thoracic vertebra",
-  "desc": "第 六 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "sixth thoracic vertebra"
+  "en": "right temporal bone",
+  "group": "脑颅骨"
  },
  "FMA52736": {
   "cn": "蝶骨",
   "latin": "Sphenoid bone",
   "desc": "位于颅底中央、形似蝴蝶的骨，连接全部其他颅骨，承托脑底。",
   "region": "颅骨",
-  "en": "sphenoid bone"
+  "en": "sphenoid bone",
+  "group": "脑颅骨"
  },
- "FMA10037": {
-  "cn": "十胸椎",
-  "latin": "Tenth thoracic vertebra",
-  "desc": "第 十 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "tenth thoracic vertebra"
+ "FMA52740": {
+  "cn": "筛骨",
+  "latin": "Ethmoid bone",
+  "desc": "位于两眼眶之间、颅腔前部的含气骨，构成鼻腔顶部与鼻中隔上部。",
+  "region": "颅骨",
+  "en": "ethmoid",
+  "group": "脑颅骨"
  },
- "FMA12521": {
-  "cn": "三颈椎",
-  "latin": "Third cervical vertebra",
-  "desc": "第 三 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
-  "region": "脊柱",
-  "en": "third cervical vertebra"
+ "FMA53650": {
+  "cn": "上颌骨（左）",
+  "latin": "Left Maxilla",
+  "desc": "构成上腭、鼻腔侧壁与眼眶底的面颅骨，上列牙齿即植于此。",
+  "region": "颅骨",
+  "en": "left maxilla",
+  "group": "面颅骨"
  },
- "FMA13074": {
-  "cn": "三腰椎",
-  "latin": "Third lumbar vertebra",
-  "desc": "第 三 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
-  "region": "脊柱",
-  "en": "third lumbar vertebra"
+ "FMA53649": {
+  "cn": "上颌骨（右）",
+  "latin": "Right Maxilla",
+  "desc": "构成上腭、鼻腔侧壁与眼眶底的面颅骨，上列牙齿即植于此。",
+  "region": "颅骨",
+  "en": "right maxilla",
+  "group": "面颅骨"
  },
- "FMA9209": {
-  "cn": "三胸椎",
-  "latin": "Third thoracic vertebra",
-  "desc": "第 三 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "third thoracic vertebra"
+ "FMA53656": {
+  "cn": "腭骨（左）",
+  "latin": "Left Palatine bone",
+  "desc": "构成硬腭后部与鼻腔侧壁的 L 形小骨。",
+  "region": "颅骨",
+  "en": "left palatine bone",
+  "group": "面颅骨"
  },
- "FMA10081": {
-  "cn": "十二胸椎",
-  "latin": "Twelfth thoracic vertebra",
-  "desc": "第 十二 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
-  "region": "脊柱",
-  "en": "twelfth thoracic vertebra"
+ "FMA53655": {
+  "cn": "腭骨（右）",
+  "latin": "Right Palatine bone",
+  "desc": "构成硬腭后部与鼻腔侧壁的 L 形小骨。",
+  "region": "颅骨",
+  "en": "right palatine bone",
+  "group": "面颅骨"
+ },
+ "FMA52893": {
+  "cn": "颧骨（左）",
+  "latin": "Left Zygomatic bone",
+  "desc": "构成面颊隆起与眼眶外侧壁的骨，俗称“颊骨”。",
+  "region": "颅骨",
+  "en": "left zygomatic bone",
+  "group": "面颅骨"
+ },
+ "FMA52892": {
+  "cn": "颧骨（右）",
+  "latin": "Right Zygomatic bone",
+  "desc": "构成面颊隆起与眼眶外侧壁的骨，俗称“颊骨”。",
+  "region": "颅骨",
+  "en": "right zygomatic bone",
+  "group": "面颅骨"
+ },
+ "FMA53648": {
+  "cn": "鼻骨（左）",
+  "latin": "Left Nasal bone",
+  "desc": "构成鼻梁上部的小长方形骨，左右各一是鼻部外形的基础。",
+  "region": "颅骨",
+  "en": "left nasal bone",
+  "group": "面颅骨"
+ },
+ "FMA53647": {
+  "cn": "鼻骨（右）",
+  "latin": "Right Nasal bone",
+  "desc": "构成鼻梁上部的小长方形骨，左右各一是鼻部外形的基础。",
+  "region": "颅骨",
+  "en": "right nasal bone",
+  "group": "面颅骨"
+ },
+ "FMA53646": {
+  "cn": "泪骨（左）",
+  "latin": "Left Lacrimal bone",
+  "desc": "位于眼眶内侧壁前部的小骨，含泪囊窝导流泪液。",
+  "region": "颅骨",
+  "en": "left lacrimal bone",
+  "group": "面颅骨"
+ },
+ "FMA53645": {
+  "cn": "泪骨（右）",
+  "latin": "Right Lacrimal bone",
+  "desc": "位于眼眶内侧壁前部的小骨，含泪囊窝导流泪液。",
+  "region": "颅骨",
+  "en": "right lacrimal bone",
+  "group": "面颅骨"
+ },
+ "FMA54738": {
+  "cn": "下鼻甲（左）",
+  "latin": "Left Inferior nasal concha",
+  "desc": "鼻腔侧壁独立的小骨，可增大鼻腔黏膜表面积以温暖湿润空气。",
+  "region": "颅骨",
+  "en": "left inferior nasal concha",
+  "group": "面颅骨"
+ },
+ "FMA54737": {
+  "cn": "下鼻甲（右）",
+  "latin": "Right Inferior nasal concha",
+  "desc": "鼻腔侧壁独立的小骨，可增大鼻腔黏膜表面积以温暖湿润空气。",
+  "region": "颅骨",
+  "en": "right inferior nasal concha",
+  "group": "面颅骨"
  },
  "FMA9710": {
   "cn": "犁骨",
   "latin": "Vomer",
   "desc": "构成鼻中隔后下部的薄板状骨，位于鼻腔正中。",
   "region": "颅骨",
-  "en": "vomer"
+  "en": "vomer",
+  "group": "面颅骨"
+ },
+ "FMA52748": {
+  "cn": "下颌骨",
+  "latin": "Mandible",
+  "desc": "面颅中唯一能活动的骨，通过颞下颌关节开合形成咀嚼运动。",
+  "region": "颅骨",
+  "en": "mandible",
+  "group": "面颅骨"
+ },
+ "FMA52749": {
+  "cn": "舌骨",
+  "latin": "Hyoid bone",
+  "desc": "位于颈前部、不与其他骨直接相连的 U 形小骨，是舌与喉部肌肉的附着点。",
+  "region": "颅骨",
+  "en": "hyoid bone",
+  "group": "舌骨"
+ },
+ "FMA12519": {
+  "cn": "寰椎",
+  "latin": "Atlas (C1)",
+  "desc": "第一颈椎，呈环状无椎体，承托颅骨并允许头部点头（“是”的动作）。",
+  "region": "脊柱",
+  "en": "atlas",
+  "group": "颈椎"
+ },
+ "FMA12520": {
+  "cn": "枢椎",
+  "latin": "Axis (C2)",
+  "desc": "第二颈椎，其向上的齿突构成头部左右旋转（“否”的动作）的枢轴。",
+  "region": "脊柱",
+  "en": "axis",
+  "group": "颈椎"
+ },
+ "FMA12521": {
+  "cn": "三颈椎",
+  "latin": "Third cervical vertebra",
+  "desc": "第 三 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
+  "region": "脊柱",
+  "en": "third cervical vertebra",
+  "group": "颈椎"
+ },
+ "FMA12522": {
+  "cn": "四颈椎",
+  "latin": "Fourth cervical vertebra",
+  "desc": "第 四 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
+  "region": "脊柱",
+  "en": "fourth cervical vertebra",
+  "group": "颈椎"
+ },
+ "FMA12523": {
+  "cn": "五颈椎",
+  "latin": "Fifth cervical vertebra",
+  "desc": "第 五 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
+  "region": "脊柱",
+  "en": "fifth cervical vertebra",
+  "group": "颈椎"
+ },
+ "FMA12524": {
+  "cn": "六颈椎",
+  "latin": "Sixth cervical vertebra",
+  "desc": "第 六 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
+  "region": "脊柱",
+  "en": "sixth cervical vertebra",
+  "group": "颈椎"
+ },
+ "FMA12525": {
+  "cn": "七颈椎",
+  "latin": "Seventh cervical vertebra",
+  "desc": "第 七 颈椎，共 7 块，是支撑头部并允许颈部灵活运动的最小椎骨。",
+  "region": "脊柱",
+  "en": "seventh cervical vertebra",
+  "group": "颈椎"
+ },
+ "FMA9165": {
+  "cn": "一胸椎",
+  "latin": "First thoracic vertebra",
+  "desc": "第 一 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "first thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9187": {
+  "cn": "二胸椎",
+  "latin": "Second thoracic vertebra",
+  "desc": "第 二 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "second thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9209": {
+  "cn": "三胸椎",
+  "latin": "Third thoracic vertebra",
+  "desc": "第 三 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "third thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9248": {
+  "cn": "四胸椎",
+  "latin": "Fourth thoracic vertebra",
+  "desc": "第 四 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "fourth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9922": {
+  "cn": "五胸椎",
+  "latin": "Fifth thoracic vertebra",
+  "desc": "第 五 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "fifth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9945": {
+  "cn": "六胸椎",
+  "latin": "Sixth thoracic vertebra",
+  "desc": "第 六 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "sixth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9968": {
+  "cn": "七胸椎",
+  "latin": "Seventh thoracic vertebra",
+  "desc": "第 七 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "seventh thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA9991": {
+  "cn": "八胸椎",
+  "latin": "Eighth thoracic vertebra",
+  "desc": "第 八 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "eighth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA10014": {
+  "cn": "九胸椎",
+  "latin": "Ninth thoracic vertebra",
+  "desc": "第 九 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "ninth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA10037": {
+  "cn": "十胸椎",
+  "latin": "Tenth thoracic vertebra",
+  "desc": "第 十 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "tenth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA10059": {
+  "cn": "十一胸椎",
+  "latin": "Eleventh thoracic vertebra",
+  "desc": "第 十一 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "eleventh thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA10081": {
+  "cn": "十二胸椎",
+  "latin": "Twelfth thoracic vertebra",
+  "desc": "第 十二 胸椎，共 12 块，两侧与肋骨相关节，构成胸廓后壁。",
+  "region": "脊柱",
+  "en": "twelfth thoracic vertebra",
+  "group": "胸椎"
+ },
+ "FMA13072": {
+  "cn": "一腰椎",
+  "latin": "First lumbar vertebra",
+  "desc": "第 一 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
+  "region": "脊柱",
+  "en": "first lumbar vertebra",
+  "group": "腰椎"
+ },
+ "FMA13073": {
+  "cn": "二腰椎",
+  "latin": "Second lumbar vertebra",
+  "desc": "第 二 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
+  "region": "脊柱",
+  "en": "second lumbar vertebra",
+  "group": "腰椎"
+ },
+ "FMA13074": {
+  "cn": "三腰椎",
+  "latin": "Third lumbar vertebra",
+  "desc": "第 三 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
+  "region": "脊柱",
+  "en": "third lumbar vertebra",
+  "group": "腰椎"
+ },
+ "FMA13075": {
+  "cn": "四腰椎",
+  "latin": "Fourth lumbar vertebra",
+  "desc": "第 四 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
+  "region": "脊柱",
+  "en": "fourth lumbar vertebra",
+  "group": "腰椎"
+ },
+ "FMA13076": {
+  "cn": "五腰椎",
+  "latin": "Fifth lumbar vertebra",
+  "desc": "第 五 腰椎，共 5 块，椎体粗大，是承担躯干重量的主要部位。",
+  "region": "脊柱",
+  "en": "fifth lumbar vertebra",
+  "group": "腰椎"
+ },
+ "FMA16202": {
+  "cn": "骶骨",
+  "latin": "Sacrum",
+  "desc": "由 5 块骶椎融合而成的三角形骨，构成骨盆后壁。",
+  "region": "脊柱",
+  "en": "sacrum",
+  "group": "骶骨"
+ },
+ "FMA7987": {
+  "cn": "第一肋（左）",
+  "latin": "First rib",
+  "desc": "真肋（第 1 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left first rib",
+  "group": "真肋"
+ },
+ "FMA7857": {
+  "cn": "第一肋（右）",
+  "latin": "First rib",
+  "desc": "真肋（第 1 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right first rib",
+  "group": "真肋"
+ },
+ "FMA8012": {
+  "cn": "第二肋（左）",
+  "latin": "Second rib",
+  "desc": "真肋（第 2 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left second rib",
+  "group": "真肋"
+ },
+ "FMA7882": {
+  "cn": "第二肋（右）",
+  "latin": "Second rib",
+  "desc": "真肋（第 2 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right second rib",
+  "group": "真肋"
+ },
+ "FMA8039": {
+  "cn": "第三肋（左）",
+  "latin": "Third rib",
+  "desc": "真肋（第 3 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left third rib",
+  "group": "真肋"
+ },
+ "FMA7909": {
+  "cn": "第三肋（右）",
+  "latin": "Third rib",
+  "desc": "真肋（第 3 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right third rib",
+  "group": "真肋"
+ },
+ "FMA8093": {
+  "cn": "第五肋（左）",
+  "latin": "Fifth rib",
+  "desc": "真肋（第 5 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left fifth rib",
+  "group": "真肋"
+ },
+ "FMA8066": {
+  "cn": "第五肋（右）",
+  "latin": "Fifth rib",
+  "desc": "真肋（第 5 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right fifth rib",
+  "group": "真肋"
+ },
+ "FMA8148": {
+  "cn": "第四肋（左）",
+  "latin": "Fourth rib",
+  "desc": "真肋（第 4 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left fourth rib",
+  "group": "真肋"
+ },
+ "FMA7957": {
+  "cn": "第四肋（右）",
+  "latin": "Fourth rib",
+  "desc": "真肋（第 4 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right fourth rib",
+  "group": "真肋"
+ },
+ "FMA8202": {
+  "cn": "第六肋（左）",
+  "latin": "Sixth rib",
+  "desc": "真肋（第 6 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left sixth rib",
+  "group": "真肋"
+ },
+ "FMA8175": {
+  "cn": "第六肋（右）",
+  "latin": "Sixth rib",
+  "desc": "真肋（第 6 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right sixth rib",
+  "group": "真肋"
+ },
+ "FMA8256": {
+  "cn": "第七肋（左）",
+  "latin": "Seventh rib",
+  "desc": "真肋（第 7 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "left seventh rib",
+  "group": "真肋"
+ },
+ "FMA8229": {
+  "cn": "第七肋（右）",
+  "latin": "Seventh rib",
+  "desc": "真肋（第 7 肋），前端借肋软骨直接连于胸骨，参与构成胸廓。",
+  "region": "胸廓",
+  "en": "right seventh rib",
+  "group": "真肋"
+ },
+ "FMA8310": {
+  "cn": "第八肋（左）",
+  "latin": "Eighth rib",
+  "desc": "假肋（第 8 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "left eighth rib",
+  "group": "假肋"
+ },
+ "FMA8283": {
+  "cn": "第八肋（右）",
+  "latin": "Eighth rib",
+  "desc": "假肋（第 8 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "right eighth rib",
+  "group": "假肋"
+ },
+ "FMA8391": {
+  "cn": "第九肋（左）",
+  "latin": "Ninth rib",
+  "desc": "假肋（第 9 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "left ninth rib",
+  "group": "假肋"
+ },
+ "FMA8364": {
+  "cn": "第九肋（右）",
+  "latin": "Ninth rib",
+  "desc": "假肋（第 9 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "right ninth rib",
+  "group": "假肋"
+ },
+ "FMA8472": {
+  "cn": "第十肋（左）",
+  "latin": "Tenth rib",
+  "desc": "假肋（第 10 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "left tenth rib",
+  "group": "假肋"
+ },
+ "FMA8445": {
+  "cn": "第十肋（右）",
+  "latin": "Tenth rib",
+  "desc": "假肋（第 10 肋），前端不直接连胸骨，而是借肋软骨连于上位肋软骨。",
+  "region": "胸廓",
+  "en": "right tenth rib",
+  "group": "假肋"
+ },
+ "FMA8532": {
+  "cn": "第十一肋（左）",
+  "latin": "Eleventh rib",
+  "desc": "浮肋（第 11 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
+  "region": "胸廓",
+  "en": "left eleventh rib",
+  "group": "浮肋"
+ },
+ "FMA8531": {
+  "cn": "第十一肋（右）",
+  "latin": "Eleventh rib",
+  "desc": "浮肋（第 11 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
+  "region": "胸廓",
+  "en": "right eleventh rib",
+  "group": "浮肋"
+ },
+ "FMA8534": {
+  "cn": "第十二肋（左）",
+  "latin": "Twelfth rib",
+  "desc": "浮肋（第 12 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
+  "region": "胸廓",
+  "en": "left twelfth rib",
+  "group": "浮肋"
+ },
+ "FMA8533": {
+  "cn": "第十二肋（右）",
+  "latin": "Twelfth rib",
+  "desc": "浮肋（第 12 肋），前端游离于腹壁肌层中，不与其他肋或胸骨相连。",
+  "region": "胸廓",
+  "en": "right twelfth rib",
+  "group": "浮肋"
+ },
+ "FMA13323": {
+  "cn": "锁骨（左）",
+  "latin": "Left Clavicle",
+  "desc": "横架于胸廓前上方的 S 形长骨，是上肢与躯干间唯一的骨性连接。",
+  "region": "上肢",
+  "en": "left clavicle",
+  "group": "上肢带骨"
+ },
+ "FMA13322": {
+  "cn": "锁骨（右）",
+  "latin": "Right Clavicle",
+  "desc": "横架于胸廓前上方的 S 形长骨，是上肢与躯干间唯一的骨性连接。",
+  "region": "上肢",
+  "en": "right clavicle",
+  "group": "上肢带骨"
+ },
+ "FMA13396": {
+  "cn": "肩胛骨（左）",
+  "latin": "Left Scapula",
+  "desc": "位于胸廓后方的三角形扁骨，与肱骨构成肩关节。",
+  "region": "上肢",
+  "en": "left scapula",
+  "group": "上肢带骨"
+ },
+ "FMA13395": {
+  "cn": "肩胛骨（右）",
+  "latin": "Right Scapula",
+  "desc": "位于胸廓后方的三角形扁骨，与肱骨构成肩关节。",
+  "region": "上肢",
+  "en": "right scapula",
+  "group": "上肢带骨"
+ },
+ "FMA23131": {
+  "cn": "肱骨（左）",
+  "latin": "Left Humerus",
+  "desc": "上臂唯一的长骨，上端构成肩关节、下端构成肘关节。",
+  "region": "上肢",
+  "en": "left humerus",
+  "group": "臂部"
+ },
+ "FMA23130": {
+  "cn": "肱骨（右）",
+  "latin": "Right Humerus",
+  "desc": "上臂唯一的长骨，上端构成肩关节、下端构成肘关节。",
+  "region": "上肢",
+  "en": "right humerus",
+  "group": "臂部"
+ },
+ "FMA23465": {
+  "cn": "桡骨（左）",
+  "latin": "Left Radius",
+  "desc": "前臂外侧的长骨，可绕尺骨旋转，是实现前臂旋前旋后的关键。",
+  "region": "上肢",
+  "en": "left radius",
+  "group": "前臂"
+ },
+ "FMA23464": {
+  "cn": "桡骨（右）",
+  "latin": "Right Radius",
+  "desc": "前臂外侧的长骨，可绕尺骨旋转，是实现前臂旋前旋后的关键。",
+  "region": "上肢",
+  "en": "right radius",
+  "group": "前臂"
+ },
+ "FMA23468": {
+  "cn": "尺骨（左）",
+  "latin": "Left Ulna",
+  "desc": "前臂内侧的长骨，上端鹰嘴构成肘尖，是肘关节稳定的支点。",
+  "region": "上肢",
+  "en": "left ulna",
+  "group": "前臂"
+ },
+ "FMA23467": {
+  "cn": "尺骨（右）",
+  "latin": "Right Ulna",
+  "desc": "前臂内侧的长骨，上端鹰嘴构成肘尖，是肘关节稳定的支点。",
+  "region": "上肢",
+  "en": "right ulna",
+  "group": "前臂"
+ },
+ "FMA24436": {
+  "cn": "手舟骨（左）",
+  "latin": "Left Scaphoid",
+  "desc": "腕骨近侧列外侧的舟形骨，是常见的腕部骨折部位。",
+  "region": "上肢",
+  "en": "left scaphoid",
+  "group": "腕骨"
+ },
+ "FMA24435": {
+  "cn": "手舟骨（右）",
+  "latin": "Right Scaphoid",
+  "desc": "腕骨近侧列外侧的舟形骨，是常见的腕部骨折部位。",
+  "region": "上肢",
+  "en": "right scaphoid",
+  "group": "腕骨"
+ },
+ "FMA24438": {
+  "cn": "月骨（左）",
+  "latin": "Left Lunate",
+  "desc": "腕骨中呈半月形的骨，位于近侧列，与桡骨直接形成关节。",
+  "region": "上肢",
+  "en": "left lunate",
+  "group": "腕骨"
+ },
+ "FMA24437": {
+  "cn": "月骨（右）",
+  "latin": "Right Lunate",
+  "desc": "腕骨中呈半月形的骨，位于近侧列，与桡骨直接形成关节。",
+  "region": "上肢",
+  "en": "right lunate",
+  "group": "腕骨"
+ },
+ "FMA24440": {
+  "cn": "三角骨（左）",
+  "latin": "Left Triquetral",
+  "desc": "腕骨近侧列内侧的三角形骨，位于尺侧。",
+  "region": "上肢",
+  "en": "left triquetral",
+  "group": "腕骨"
+ },
+ "FMA24439": {
+  "cn": "三角骨（右）",
+  "latin": "Right Triquetral",
+  "desc": "腕骨近侧列内侧的三角形骨，位于尺侧。",
+  "region": "上肢",
+  "en": "right triquetral",
+  "group": "腕骨"
+ },
+ "FMA24442": {
+  "cn": "豌豆骨（左）",
+  "latin": "Left Pisiform",
+  "desc": "腕骨中最小的豆状骨，位于腕掌侧，是尺侧腕屈肌腱内的籽骨。",
+  "region": "上肢",
+  "en": "left pisiform",
+  "group": "腕骨"
+ },
+ "FMA24441": {
+  "cn": "豌豆骨（右）",
+  "latin": "Right Pisiform",
+  "desc": "腕骨中最小的豆状骨，位于腕掌侧，是尺侧腕屈肌腱内的籽骨。",
+  "region": "上肢",
+  "en": "right pisiform",
+  "group": "腕骨"
+ },
+ "FMA24444": {
+  "cn": "大多角骨（左）",
+  "latin": "Left Trapezium",
+  "desc": "腕骨远端列外侧的骨，与第一掌骨形成拇指的鞍状关节。",
+  "region": "上肢",
+  "en": "left trapezium",
+  "group": "腕骨"
+ },
+ "FMA24443": {
+  "cn": "大多角骨（右）",
+  "latin": "Right Trapezium",
+  "desc": "腕骨远端列外侧的骨，与第一掌骨形成拇指的鞍状关节。",
+  "region": "上肢",
+  "en": "right trapezium",
+  "group": "腕骨"
+ },
+ "FMA24445": {
+  "cn": "小多角骨（左）",
+  "latin": "Left Trapezoid",
+  "desc": "腕骨远端列的小骨，位于大多角骨与头状骨之间。",
+  "region": "上肢",
+  "en": "left trapezoid",
+  "group": "腕骨"
+ },
+ "FMA23725": {
+  "cn": "小多角骨（右）",
+  "latin": "Right Trapezoid",
+  "desc": "腕骨远端列的小骨，位于大多角骨与头状骨之间。",
+  "region": "上肢",
+  "en": "right trapezoid",
+  "group": "腕骨"
+ },
+ "FMA24447": {
+  "cn": "头状骨（左）",
+  "latin": "Left Capitate",
+  "desc": "腕骨中最大的一块，位于腕中央，参与腕关节活动。",
+  "region": "上肢",
+  "en": "left capitate",
+  "group": "腕骨"
+ },
+ "FMA24446": {
+  "cn": "头状骨（右）",
+  "latin": "Right Capitate",
+  "desc": "腕骨中最大的一块，位于腕中央，参与腕关节活动。",
+  "region": "上肢",
+  "en": "right capitate",
+  "group": "腕骨"
+ },
+ "FMA24449": {
+  "cn": "钩骨（左）",
+  "latin": "Left Hamate",
+  "desc": "位于腕骨尺侧远端的骨，掌面有钩状突，是屈肌支持带的附着点。",
+  "region": "上肢",
+  "en": "left hamate",
+  "group": "腕骨"
+ },
+ "FMA24448": {
+  "cn": "钩骨（右）",
+  "latin": "Right Hamate",
+  "desc": "位于腕骨尺侧远端的骨，掌面有钩状突，是屈肌支持带的附着点。",
+  "region": "上肢",
+  "en": "right hamate",
+  "group": "腕骨"
+ },
+ "FMA24465": {
+  "cn": "第一掌骨（左）",
+  "latin": "First metacarpal bone",
+  "desc": "构成第一指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "left first metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24467": {
+  "cn": "第二掌骨（左）",
+  "latin": "Second metacarpal bone",
+  "desc": "构成第二指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "left second metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24469": {
+  "cn": "第三掌骨（左）",
+  "latin": "Third metacarpal bone",
+  "desc": "构成第三指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "left third metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24471": {
+  "cn": "第四掌骨（左）",
+  "latin": "Fourth metacarpal bone",
+  "desc": "构成第四指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "left fourth metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24473": {
+  "cn": "第五掌骨（左）",
+  "latin": "Fifth metacarpal bone",
+  "desc": "构成第五指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "left fifth metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24464": {
+  "cn": "第一掌骨（右）",
+  "latin": "First metacarpal bone",
+  "desc": "构成第一指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "right first metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24466": {
+  "cn": "第二掌骨（右）",
+  "latin": "Second metacarpal bone",
+  "desc": "构成第二指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "right second metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24468": {
+  "cn": "第三掌骨（右）",
+  "latin": "Third metacarpal bone",
+  "desc": "构成第三指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "right third metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24470": {
+  "cn": "第四掌骨（右）",
+  "latin": "Fourth metacarpal bone",
+  "desc": "构成第四指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "right fourth metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA24472": {
+  "cn": "第五掌骨（右）",
+  "latin": "Fifth metacarpal bone",
+  "desc": "构成第五指掌部的手掌骨，是手指与腕骨之间的桥梁。",
+  "region": "上肢",
+  "en": "right fifth metacarpal bone",
+  "group": "掌骨"
+ },
+ "FMA65470": {
+  "cn": "左拇指近节骨",
+  "latin": "Proximal phalanx of Left Thumb",
+  "desc": "左拇指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of left thumb",
+  "group": "指骨"
+ },
+ "FMA23951": {
+  "cn": "左拇指远节骨",
+  "latin": "Distal phalanx of Left Thumb",
+  "desc": "左拇指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of left thumb",
+  "group": "指骨"
+ },
+ "FMA71915": {
+  "cn": "左食指近节骨",
+  "latin": "Proximal phalanx of Left Index Finger",
+  "desc": "左食指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of left index finger",
+  "group": "指骨"
+ },
+ "FMA23938": {
+  "cn": "左食指中节骨",
+  "latin": "Middle phalanx of Left Index Finger",
+  "desc": "左食指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of left index finger",
+  "group": "指骨"
+ },
+ "FMA23953": {
+  "cn": "左食指远节骨",
+  "latin": "Distal phalanx of Left Index Finger",
+  "desc": "左食指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of left index finger",
+  "group": "指骨"
+ },
+ "FMA71908": {
+  "cn": "左中指近节骨",
+  "latin": "Proximal phalanx of Left Middle Finger",
+  "desc": "左中指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of left middle finger",
+  "group": "指骨"
+ },
+ "FMA23940": {
+  "cn": "左中指中节骨",
+  "latin": "Middle phalanx of Left Middle Finger",
+  "desc": "左中指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of left middle finger",
+  "group": "指骨"
+ },
+ "FMA23955": {
+  "cn": "左中指远节骨",
+  "latin": "Distal phalanx of Left Middle Finger",
+  "desc": "左中指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of left middle finger",
+  "group": "指骨"
+ },
+ "FMA71916": {
+  "cn": "左无名指近节骨",
+  "latin": "Proximal phalanx of Left Ring Finger",
+  "desc": "左无名指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of left ring finger",
+  "group": "指骨"
+ },
+ "FMA23942": {
+  "cn": "左无名指中节骨",
+  "latin": "Middle phalanx of Left Ring Finger",
+  "desc": "左无名指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of left ring finger",
+  "group": "指骨"
+ },
+ "FMA23957": {
+  "cn": "左无名指远节骨",
+  "latin": "Distal phalanx of Left Ring Finger",
+  "desc": "左无名指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of left ring finger",
+  "group": "指骨"
+ },
+ "FMA66791": {
+  "cn": "左小指近节骨",
+  "latin": "Proximal phalanx of Left Little Finger",
+  "desc": "左小指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of left little finger",
+  "group": "指骨"
+ },
+ "FMA23944": {
+  "cn": "左小指中节骨",
+  "latin": "Middle phalanx of Left Little Finger",
+  "desc": "左小指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of left little finger",
+  "group": "指骨"
+ },
+ "FMA23959": {
+  "cn": "左小指远节骨",
+  "latin": "Distal phalanx of Left Little Finger",
+  "desc": "左小指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of left little finger",
+  "group": "指骨"
+ },
+ "FMA24450": {
+  "cn": "右拇指近节骨",
+  "latin": "Proximal phalanx of Right Thumb",
+  "desc": "右拇指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of right thumb",
+  "group": "指骨"
+ },
+ "FMA24459": {
+  "cn": "右拇指远节骨",
+  "latin": "Distal phalanx of Right Thumb",
+  "desc": "右拇指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of right thumb",
+  "group": "指骨"
+ },
+ "FMA24451": {
+  "cn": "右食指近节骨",
+  "latin": "Proximal phalanx of Right Index Finger",
+  "desc": "右食指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of right index finger",
+  "group": "指骨"
+ },
+ "FMA24455": {
+  "cn": "右食指中节骨",
+  "latin": "Middle phalanx of Right Index Finger",
+  "desc": "右食指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of right index finger",
+  "group": "指骨"
+ },
+ "FMA24460": {
+  "cn": "右食指远节骨",
+  "latin": "Distal phalanx of Right Index Finger",
+  "desc": "右食指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of right index finger",
+  "group": "指骨"
+ },
+ "FMA24452": {
+  "cn": "右中指近节骨",
+  "latin": "Proximal phalanx of Right Middle Finger",
+  "desc": "右中指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of right middle finger",
+  "group": "指骨"
+ },
+ "FMA24456": {
+  "cn": "右中指中节骨",
+  "latin": "Middle phalanx of Right Middle Finger",
+  "desc": "右中指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of right middle finger",
+  "group": "指骨"
+ },
+ "FMA24461": {
+  "cn": "右中指远节骨",
+  "latin": "Distal phalanx of Right Middle Finger",
+  "desc": "右中指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of right middle finger",
+  "group": "指骨"
+ },
+ "FMA24453": {
+  "cn": "右无名指近节骨",
+  "latin": "Proximal phalanx of Right Ring Finger",
+  "desc": "右无名指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of right ring finger",
+  "group": "指骨"
+ },
+ "FMA24457": {
+  "cn": "右无名指中节骨",
+  "latin": "Middle phalanx of Right Ring Finger",
+  "desc": "右无名指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of right ring finger",
+  "group": "指骨"
+ },
+ "FMA24462": {
+  "cn": "右无名指远节骨",
+  "latin": "Distal phalanx of Right Ring Finger",
+  "desc": "右无名指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of right ring finger",
+  "group": "指骨"
+ },
+ "FMA24454": {
+  "cn": "右小指近节骨",
+  "latin": "Proximal phalanx of Right Little Finger",
+  "desc": "右小指的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "上肢",
+  "en": "proximal phalanx of right little finger",
+  "group": "指骨"
+ },
+ "FMA24458": {
+  "cn": "右小指中节骨",
+  "latin": "Middle phalanx of Right Little Finger",
+  "desc": "右小指的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "上肢",
+  "en": "middle phalanx of right little finger",
+  "group": "指骨"
+ },
+ "FMA24463": {
+  "cn": "右小指远节骨",
+  "latin": "Distal phalanx of Right Little Finger",
+  "desc": "右小指的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "上肢",
+  "en": "distal phalanx of right little finger",
+  "group": "指骨"
+ },
+ "FMA16587": {
+  "cn": "髋骨（左）",
+  "latin": "Left Hip bone",
+  "desc": "由髂骨、坐骨、耻骨融合而成的扁骨，构成骨盆侧壁。",
+  "region": "下肢",
+  "en": "left hip bone",
+  "group": "下肢带骨"
+ },
+ "FMA16586": {
+  "cn": "髋骨（右）",
+  "latin": "Right Hip bone",
+  "desc": "由髂骨、坐骨、耻骨融合而成的扁骨，构成骨盆侧壁。",
+  "region": "下肢",
+  "en": "right hip bone",
+  "group": "下肢带骨"
+ },
+ "FMA24475": {
+  "cn": "股骨（左）",
+  "latin": "Left Femur",
+  "desc": "人体最长最粗壮的长骨，构成大腿，上接髋关节、下连膝关节。",
+  "region": "下肢",
+  "en": "left femur",
+  "group": "大腿"
+ },
+ "FMA24474": {
+  "cn": "股骨（右）",
+  "latin": "Right Femur",
+  "desc": "人体最长最粗壮的长骨，构成大腿，上接髋关节、下连膝关节。",
+  "region": "下肢",
+  "en": "right femur",
+  "group": "大腿"
+ },
+ "FMA24487": {
+  "cn": "髌骨（左）",
+  "latin": "Left Patella",
+  "desc": "膝关节前方最大的一块籽骨，可保护膝关节并增大股四头肌的力臂。",
+  "region": "下肢",
+  "en": "left patella",
+  "group": "大腿"
+ },
+ "FMA24486": {
+  "cn": "髌骨（右）",
+  "latin": "Right Patella",
+  "desc": "膝关节前方最大的一块籽骨，可保护膝关节并增大股四头肌的力臂。",
+  "region": "下肢",
+  "en": "right patella",
+  "group": "大腿"
+ },
+ "FMA24478": {
+  "cn": "胫骨（左）",
+  "latin": "Left Tibia",
+  "desc": "小腿内侧粗大的长骨，是下肢的主要承重骨。",
+  "region": "下肢",
+  "en": "left tibia",
+  "group": "小腿"
+ },
+ "FMA24477": {
+  "cn": "胫骨（右）",
+  "latin": "Right Tibia",
+  "desc": "小腿内侧粗大的长骨，是下肢的主要承重骨。",
+  "region": "下肢",
+  "en": "right tibia",
+  "group": "小腿"
+ },
+ "FMA24481": {
+  "cn": "腓骨（左）",
+  "latin": "Left Fibula",
+  "desc": "小腿外侧细长的长骨，不直接承重，主要起肌肉附着与稳定踝关节的作用。",
+  "region": "下肢",
+  "en": "left fibula",
+  "group": "小腿"
+ },
+ "FMA24480": {
+  "cn": "腓骨（右）",
+  "latin": "Right Fibula",
+  "desc": "小腿外侧细长的长骨，不直接承重，主要起肌肉附着与稳定踝关节的作用。",
+  "region": "下肢",
+  "en": "right fibula",
+  "group": "小腿"
+ },
+ "FMA24498": {
+  "cn": "跟骨（左）",
+  "latin": "Left Calcaneus",
+  "desc": "足部最大的跗骨，构成足跟并传导行走时的冲击力。",
+  "region": "下肢",
+  "en": "left calcaneus",
+  "group": "跗骨"
+ },
+ "FMA24497": {
+  "cn": "跟骨（右）",
+  "latin": "Right Calcaneus",
+  "desc": "足部最大的跗骨，构成足跟并传导行走时的冲击力。",
+  "region": "下肢",
+  "en": "right calcaneus",
+  "group": "跗骨"
+ },
+ "FMA24483": {
+  "cn": "距骨（左）",
+  "latin": "Left Talus",
+  "desc": "连接小腿与足部的跗骨，上承胫腓骨构成踝关节，下接跟骨。",
+  "region": "下肢",
+  "en": "left talus",
+  "group": "跗骨"
+ },
+ "FMA24482": {
+  "cn": "距骨（右）",
+  "latin": "Right Talus",
+  "desc": "连接小腿与足部的跗骨，上承胫腓骨构成踝关节，下接跟骨。",
+  "region": "下肢",
+  "en": "right talus",
+  "group": "跗骨"
+ },
+ "FMA24501": {
+  "cn": "左足舟骨",
+  "latin": "Left Navicular bone of foot",
+  "desc": "左足部的舟状跗骨，位于距骨前方、三块楔骨后方，是足内侧纵弓的关键结构。",
+  "region": "下肢",
+  "en": "navicular bone of left foot",
+  "group": "跗骨"
+ },
+ "FMA24500": {
+  "cn": "右足舟骨",
+  "latin": "Right Navicular bone of foot",
+  "desc": "右足部的舟状跗骨，位于距骨前方、三块楔骨后方，是足内侧纵弓的关键结构。",
+  "region": "下肢",
+  "en": "navicular bone of right foot",
+  "group": "跗骨"
+ },
+ "FMA24529": {
+  "cn": "骰骨（左）",
+  "latin": "Left Cuboid bone",
+  "desc": "足外侧的立方状跗骨，位于跟骨前方。",
+  "region": "下肢",
+  "en": "left cuboid bone",
+  "group": "跗骨"
+ },
+ "FMA24528": {
+  "cn": "骰骨（右）",
+  "latin": "Right Cuboid bone",
+  "desc": "足外侧的立方状跗骨，位于跟骨前方。",
+  "region": "下肢",
+  "en": "right cuboid bone",
+  "group": "跗骨"
+ },
+ "FMA24522": {
+  "cn": "内侧楔骨（左）",
+  "latin": "Left Medial cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于最内侧，与第一跖骨相连。",
+  "region": "下肢",
+  "en": "left medial cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24521": {
+  "cn": "内侧楔骨（右）",
+  "latin": "Right Medial cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于最内侧，与第一跖骨相连。",
+  "region": "下肢",
+  "en": "right medial cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24524": {
+  "cn": "中间楔骨（左）",
+  "latin": "Left Intermediate cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于中央。",
+  "region": "下肢",
+  "en": "left intermediate cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24523": {
+  "cn": "中间楔骨（右）",
+  "latin": "Right Intermediate cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于中央。",
+  "region": "下肢",
+  "en": "right intermediate cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24526": {
+  "cn": "外侧楔骨（左）",
+  "latin": "Left Lateral cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于最外侧。",
+  "region": "下肢",
+  "en": "left lateral cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24525": {
+  "cn": "外侧楔骨（右）",
+  "latin": "Right Lateral cuneiform bone",
+  "desc": "足舟骨前方的三块楔骨之一，位于最外侧。",
+  "region": "下肢",
+  "en": "right lateral cuneiform bone",
+  "group": "跗骨"
+ },
+ "FMA24508": {
+  "cn": "第一跖骨（左）",
+  "latin": "First metatarsal bone",
+  "desc": "构成第一趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "left first metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24510": {
+  "cn": "第二跖骨（左）",
+  "latin": "Second metatarsal bone",
+  "desc": "构成第二趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "left second metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24512": {
+  "cn": "第三跖骨（左）",
+  "latin": "Third metatarsal bone",
+  "desc": "构成第三趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "left third metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24514": {
+  "cn": "第四跖骨（左）",
+  "latin": "Fourth metatarsal bone",
+  "desc": "构成第四趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "left fourth metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24516": {
+  "cn": "第五跖骨（左）",
+  "latin": "Fifth metatarsal bone",
+  "desc": "构成第五趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "left fifth metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24507": {
+  "cn": "第一跖骨（右）",
+  "latin": "First metatarsal bone",
+  "desc": "构成第一趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "right first metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24509": {
+  "cn": "第二跖骨（右）",
+  "latin": "Second metatarsal bone",
+  "desc": "构成第二趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "right second metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24511": {
+  "cn": "第三跖骨（右）",
+  "latin": "Third metatarsal bone",
+  "desc": "构成第三趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "right third metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24513": {
+  "cn": "第四跖骨（右）",
+  "latin": "Fourth metatarsal bone",
+  "desc": "构成第四趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "right fourth metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA24515": {
+  "cn": "第五跖骨（右）",
+  "latin": "Fifth metatarsal bone",
+  "desc": "构成第五趾足弓的跖骨，负责将体重从踝部传向趾端。",
+  "region": "下肢",
+  "en": "right fifth metatarsal bone",
+  "group": "跖骨"
+ },
+ "FMA43254": {
+  "cn": "左大趾近节骨",
+  "latin": "Proximal phalanx of Left Big Toe",
+  "desc": "左大趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of left big toe",
+  "group": "趾骨"
+ },
+ "FMA32651": {
+  "cn": "左大趾远节骨",
+  "latin": "Distal phalanx of Left Big Toe",
+  "desc": "左大趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of left big toe",
+  "group": "趾骨"
+ },
+ "FMA32635": {
+  "cn": "左第二趾近节骨",
+  "latin": "Proximal phalanx of Left Second Toe",
+  "desc": "左第二趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of left second toe",
+  "group": "趾骨"
+ },
+ "FMA32643": {
+  "cn": "左第二趾中节骨",
+  "latin": "Middle phalanx of Left Second Toe",
+  "desc": "左第二趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of left second toe",
+  "group": "趾骨"
+ },
+ "FMA32653": {
+  "cn": "左第二趾远节骨",
+  "latin": "Distal phalanx of Left Second Toe",
+  "desc": "左第二趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of left second toe",
+  "group": "趾骨"
+ },
+ "FMA32637": {
+  "cn": "左第三趾近节骨",
+  "latin": "Proximal phalanx of Left Third Toe",
+  "desc": "左第三趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of left third toe",
+  "group": "趾骨"
+ },
+ "FMA32645": {
+  "cn": "左第三趾中节骨",
+  "latin": "Middle phalanx of Left Third Toe",
+  "desc": "左第三趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of left third toe",
+  "group": "趾骨"
+ },
+ "FMA32655": {
+  "cn": "左第三趾远节骨",
+  "latin": "Distal phalanx of Left Third Toe",
+  "desc": "左第三趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of left third toe",
+  "group": "趾骨"
+ },
+ "FMA32639": {
+  "cn": "左第四趾近节骨",
+  "latin": "Proximal phalanx of Left Fourth Toe",
+  "desc": "左第四趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of left fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32647": {
+  "cn": "左第四趾中节骨",
+  "latin": "Middle phalanx of Left Fourth Toe",
+  "desc": "左第四趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of left fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32657": {
+  "cn": "左第四趾远节骨",
+  "latin": "Distal phalanx of Left Fourth Toe",
+  "desc": "左第四趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of left fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32641": {
+  "cn": "左小趾近节骨",
+  "latin": "Proximal phalanx of Left Little Toe",
+  "desc": "左小趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of left little toe",
+  "group": "趾骨"
+ },
+ "FMA230988": {
+  "cn": "左小趾中节骨",
+  "latin": "Middle phalanx of Left Little Toe",
+  "desc": "左小趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of left little toe",
+  "group": "趾骨"
+ },
+ "FMA32659": {
+  "cn": "左小趾远节骨",
+  "latin": "Distal phalanx of Left Little Toe",
+  "desc": "左小趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of left little toe",
+  "group": "趾骨"
+ },
+ "FMA43253": {
+  "cn": "右大趾近节骨",
+  "latin": "Proximal phalanx of Right Big Toe",
+  "desc": "右大趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of right big toe",
+  "group": "趾骨"
+ },
+ "FMA32650": {
+  "cn": "右大趾远节骨",
+  "latin": "Distal phalanx of Right Big Toe",
+  "desc": "右大趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of right big toe",
+  "group": "趾骨"
+ },
+ "FMA32634": {
+  "cn": "右第二趾近节骨",
+  "latin": "Proximal phalanx of Right Second Toe",
+  "desc": "右第二趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of right second toe",
+  "group": "趾骨"
+ },
+ "FMA32642": {
+  "cn": "右第二趾中节骨",
+  "latin": "Middle phalanx of Right Second Toe",
+  "desc": "右第二趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of right second toe",
+  "group": "趾骨"
+ },
+ "FMA32652": {
+  "cn": "右第二趾远节骨",
+  "latin": "Distal phalanx of Right Second Toe",
+  "desc": "右第二趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of right second toe",
+  "group": "趾骨"
+ },
+ "FMA32636": {
+  "cn": "右第三趾近节骨",
+  "latin": "Proximal phalanx of Right Third Toe",
+  "desc": "右第三趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of right third toe",
+  "group": "趾骨"
+ },
+ "FMA32644": {
+  "cn": "右第三趾中节骨",
+  "latin": "Middle phalanx of Right Third Toe",
+  "desc": "右第三趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of right third toe",
+  "group": "趾骨"
+ },
+ "FMA32654": {
+  "cn": "右第三趾远节骨",
+  "latin": "Distal phalanx of Right Third Toe",
+  "desc": "右第三趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of right third toe",
+  "group": "趾骨"
+ },
+ "FMA32638": {
+  "cn": "右第四趾近节骨",
+  "latin": "Proximal phalanx of Right Fourth Toe",
+  "desc": "右第四趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of right fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32646": {
+  "cn": "右第四趾中节骨",
+  "latin": "Middle phalanx of Right Fourth Toe",
+  "desc": "右第四趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of right fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32656": {
+  "cn": "右第四趾远节骨",
+  "latin": "Distal phalanx of Right Fourth Toe",
+  "desc": "右第四趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of right fourth toe",
+  "group": "趾骨"
+ },
+ "FMA32640": {
+  "cn": "右小趾近节骨",
+  "latin": "Proximal phalanx of Right Little Toe",
+  "desc": "右小趾的近节骨。紧接掌骨（跖骨）的第一节指（趾）骨，位于指（趾）根部。",
+  "region": "下肢",
+  "en": "proximal phalanx of right little toe",
+  "group": "趾骨"
+ },
+ "FMA230986": {
+  "cn": "右小趾中节骨",
+  "latin": "Middle phalanx of Right Little Toe",
+  "desc": "右小趾的中节骨。指（趾）中间的一节指（趾）骨，拇指与大趾无此节。",
+  "region": "下肢",
+  "en": "middle phalanx of right little toe",
+  "group": "趾骨"
+ },
+ "FMA32658": {
+  "cn": "右小趾远节骨",
+  "latin": "Distal phalanx of Right Little Toe",
+  "desc": "右小趾的远节骨。指（趾）末端的一节指（趾）骨，末端膨大形成甲粗隆。",
+  "region": "下肢",
+  "en": "distal phalanx of right little toe",
+  "group": "趾骨"
+ },
+ "FMA45098": {
+  "cn": "左足籽骨",
+  "latin": "Left Sesamoid bone of foot",
+  "desc": "左足第一跖骨头下方的籽骨，包埋于肌腱内，起改变肌腱方向、减少摩擦的作用。",
+  "region": "下肢",
+  "en": "sesamoid bone of left foot",
+  "group": "籽骨"
+ },
+ "FMA45097": {
+  "cn": "右足籽骨",
+  "latin": "Right Sesamoid bone of foot",
+  "desc": "右足第一跖骨头下方的籽骨，包埋于肌腱内，起改变肌腱方向、减少摩擦的作用。",
+  "region": "下肢",
+  "en": "sesamoid bone of right foot",
+  "group": "籽骨"
  }
 }
