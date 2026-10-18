@@ -383,6 +383,14 @@
   "en": "sacrum",
   "group": "骶骨"
  },
+ "FMA20377": {
+  "cn": "尾骨",
+  "latin": "Coccyx",
+  "en": "coccyx",
+  "desc": "由 3-5 块退化的尾椎融合而成的三角形小骨，上接骶骨尖，是脊柱的末端。",
+  "region": "脊柱",
+  "group": "尾骨"
+ },
  "FMA7371": {
   "cn": "胸骨",
   "latin": "Sternum",
