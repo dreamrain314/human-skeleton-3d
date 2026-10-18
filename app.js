@@ -680,8 +680,10 @@ function updateLabelPose() {
 function updateMaterials() {
   state.meshes.forEach(({ mesh, fma }) => {
     applyXrayToMesh(mesh, fma);
-    // 选中 / 悬停的骨保留各自的强调色，其余跟随当前模式（含重点标红）
-    if (fma !== state.selected && fma !== state.hovered) setMeshColor(mesh, baseFor(fma));
+    // 选中色优先级最高（画布点击时新选中的骨往往正处于悬停态，不能被悬停跳过），
+    // 其次悬停蓝，其余跟随当前模式（含重点标红）
+    if (fma === state.selected) setMeshColor(mesh, SEL_COLOR);
+    else setMeshColor(mesh, fma === state.hovered ? HOV_COLOR : baseFor(fma));
     refreshEmissive(mesh, fma);
   });
 }
