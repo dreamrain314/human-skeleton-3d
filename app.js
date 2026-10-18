@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { store } from './store.js';
 
 /* ============ 全局状态 ============ */
@@ -159,9 +160,11 @@ async function boot() {
     store.init();
     state.keySet = new Set(store.getMarked());
 
+    // 模型是 Draco 压缩（3MB 级），解码器本地化，不依赖外网 CDN
+    const draco = new DRACOLoader().setDecoderPath('./lib/draco/');
     const gltf = await new Promise((res, rej) => {
       // 正确的回调顺序: load(url, onLoad, onProgress, onError)
-      new GLTFLoader().load('./models/skeleton.glb', res,
+      new GLTFLoader().setDRACOLoader(draco).load('./models/skeleton.glb', res,
         p => {
           if (p.total) {
             // Pages 对 glb 走 gzip 时 loaded 按解压字节计、total 是压缩大小，比值可能 >100%，需截断
@@ -175,8 +178,9 @@ async function boot() {
 
     setupEnvironment();
 
-    // 模型：每个节点名 = FMA ID
+    // 模型：每个节点名 = FMA ID（成对骨的左侧是 scale=-1 的镜像节点，与本骨共享几何体）
     const model = gltf.scene;
+    model.updateMatrixWorld(true);
     model.traverse(o => {
       if (o.isMesh) {
         // 源 glb 只有顶点坐标、没有法线，不补的话任何光照都算不出明暗 → 渲染成全黑
@@ -186,9 +190,16 @@ async function boot() {
           const count = o.geometry.attributes.position.count;
           o.geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(count * 2), 2));
         }
-        const fma = o.name || o.parent?.name || '';
+        // GLTFLoader 对重名节点追加 _1/_2 后缀（胸骨柄/胸骨体同名 FMA7371）；FMA 本身不含下划线，安全剥除
+        const fma = (o.name || o.parent?.name || '').replace(/_\d+$/, '');
         o.userData.fma = fma;
+        const srcNormal = o.material && o.material.normalMap;   // 保留解剖细节法线贴图
+        const srcScale = o.material && o.material.normalScale;
         o.material = new THREE.MeshPhysicalMaterial(Object.assign({ color: BASE_COLOR.clone() }, BONE_MAT));
+        if (srcNormal && o.geometry.attributes.uv.itemSize === 2 && o.geometry.attributes.uv.array.some(v => v !== 0)) {
+          o.material.normalMap = srcNormal;
+          o.material.normalScale = srcScale ? srcScale.clone() : new THREE.Vector2(1, 1);
+        }
         state.meshes.push({ mesh: o, fma });
         if (!state.byFma.has(fma)) state.byFma.set(fma, []);
         state.byFma.get(fma).push(o);
@@ -543,7 +554,7 @@ function selectBone(fma) {
     $('enName').textContent = b.en ? b.en.replace(/\b\w/g, c => c.toUpperCase()) : '';
     $('enName').style.display = b.en ? '' : 'none';
     $('desc').textContent = b.desc;
-    $('fma').textContent = 'FMA ' + fma.replace('FMA', '') + ' · BodyParts3D';
+    $('fma').textContent = 'FMA ' + fma.replace('FMA', '');
   } else {
     $('cn').textContent = fma;
     $('latin').textContent = ''; $('enName').textContent = '';

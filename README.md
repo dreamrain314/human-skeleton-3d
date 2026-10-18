@@ -7,7 +7,7 @@
 - **自定义标记**：任意骨骼一键标记（标红/★/仅看标记），数据保存在本机浏览器
 - **区域骨骼清单**：三级导航（区域→专业分组→骨骼），支持隐藏任意骨骼、单骨隔离展示，配合 X 光模式解决遮挡区域的点选难题
 - **每骨笔记**：给每块骨头写自己的知识点，可导出/导入 JSON 备份
-- 数据来自权威开源解剖数据库 **BodyParts3D 4.0**（DBCLS，[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)）
+- 模型来自荷兰大学联合的 **AnatomyTOOL 开放解剖模型**（经解剖学家审核，[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)）；舌骨取自 BodyParts3D 4.0（CC BY 4.0），详见 [ATTRIBUTION.md](ATTRIBUTION.md)
 - 基于 **Three.js r160**（MIT，已本地化），**纯静态、零构建、零联网、零依赖**
 
 ## 🌐 在线体验
@@ -35,7 +35,7 @@ Windows 直接双击 `start.bat`；macOS 双击 `start.command`。
 | 路径 | 说明 |
 |---|---|
 | `index.html` / `app.js` | 页面与交互逻辑（拾取、高亮、信息面板） |
-| `models/skeleton.glb` | 骨骼模型（207 个源网格 → 202 个骨骼节点，约 50 万三角面） |
+| `models/skeleton.glb` | 骨骼模型（Draco 压缩，约 3.1 MB；202 个骨骼节点，骶骨/尾骨独立、含法线贴图） |
 | `data/bones.json` | 骨骼中文名称与说明数据 |
 | `data/bones-detail.json` | 完整介绍库（功能作用/知识点/临床关联，首次展开时懒加载） |
 | `store.js` | 用户数据存储抽象层（本地 localStorage 驱动，预留后端同步接口） |
@@ -45,6 +45,6 @@ Windows 直接双击 `start.bat`；macOS 双击 `start.command`。
 
 ## 许可
 
-- 骨骼几何数据：BodyParts3D 4.0，CC BY 4.0 © The Database Center for Life Science
+- 骨骼几何数据：AnatomyTOOL open3Dmodel / Z-Anatomy，CC BY-SA 4.0；舌骨：BodyParts3D 4.0，CC BY 4.0 © DBCLS
 - 代码与中文文案：同仓库根许可（见 ATTRIBUTION.md）
 - 仅供教育科普用途，不得用于临床诊断或手术
