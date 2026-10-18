@@ -529,18 +529,20 @@ function removeLabel() {
   labelAnchor = null;
 }
 
+/* 标签药丸的屏幕尺寸（CSS 像素）——缩放页面/推拉相机都不改变屏幕大小 */
+const PILL_FS = 18, PILL_PAD_X = 12, PILL_PAD_Y = 6;
+
 function makeLabel(text) {
   // 注意：这里不再调用 removeLabel()——旧标签的清理由 placeLabel 开头统一负责，
   // 否则会把 placeLabel 刚算好的 labelAnchor 清空导致空引用
   // 画布按设备像素比绘制（至少 3x），高 DPR 手机上文字才不会发虚
   const dpr = Math.min(3, Math.max(2, devicePixelRatio || 1));
-  const pad = 12, fs = 28;
   const cv = document.createElement('canvas');
   const ctx = cv.getContext('2d');
-  const font = `600 ${fs}px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif`;
+  const font = `600 ${PILL_FS}px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif`;
   ctx.font = font;
-  const w = Math.ceil(ctx.measureText(text).width) + pad * 2;
-  const h = fs + pad * 2;
+  const w = Math.ceil(ctx.measureText(text).width) + PILL_PAD_X * 2;
+  const h = PILL_FS + PILL_PAD_Y * 2;
   cv.width = w * dpr; cv.height = h * dpr;
   ctx.scale(dpr, dpr);
   // 圆角背景
@@ -558,9 +560,9 @@ function makeLabel(text) {
   tex.colorSpace = THREE.SRGBColorSpace;
   const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
   const sp = new THREE.Sprite(mat);
-  const scale = 0.042;
-  sp.scale.set((w / h) * scale, scale, 1);
   sp.renderOrder = 999;
+  sp.userData.cssW = w;   // 药丸屏幕尺寸（CSS px），每帧据此换算世界尺寸
+  sp.userData.cssH = h;
   return sp;
 }
 
@@ -587,8 +589,11 @@ function placeLabel(fma) {
   updateLabelPose();
 }
 
-/* 每帧根据当前相机重算：标签始终落在骨的屏幕左/右空白侧，
-   并且整颗药丸被裁剪进可视区域内（手机上边缘骨不再被推出屏幕外） */
+/* 每帧根据当前相机重算标签位姿。
+   药丸保持恒定屏幕像素尺寸（不随缩放变化），位置全部在像素域规划：
+   ① 先放在骨的屏幕左/右侧；② 与骨的屏幕轮廓重叠时上下错开（优先下移）；
+   ③ 夹进屏幕边界；④ 避开信息面板（先换边，再上下避让）。
+   最后把像素坐标反投影回世界坐标，牵引线连到药丸近侧边缘。 */
 function updateLabelPose() {
   if (!labelSprite || !labelAnchor) return;
   const anchorCam = labelAnchor.clone().applyMatrix4(camera.matrixWorldInverse);
@@ -599,49 +604,76 @@ function updateLabelPose() {
   }
   labelSprite.visible = true;
   labelLine.visible = true;
-  // 骨在屏幕右半 → 标签放右侧；在左半 → 放左侧（用世界投影判断一次）
-  const ndc = labelAnchor.clone().project(camera);
-  const side = ndc.x >= 0 ? 1 : -1;
-  // 相机空间：x 向右、y 向上；按可视锥体把标签中心夹进屏幕（留出药丸半宽 + 余量）
-  const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * -anchorCam.z;
+
+  const dist = -anchorCam.z;
+  const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * dist;
   const halfW = halfH * camera.aspect;
-  const padX = labelSprite.scale.x / 2 + 0.015;
-  const padY = labelSprite.scale.y / 2 + 0.012;
-  let cx = anchorCam.x + side * (labelRadius + labelSprite.scale.x / 2 + 0.02);
-  cx = Math.min(halfW - padX, Math.max(-halfW + padX, cx));
-  let cy = Math.min(halfH - padY, Math.max(-halfH + padY, anchorCam.y));
+  const pxPerWorld = innerHeight / (2 * halfH);
+  const pw = labelSprite.userData.cssW;
+  const ph = labelSprite.userData.cssH;
+
+  // 骨中心的屏幕坐标与屏幕半径
+  const ndc = labelAnchor.clone().project(camera);
+  const ax = (ndc.x * 0.5 + 0.5) * innerWidth;
+  const ay = (-ndc.y * 0.5 + 0.5) * innerHeight;
+  const boneRpx = Math.max(labelRadius * pxPerWorld, 6);
+
+  const clampX = v => Math.min(innerWidth - pw / 2 - 8, Math.max(pw / 2 + 8, v));
+  const clampY = v => Math.min(innerHeight - ph / 2 - 8, Math.max(ph / 2 + 8, v));
+  // 与骨屏幕轮廓重叠 → 纵向错开（空间够就下移，否则上移）
+  const staggerY = () => {
+    const down = ay + boneRpx + ph / 2 + 10;
+    const up = ay - boneRpx - ph / 2 - 10;
+    sy = (down <= innerHeight - ph / 2 - 8) ? down
+      : (up >= ph / 2 + 8) ? up
+      : clampY(down);
+  };
+
+  let side = ax >= innerWidth / 2 ? 1 : -1;
+  let sx = clampX(ax + side * (boneRpx + pw / 2 + 12));
+  let sy = clampY(ay);
+  if (Math.abs(sx - ax) < boneRpx + pw / 2 && Math.abs(sy - ay) < boneRpx + ph / 2) staggerY();
 
   /* 避开信息面板：桌面在右侧、手机是底部抽屉。若标签与面板相交，
-     先换到另一侧；仍相交则把标签挪到面板上缘之外 */
+     先换到另一侧（换边后需重新做骨避让），仍相交则挪到面板上/下缘之外 */
   const infoEl = document.getElementById('info');
   if (infoEl && infoEl.classList.contains('show')) {
     const r = infoEl.getBoundingClientRect();
-    const pxPerWorldX = innerWidth / (2 * halfW);
-    const pxPerWorldY = innerHeight / (2 * halfH);
-    const pillW = labelSprite.scale.x * pxPerWorldX;
-    const pillH = labelSprite.scale.y * pxPerWorldY;
-    const sx = () => (cx / halfW * 0.5 + 0.5) * innerWidth;
-    const sy = () => (0.5 - cy / halfH * 0.5) * innerHeight;
-    const hit = () => Math.abs(sx() - (r.left + r.width / 2)) < pillW / 2 + r.width / 2 + 6 &&
-                      Math.abs(sy() - (r.top + r.height / 2)) < pillH / 2 + r.height / 2 + 6;
-    if (hit() && side === 1) {
-      cx = Math.min(halfW - padX, Math.max(-halfW + padX,
-        anchorCam.x - (labelRadius + labelSprite.scale.x / 2 + 0.02)));
+    const hitP = () => Math.abs(sx - (r.left + r.width / 2)) < pw / 2 + r.width / 2 + 6 &&
+                       Math.abs(sy - (r.top + r.height / 2)) < ph / 2 + r.height / 2 + 6;
+    if (hitP() && side === 1) {
+      side = -1;
+      sx = clampX(ax + side * (boneRpx + pw / 2 + 12));
+      if (Math.abs(sx - ax) < boneRpx + pw / 2 && Math.abs(sy - ay) < boneRpx + ph / 2) staggerY();
     }
-    if (hit()) {
-      const topY = (0.5 - (r.top - pillH / 2 - 8) / innerHeight * 2) * halfH;  // 面板上缘之上
-      const botY = (0.5 - (r.bottom + pillH / 2 + 8) / innerHeight * 2) * halfH; // 面板下缘之下
-      cy = Math.abs(topY - cy) <= Math.abs(botY - cy)
-        ? Math.min(topY, halfH - padY)
-        : Math.max(botY, -halfH + padY);
+    if (hitP()) {
+      const above = r.top - ph / 2 - 8;
+      const below = r.bottom + ph / 2 + 8;
+      sy = Math.abs(sy - above) <= Math.abs(below - sy)
+        ? clampY(above) : clampY(below);
     }
   }
 
-  const labelPos = new THREE.Vector3(cx, cy, anchorCam.z).applyMatrix4(camera.matrixWorld);
+  // 像素坐标 → 相机空间 → 世界坐标（ndc.y 与屏幕 y 方向相反，注意公式）
+  const labelPos = new THREE.Vector3(
+    (sx / innerWidth * 2 - 1) * halfW,
+    (1 - 2 * sy / innerHeight) * halfH,
+    anchorCam.z
+  ).applyMatrix4(camera.matrixWorld);
   labelSprite.position.copy(labelPos);
+  // 恒定屏幕尺寸：世界尺寸 = CSS 像素 ÷ 每世界单位对应的像素数
+  labelSprite.scale.set(pw / pxPerWorld, ph / pxPerWorld, 1);
+
+  // 牵引线：骨中心 → 药丸近侧边缘中点
+  const ex = sx - side * pw / 2;
+  const lineEnd = new THREE.Vector3(
+    (ex / innerWidth * 2 - 1) * halfW,
+    (1 - 2 * sy / innerHeight) * halfH,
+    anchorCam.z
+  ).applyMatrix4(camera.matrixWorld);
   const posAttr = labelLine.geometry.attributes.position;
   posAttr.setXYZ(0, labelAnchor.x, labelAnchor.y, labelAnchor.z);
-  posAttr.setXYZ(1, labelPos.x, labelPos.y, labelPos.z);
+  posAttr.setXYZ(1, lineEnd.x, lineEnd.y, lineEnd.z);
   posAttr.needsUpdate = true;
 }
 
