@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用手册 · 人体骨骼 3D 交互模型</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🦴</text></svg>">
+<style>
+  :root{--bg:#0b0e14;--line:rgba(120,140,180,.22);--txt:#e6ebf5;--dim:#8b96ad;--accent2:#4da3ff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);line-height:1.75;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    padding:0 18px 90px}
+  header{position:sticky;top:0;z-index:5;background:rgba(11,14,20,.88);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);margin:0 -18px 8px;padding:12px 22px;
+    display:flex;align-items:center;gap:14px}
+  header a{color:#8fc4ff;text-decoration:none;font-size:13px;white-space:nowrap}
+  header a:hover{text-decoration:underline}
+  header .tt{font-size:13px;color:var(--dim);letter-spacing:1px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  main{max-width:860px;margin:0 auto}
+  h1{font-size:24px;margin:18px 0 6px;letter-spacing:.5px;color:#fff}
+  h2{font-size:19px;margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);color:#fff}
+  h3{font-size:15.5px;margin:22px 0 8px;color:#8fc4ff}
+  h4{font-size:14px;margin:16px 0 6px;color:#c3ccdd}
+  p{margin:10px 0;font-size:14px;color:#c3ccdd}
+  li{margin:6px 0;font-size:14px;color:#c3ccdd}
+  ul,ol{padding-left:24px;margin:10px 0}
+  a{color:#8fc4ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:5px;
+    padding:1px 6px;font-size:12.5px;color:#ffd9a8;font-family:Consolas,Menlo,monospace}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13px}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:rgba(77,163,255,.12);color:#dfe8f7;font-weight:600}
+  tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+  blockquote{margin:14px 0;padding:10px 16px;background:rgba(77,163,255,.07);
+    border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;font-size:13.5px}
+  blockquote p{margin:4px 0;color:#a8b4c8}
+  hr{border:none;border-top:1px dashed var(--line);margin:26px 0}
+  strong{color:#fff}
+  em{color:#a8b4c8}
+  #doc.fail{margin-top:60px;text-align:center;color:var(--dim);font-size:14px;line-height:2}
+  #doc.fail code{color:#8fc4ff}
+</style>
+</head>
+<body>
+<header><a href="./">← 返回模型</a><span class="tt">使用手册 · 人体骨骼 3D 交互模型</span></header>
+<main id="doc">正在加载手册…</main>
+<script src="./lib/md-render.js"></script>
+<script>
+  // 内容唯一来源是 使用手册.md：本页只负责取回并渲染，改手册无需动本页
+  fetch('./使用手册.md', { cache: 'no-cache' })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(t => {
+      const doc = document.getElementById('doc');
+      doc.innerHTML = window.mdRender(t);
+      const h1 = doc.querySelector('h1');
+      if (h1) document.title = h1.textContent + ' · 人体骨骼 3D 交互模型';
+    })
+    .catch(err => {
+      const doc = document.getElementById('doc');
+      doc.classList.add('fail');
+      doc.innerHTML = '手册加载失败（' + err.message + '）。<br>' +
+        '请通过本地服务器或线上地址访问本页，不要直接双击 HTML 文件。<br>' +
+        '文字版见同目录的 <code>使用手册.md</code>。';
+    });
+</script>
+</body>
+</html>
