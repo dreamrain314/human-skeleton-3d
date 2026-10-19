@@ -176,8 +176,8 @@
     font-size:16px;line-height:1;transition:.15s}
   #close:hover{background:rgba(255,255,255,.09);color:var(--txt)}
 
-  /* 206 口径说明 */
-  #note{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:11;
+  /* 206 口径说明：默认收起，点击右下角「可交互骨骼」展开 */
+  #note{position:fixed;right:14px;bottom:60px;z-index:11;display:none;
     max-width:min(620px,52vw);background:rgba(18,22,32,.86);border:1px solid var(--line);
     border-radius:10px;padding:9px 15px;font-size:11.5px;line-height:1.6;color:#a8b4c8;
     backdrop-filter:blur(12px);box-shadow:0 4px 18px rgba(0,0,0,.35)}
@@ -216,8 +216,12 @@
   /* 计数徽标 */
   #count{position:fixed;bottom:16px;right:22px;z-index:10;font-size:11px;color:var(--dim);
     background:rgba(18,22,32,.8);padding:7px 13px;border-radius:20px;
-    border:1px solid var(--line);backdrop-filter:blur(10px)}
+    border:1px solid var(--line);backdrop-filter:blur(10px);cursor:pointer;user-select:none}
+  #count:hover{border-color:var(--accent2)}
   #count b{color:var(--accent2);font-weight:600}
+  #countArrow{margin-left:8px;color:#8fa3c8}
+  #note.open{display:block}
+  #note{max-width:min(420px,calc(100vw - 28px));text-align:left}
 
   /* 双击 index.html 时的引导页 */
   #fileWarn{position:fixed;inset:0;z-index:99;display:none;flex-direction:column;
@@ -371,7 +375,7 @@
 <div id="hint">
   <b>左键拖动</b> 旋转 · <b>滚轮</b> 缩放 · <b>右侧滑块</b> 上下移动视角 · <b>点击骨骼</b> 查看信息
 </div>
-<div id="count">可交互骨骼 <b id="cnt">—</b> 块</div>
+<div id="count">可交互骨骼 <b id="cnt">—</b> 块<span id="countArrow">▸ 骨数说明</span></div>
 
 <script type="importmap">
 {

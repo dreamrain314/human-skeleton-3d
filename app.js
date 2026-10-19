@@ -247,6 +247,9 @@ async function boot() {
     if ($('noteCnt')) $('noteCnt').textContent = state.byFma.size;
     buildRegionUI();
     bindUI();
+    // 右下角「可交互骨骼」chip 点击展开/收起骨数口径说明
+    const cntChip = document.getElementById('count'), noteEl = document.getElementById('note');
+    if (cntChip && noteEl) cntChip.addEventListener('click', () => noteEl.classList.toggle('open'));
     animate();
     setTimeout(() => loaderEl.classList.add('hide'), 250);
   } catch (err) {
@@ -525,8 +528,10 @@ function onMove(e) {
       hoverEl.style.left = (e.clientX + 14) + 'px';
       hoverEl.style.top = (e.clientY + 14) + 'px';
       hoverEl.classList.add('show');
+      for (const a of state.annSprites) a.hover = (a.sprite === hitsA[0].object);
       return;
     }
+    for (const a of state.annSprites) a.hover = false;
   }
   const hits = raycast(e.clientX, e.clientY);
   if (!hits.length) {
@@ -685,7 +690,10 @@ function enterIsolate(fma) {
     controls.target.copy(c);
     const dir = camera.position.clone().sub(c);
     if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
-    dir.setLength(Math.max(r * 3.2 + 0.01, 0.016));   // 小骨（听小骨级）也能取得近景特写
+    // 取景与骨大小解耦：包围球恒占约 58% 视高，小骨大骨呈现尺寸一致
+    const fovRad = camera.fov * Math.PI / 180;
+    const dist = (r / Math.sin(fovRad / 2)) / 0.62;
+    dir.setLength(Math.max(dist, 0.02));
     camera.position.copy(c).add(dir);
     controls.update();
   }
@@ -849,7 +857,7 @@ function buildAnnSprites(fma) {
           bb.min.z + (bb.max.z - bb.min.z) * rv[2],
         ];
         const sp = rv.pts ? rv.pts.slice() : annSnap(mesh, p);
-        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false });
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: 0.5 });
         const sprite = new THREE.Sprite(mat);
         sprite.position.set(sp[0], sp[1], sp[2]);
         sprite.renderOrder = 990;
@@ -909,7 +917,7 @@ function buildAnnSpritesEdit(fma) {
     }
     for (let pi = 0; pi < e.pts.length; pi++) {
       for (const mesh of targets) {
-        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false });
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: 0.5 });
         const sprite = new THREE.Sprite(mat);
         sprite.position.set(e.pts[pi][0], e.pts[pi][1], e.pts[pi][2]);
         sprite.renderOrder = 990;
@@ -930,7 +938,7 @@ function selectAnnPoint(sprite) {
     ptIndex: sprite.userData.ann.ptIndex ?? 0,
     sprite, mesh: sprite.parent,
   } : null;
-  for (const a of state.annSprites) a.sprite.material.color.set(0xffffff);
+  for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = 0.5; }
   if (state.annSel) state.annSel.sprite.material.color.set(0xff4a2e);
   refreshAnnEditForm();
 }
@@ -995,7 +1003,9 @@ function exportAnnotations() {
   const blob = new Blob([JSON.stringify(merged, null, 1)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'annotations.json';
+  const fname = prompt('导出文件名（不含扩展名），可带版号：', 'annotations-v2');
+  if (!fname) return;
+  a.download = fname.trim() + '.json';
   a.click();
 }
 
@@ -1021,7 +1031,7 @@ function showAnnDesc(entry) {
   if (old) old.remove();
   list.querySelectorAll('.ann-chip').forEach(c => c.classList.remove('on'));
   if (isOpen) {
-    for (const a of state.annSprites) a.sprite.material.color.set(0xffffff);
+    for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = 0.5; }
     return;
   }
   const dd = document.createElement('div');
@@ -1036,7 +1046,10 @@ function showAnnDesc(entry) {
   }
   list.appendChild(dd);
   list.querySelectorAll('.ann-chip').forEach(c => { if (c.textContent === entry.name) c.classList.add('on'); });
-  for (const a of state.annSprites) a.sprite.material.color.set(a.entry === entry ? 0xff4a2e : 0xffffff);
+  for (const a of state.annSprites) {
+    a.sprite.material.color.set(a.entry === entry ? 0xff4a2e : 0xffffff);
+    a.sprite.material.opacity = a.entry === entry ? 1.0 : 0.5;
+  }
 }
 function showAnnInfo(sprite) {
   const a = state.annSprites.find(x => x.sprite === sprite);
@@ -1254,7 +1267,7 @@ function animate() {
   const occFrame = (frameCount++ % 6 === 0);
   for (const a of state.annSprites) {
     a.sprite.getWorldPosition(tmpV);
-    const s = camera.position.distanceTo(tmpV) * 0.022;
+    const s = camera.position.distanceTo(tmpV) * 0.017;
     a.sprite.scale.set(s, s, 1);
     if (occFrame) {
       const dir = tmpV.clone().sub(camera.position);
@@ -1264,7 +1277,9 @@ function animate() {
       raycaster.far = dist - s * 0.4;
       const hit = raycaster.intersectObject(a.mesh, false);
       raycaster.far = Infinity;
-      a.sprite.material.opacity = hit.length ? 0.22 : 1.0;
+      // 默认半透明避免挡住小结构；被骨面挡住更淡；选中/悬停不透明
+      const emphasized = (state.annSel && state.annSel.sprite === a.sprite) || a.hover;
+      a.sprite.material.opacity = emphasized ? 1.0 : (hit.length ? 0.16 : 0.5);
     }
   }
   renderer.render(scene, camera);
