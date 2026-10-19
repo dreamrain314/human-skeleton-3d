@@ -876,9 +876,9 @@ function makeLabel(text) {
   const h = PILL_FS + PILL_PAD_Y * 2;
   cv.width = w * dpr; cv.height = h * dpr;
   ctx.scale(dpr, dpr);
-  // 圆角背景（药丸保持红色：与选中骨骼的蓝色形成对比，用户指定）
+  // 圆角背景（与选中骨骼的深蓝一致）
   const r = h / 2;
-  ctx.fillStyle = 'rgba(255,77,79,0.92)';
+  ctx.fillStyle = 'rgba(61,130,204,0.92)';
   ctx.beginPath(); ctx.roundRect(0, 0, w, h, r); ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.roundRect(0.75, 0.75, w - 1.5, h - 1.5, r); ctx.stroke();
