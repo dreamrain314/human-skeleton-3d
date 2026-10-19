@@ -250,6 +250,14 @@ async function boot() {
     // 右下角「可交互骨骼」chip 点击展开/收起骨数口径说明
     const cntChip = document.getElementById('count'), noteEl = document.getElementById('note');
     if (cntChip && noteEl) cntChip.addEventListener('click', () => noteEl.classList.toggle('open'));
+    // 结构标注列表折叠/展开
+    const fold = document.getElementById('annFold');
+    if (fold) fold.addEventListener('click', () => {
+      const list = document.getElementById('annList');
+      const open = list.style.display !== 'none';
+      list.style.display = open ? 'none' : 'flex';
+      document.getElementById('annFoldArr').textContent = open ? '▸ 展开' : '▾ 收起';
+    });
     animate();
     setTimeout(() => loaderEl.classList.add('hide'), 250);
   } catch (err) {
@@ -508,7 +516,12 @@ function pick(clientX, clientY) {
         else selectAnnPoint(near.sprite);
         return;
       }
-      showAnnInfo(near.sprite); return;
+      // 普通模式：选中该点（红色高亮 + 名称标签常驻），再点同一点取消
+      const same = state.annSel && state.annSel.entry === near.rec.entry;
+      selectAnnPoint(near.sprite);
+      showAnnDesc(near.rec.entry);
+      if (same) clearAnnSel();
+      return;
     }
   }
   if (state.editMode) {
@@ -729,6 +742,7 @@ function exitIsolate() {
 
 function clearSelection(alsoHidePanel = true) {
   state.selected = null;
+  clearAnnSel();
   clearAnnSprites();
   updateMaterials();   // 统一还原全部骨骼的底色/透明度/自发光
   if (alsoHidePanel) {
@@ -884,11 +898,35 @@ function annSnap(mesh, p) {   // 吸附到该网格最近顶点，保证标注�
   return out;
 }
 function clearAnnSprites() {
+  clearAnnSel();
   for (const a of state.annSprites) {
     a.sprite.parent.remove(a.sprite);
     a.sprite.material.dispose();
   }
   state.annSprites = [];
+}
+/* 取消标注点的选中态（红色高亮 + 常驻名称标签） */
+function clearAnnSel() {
+  state.annSel = null;
+  const lbl = document.getElementById('annLabel');
+  if (lbl) lbl.style.display = 'none';
+  for (const a of state.annSprites) {
+    a.sprite.material.color.set(0xffffff);
+    a.sprite.material.opacity = 0.5;
+  }
+  const list = $('annList');
+  if (list) {
+    const dd = list.querySelector('.ann-desc');
+    if (dd) dd.remove();
+    list.querySelectorAll('.ann-chip.on').forEach(c => c.classList.remove('on'));
+  }
+}
+/* 水平环绕旋转（绕注视点 y 轴） */
+function orbitY(angle) {
+  const off = camera.position.clone().sub(controls.target);
+  off.applyAxisAngle(new THREE.Vector3(0, 1, 0), angle);
+  camera.position.copy(controls.target).add(off);
+  controls.update();
 }
 function buildAnnSprites(fma) {
   clearAnnSprites();
@@ -991,14 +1029,29 @@ function buildAnnSpritesEdit(fma) {
   refreshAnnEditForm();
 }
 function selectAnnPoint(sprite) {
-  state.annSel = sprite ? {
-    fma: sprite.userData.fma || state.selected,
-    entry: sprite.userData.ann.entry,
-    ptIndex: sprite.userData.ann.ptIndex ?? 0,
-    sprite, mesh: sprite.parent,
-  } : null;
+  const rec = sprite ? state.annSprites.find(r => r.hit === sprite || r.sprite === sprite) : null;
   for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = 0.5; }
-  if (state.annSel) state.annSel.sprite.material.color.set(0xff4a2e);
+  state.annSel = rec ? { fma: state.selected, entry: rec.entry, ptIndex: rec.sprite.userData.ann.ptIndex ?? 0, sprite: rec.sprite, mesh: rec.mesh } : null;
+  if (state.annSel) {
+    state.annSel.sprite.material.color.set(0xff4a2e);
+    state.annSel.sprite.material.opacity = 1.0;
+  }
+  const lbl = document.getElementById('annLabel');
+  if (lbl) {
+    if (state.annSel) {
+      lbl.textContent = state.annSel.entry.name;
+      lbl.style.display = 'block';
+    } else {
+      lbl.style.display = 'none';
+    }
+  }
+  const list = $('annList');
+  if (list) {
+    list.querySelectorAll('.ann-chip').forEach(c => c.classList.remove('on'));
+    if (state.annSel) {
+      list.querySelectorAll('.ann-chip').forEach(c => { if (c.textContent === rec.entry.name) c.classList.add('on'); });
+    }
+  }
   refreshAnnEditForm();
 }
 function moveAnnSelTo(hit) {
@@ -1320,6 +1373,21 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   updateLabelPose();
+  // 选中标注点的名称标签跟随其屏幕位置
+  const annLbl = document.getElementById('annLabel');
+  if (annLbl && state.annSel && state.annSel.sprite) {
+    const v = state.annSel.sprite.getWorldPosition(new THREE.Vector3());
+    const p = v.project(camera);
+    if (p.z < 1 && Math.abs(p.x) < 1.1 && Math.abs(p.y) < 1.1) {
+      annLbl.style.display = 'block';
+      annLbl.style.left = ((p.x + 1) / 2 * innerWidth + 12) + 'px';
+      annLbl.style.top = ((1 - p.y) / 2 * innerHeight - 12) + 'px';
+    } else {
+      annLbl.style.display = 'none';
+    }
+  } else if (annLbl) {
+    annLbl.style.display = 'none';
+  }
   // 标注点保持恒定屏幕大小 + 遮挡检测（每 6 帧一次：被骨面挡住时变半透明）
   const tmpV = new THREE.Vector3();
   const occFrame = (frameCount++ % 6 === 0);
@@ -1360,6 +1428,23 @@ boot();
   }
   document.getElementById('annDel').onclick = deleteAnnSel;
 })();
+
+/* 键盘方向键控制视角：↑↓ 垂直平移（同右侧滑块），←→ 水平环绕旋转 */
+window.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const ae = document.activeElement;
+  if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return;   // 输入框内不劫持
+  const step = (state.panRange || 1) * 0.05;
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    applyPanY(state.panY + (e.key === 'ArrowUp' ? -step : step));
+    const vp = $('vpRange');
+    if (vp) vp.value = (state.panY / state.panRange) * 100;
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    e.preventDefault();
+    orbitY(e.key === 'ArrowLeft' ? -0.12 : 0.12);   // 左=视角顺时针转（自上看上去）
+  }
+});
 
 /* 调试出口：控制台可直接查运行时状态（不影响功能） */
 window.__skel = { state, camera, scene, controls, THREE };

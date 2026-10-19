@@ -138,7 +138,12 @@
   .ann-detail{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(255,177,77,.3);
     color:#e8dcc2;font-size:11.5px;line-height:1.6}
   #annSec{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
-  #annSec h4{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1px;margin-bottom:6px}
+  #annSec h4{font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1px;margin-bottom:6px;
+    cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
+  #annFold{color:#8fa3c8;font-size:10px}
+  #annLabel{position:fixed;z-index:14;display:none;background:rgba(255,122,50,.94);color:#fff;
+    font-size:12px;font-weight:600;padding:4px 11px;border-radius:12px;pointer-events:none;
+    white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.4)}
   #annList{display:flex;flex-wrap:wrap;gap:4px}
   .ann-chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11.5px;cursor:pointer;
     background:rgba(255,177,77,.10);color:#ffcf96;border:1px solid rgba(255,177,77,.28);user-select:none}
@@ -338,7 +343,7 @@
     <span class="act-btn" id="actIsolate">⤢ <span class="act-txt">单独查看</span></span>
   </div>
   <div id="annSec" hidden>
-    <h4>结构标注</h4>
+    <h4 id="annFold">结构标注 <span id="annFoldArr">▾ 收起</span></h4>
     <div id="annList"></div>
     <div id="annEditSec" hidden>
       <input id="annName" placeholder="结构名称（中文）">
@@ -365,6 +370,7 @@
 <div id="isolateBar"></div>
 
 <div id="hover"></div>
+<div id="annLabel"></div>
 
 <div id="vpan" title="拖动可上下移动视角，双击回中">
   <div class="lab">上</div>
