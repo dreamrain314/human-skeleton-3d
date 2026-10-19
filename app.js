@@ -483,7 +483,8 @@ function bindUI() {
   el.addEventListener('pointerleave', () => { hoverEl.classList.remove('show'); highlightHover(null); });
   // 双击 3D 视图中的骨（或其名称标签）→ 进入隔离查看
   el.addEventListener('dblclick', e => {
-    const hits = raycastList(state.annSprites.filter(a => annSpritePickable(a.sprite)).map(a => a.sprite), e.clientX, e.clientY);
+    const hits = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY)
+      .filter(h => annSpriteHitValid(h));
     if (hits.length) { if (state.selected) enterIsolate(state.selected); return; }
     const hitsB = raycast(e.clientX, e.clientY);
     if (hitsB.length) {
@@ -500,10 +501,14 @@ const ndc = new THREE.Vector2();
 function pick(clientX, clientY) {
   if (state.annSprites.length) {
     const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY)
-      .filter(h => annSpritePickable(h.object));
+      .filter(h => annSpriteHitValid(h));
     if (hitsA.length) {
       if (state.editMode) { selectAnnPoint(hitsA[0].object); return; }
-      showAnnInfo(hitsA[0].object); return;
+      const hitsPre = raycast(clientX, clientY);
+      // 点到的骨与当前选中骨不同（点在前面挡住它）时，优先切换骨
+      if (!hitsPre.length || hitsPre[0].object.userData.fma === state.selected) {
+        showAnnInfo(hitsA[0].object); return;
+      }
     }
   }
   const hits = raycast(clientX, clientY);
@@ -532,7 +537,7 @@ function raycast(clientX, clientY) {
 function onMove(e) {
   if (state.annSprites.length) {
     const hitsA = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY)
-      .filter(h => annSpritePickable(h.object));
+      .filter(h => annSpriteHitValid(h));
     if (hitsA.length) {
       highlightHover(null);
       renderer.domElement.style.cursor = 'pointer';
@@ -806,7 +811,7 @@ function boneBoxOf(fma) {
   }
   return box;
 }
-/* 标注点是否可被拾取：从相机到点的连线上不被骨面抢先命中（被挡住的点不参与拾取） */
+/* 标注点是否可被拾取：从相机到点的连线上不被任何可见骨面抢先命中 */
 function annSpritePickable(sprite) {
   const wp = sprite.getWorldPosition(new THREE.Vector3());
   const dir = wp.clone().sub(camera.position);
@@ -814,10 +819,22 @@ function annSpritePickable(sprite) {
   if (dist < 1e-6) return true;
   dir.normalize();
   raycaster.set(camera.position, dir);
-  raycaster.far = dist - sprite.scale.x * 0.4;
+  raycaster.far = dist - 0.002;   // 2mm 容差：吸附点贴在骨面上，射线擦到自身表面不算遮挡
   const hit = raycaster.intersectObjects(state.meshes.filter(m => m.mesh.visible).map(m => m.mesh), false);
   raycaster.far = Infinity;
   return hit.length === 0;
+}
+/* 命中点有效性：射线须穿过标注圆的可见范围（贴片四角透明区域不算），且未被骨面遮挡 */
+function annSpriteHitValid(hit) {
+  const sprite = hit.object;
+  const wp = sprite.getWorldPosition(new THREE.Vector3());
+  const toCam = wp.clone().sub(camera.position);
+  const dist = toCam.length();
+  const along = hit.distance ?? dist;
+  const perp = Math.sqrt(Math.max(dist * dist - along * along, 0));
+  const worldR = sprite.scale.x * 0.31;      // 可见圆半径（纹理圆约占贴片 0.62）
+  if (perp > worldR) return false;
+  return annSpritePickable(sprite);
 }
 
 /* ============ 结构标注 ============ */
@@ -1310,7 +1327,7 @@ function animate() {
       const dist = dir.length();
       dir.normalize();
       raycaster.set(camera.position, dir);
-      raycaster.far = dist - s * 0.4;
+      raycaster.far = dist - 0.002;
       const hit = raycaster.intersectObject(a.mesh, false);
       raycaster.far = Infinity;
       // 默认半透明避免挡住小结构；被骨面挡住更淡；选中/悬停不透明
