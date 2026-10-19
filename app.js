@@ -37,12 +37,13 @@ const REGIONS = ['颅骨', '脊柱', '胸廓', '上肢', '下肢'];
 
 /* 骨骼外观：干骨的象牙米黄，而不是纯白或灰蓝 */
 const BASE_COLOR = new THREE.Color(0xe8ddc3);
-const SEL_COLOR  = new THREE.Color(0xff4d4f);
+/* 选中色与悬停色同属一个蓝（0x4da3ff）只是略深一档；红色观感刺眼，弃用 */
+const SEL_COLOR  = new THREE.Color(0x3d82cc);
 const HOV_COLOR  = new THREE.Color(0x4da3ff);
 const KEY_COLOR  = new THREE.Color(0xff7043);  // 重点标红的橙红，与选中红区分
 const XRAY_OPACITY = 0.34;   // X 光模式透明度（统一常量）
 const XRAY_TINT  = new THREE.Color(0x9fd8e8);  // X 光下的冷青色
-const SEL_EMISSIVE = new THREE.Color(0x551010);
+const SEL_EMISSIVE = new THREE.Color(0x0e2a4d);
 const XRAY_EMISSIVE = new THREE.Color(0x16404d);
 const NO_EMISSIVE  = new THREE.Color(0x000000);
 
@@ -875,9 +876,9 @@ function makeLabel(text) {
   const h = PILL_FS + PILL_PAD_Y * 2;
   cv.width = w * dpr; cv.height = h * dpr;
   ctx.scale(dpr, dpr);
-  // 圆角背景
+  // 圆角背景（与选中骨骼的深蓝一致）
   const r = h / 2;
-  ctx.fillStyle = 'rgba(255,77,79,0.92)';
+  ctx.fillStyle = 'rgba(61,130,204,0.92)';
   ctx.beginPath(); ctx.roundRect(0, 0, w, h, r); ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.roundRect(0.75, 0.75, w - 1.5, h - 1.5, r); ctx.stroke();
