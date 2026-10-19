@@ -481,6 +481,16 @@ function bindUI() {
   });
   el.addEventListener('pointermove', onMove);
   el.addEventListener('pointerleave', () => { hoverEl.classList.remove('show'); highlightHover(null); });
+  // 双击 3D 视图中的骨（或其名称标签）→ 进入隔离查看
+  el.addEventListener('dblclick', e => {
+    const hits = raycastList(state.annSprites.filter(a => annSpritePickable(a.sprite)).map(a => a.sprite), e.clientX, e.clientY);
+    if (hits.length) { if (state.selected) enterIsolate(state.selected); return; }
+    const hitsB = raycast(e.clientX, e.clientY);
+    if (hitsB.length) {
+      const fma = hitsB[0].object.userData.fma;
+      if (fma) { selectBone(fma); enterIsolate(fma); }
+    }
+  });
 }
 
 /* ============ 射线拾取 ============ */
@@ -489,7 +499,8 @@ const ndc = new THREE.Vector2();
 
 function pick(clientX, clientY) {
   if (state.annSprites.length) {
-    const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY);
+    const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY)
+      .filter(h => annSpritePickable(h.object));
     if (hitsA.length) {
       if (state.editMode) { selectAnnPoint(hitsA[0].object); return; }
       showAnnInfo(hitsA[0].object); return;
@@ -520,7 +531,8 @@ function raycast(clientX, clientY) {
 
 function onMove(e) {
   if (state.annSprites.length) {
-    const hitsA = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY);
+    const hitsA = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY)
+      .filter(h => annSpritePickable(h.object));
     if (hitsA.length) {
       highlightHover(null);
       renderer.domElement.style.cursor = 'pointer';
@@ -683,8 +695,7 @@ function enterIsolate(fma) {
   applyVisibility();
   const list = state.byFma.get(fma);
   if (list && list.length) {
-    const box = new THREE.Box3();
-    list.forEach(m => box.expandByObject(m));
+    const box = boneBoxOf(fma);
     const c = box.getCenter(new THREE.Vector3());
     const r = Math.max(box.getBoundingSphere(new THREE.Sphere()).radius, 0.02);
     controls.target.copy(c);
@@ -781,6 +792,32 @@ function makeLabel(text) {
   sp.userData.cssW = w;   // 药丸屏幕尺寸（CSS px），每帧据此换算世界尺寸
   sp.userData.cssH = h;
   return sp;
+}
+
+/* 骨骼包围盒：仅统计骨网格自身几何。
+   标注 sprite 是网格子对象且会随相机距离缩放，expandByObject 会把它们算进包围盒，
+   导致隔离取景/标签锚点被撑偏。 */
+function boneBoxOf(fma) {
+  const box = new THREE.Box3();
+  const list = state.byFma.get(fma) || [];
+  for (const m of list) {
+    m.geometry.computeBoundingBox();
+    box.union(new THREE.Box3().copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld));
+  }
+  return box;
+}
+/* 标注点是否可被拾取：从相机到点的连线上不被骨面抢先命中（被挡住的点不参与拾取） */
+function annSpritePickable(sprite) {
+  const wp = sprite.getWorldPosition(new THREE.Vector3());
+  const dir = wp.clone().sub(camera.position);
+  const dist = dir.length();
+  if (dist < 1e-6) return true;
+  dir.normalize();
+  raycaster.set(camera.position, dir);
+  raycaster.far = dist - sprite.scale.x * 0.4;
+  const hit = raycaster.intersectObjects(state.meshes.filter(m => m.mesh.visible).map(m => m.mesh), false);
+  raycaster.far = Infinity;
+  return hit.length === 0;
 }
 
 /* ============ 结构标注 ============ */
@@ -1065,8 +1102,7 @@ function placeLabel(fma) {
   if (!list || !list.length) return;
   const b = state.bones[fma];
   if (!b) return;
-  const box = new THREE.Box3();
-  list.forEach(m => box.expandByObject(m));
+  const box = boneBoxOf(fma);
   labelAnchor = box.getCenter(new THREE.Vector3());
   labelRadius = box.getBoundingSphere(new THREE.Sphere()).radius || 0.01;
   labelSprite = makeLabel(b.cn);
