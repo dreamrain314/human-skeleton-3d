@@ -832,7 +832,7 @@ function annSpriteHitValid(hit) {
   const dist = toCam.length();
   const along = hit.distance ?? dist;
   const perp = Math.sqrt(Math.max(dist * dist - along * along, 0));
-  const worldR = sprite.scale.x * 0.31;      // 可见圆半径（纹理圆约占贴片 0.62）
+  const worldR = sprite.scale.x * 0.45;      // 点击热区略大于可见圆（可见圆约 0.31），好点不难戳
   if (perp > worldR) return false;
   return annSpritePickable(sprite);
 }
