@@ -164,7 +164,8 @@ async function boot() {
     const draco = new DRACOLoader().setDecoderPath('./lib/draco/');
     const gltf = await new Promise((res, rej) => {
       // 正确的回调顺序: load(url, onLoad, onProgress, onError)
-      new GLTFLoader().setDRACOLoader(draco).load('./models/skeleton.glb', res,
+      // 版本参数随模型更新手动递增，避免 Pages 缓存导致用户拿到旧模型
+      new GLTFLoader().setDRACOLoader(draco).load('./models/skeleton.glb?v=20261019e', res,
         p => {
           if (p.total) {
             // Pages 对 glb 走 gzip 时 loaded 按解压字节计、total 是压缩大小，比值可能 >100%，需截断
@@ -214,7 +215,7 @@ async function boot() {
     scene.add(model);
 
     const maxDim = Math.max(size.x, size.y, size.z);
-    controls.minDistance = maxDim * 0.08;   // 允许凑近到单块骨细节级别
+    controls.minDistance = maxDim * 0.01;   // 允许凑近到听小骨等毫米级细节（near=0.01 之上留有余量）
     controls.maxDistance = maxDim * 6;
     camera.position.set(0, 0, maxDim * 1.55);
     controls.target.set(0, 0, 0);
@@ -640,7 +641,7 @@ function enterIsolate(fma) {
     controls.target.copy(c);
     const dir = camera.position.clone().sub(c);
     if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
-    dir.setLength(r * 3.2 + 0.05);
+    dir.setLength(Math.max(r * 3.2 + 0.01, 0.016));   // 小骨（听小骨级）也能取得近景特写
     camera.position.copy(c).add(dir);
     controls.update();
   }
