@@ -15,7 +15,7 @@
 | 基础项目 | Z-Anatomy（https://github.com/LluisV/Z-Anatomy ，CC BY-SA 4.0） |
 | 许可证 | **CC BY-SA 4.0**<br>https://creativecommons.org/licenses/by-sa/4.0/ |
 | 本仓库改编 | 剔除牙齿/肋软骨/手部籽骨；右侧骨镜像生成左侧（scale −1 节点）；
-胸骨柄与胸骨体合并计入胸骨；**舌骨来自下述 BodyParts3D 模型**（Umeyama 局部拟合对位移植）；
+胸骨柄与胸骨体计入胸骨，**剑突取自 BodyParts3D 移植补全**；**舌骨来自下述 BodyParts3D 模型**（局部拟合对位移植）；
 节点以 FMA ID 命名用于点击拾取；保留原法线贴图 |
 
 > ShareAlike 说明：模型文件 `models/skeleton.glb` 以 CC BY-SA 4.0 提供；
@@ -36,7 +36,7 @@
 
 ### 历史模型（v1.2 及之前）：BodyParts3D 4.0
 
-舌骨网格仍取自 BodyParts3D，特此署名。
+舌骨与剑突网格仍取自 BodyParts3D（剑突 FMA7488，经坐标变换移植为新模型胸骨的第三部件），特此署名。
 
 | 项目 | 内容 |
 |---|---|
