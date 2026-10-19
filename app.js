@@ -21,7 +21,10 @@ const state = {
   hiddenSet: new Set(), // 会话级：用户手动隐藏的骨（不持久化）
   ann: null,            // FMA -> [结构标注条目]（data/annotations.json）
   annPair: null,        // 成对骨 FMA 映射（右↔左），懒构建
-  annSprites: [],       // 当前显示的标注点 {sprite, entry, name}
+  annSprites: [],       // 当前显示的标注点 {sprite, entry, name, mesh}
+  annEdit: null,        // 编辑模式工作副本 {fma: [pts 条目]}
+  annSel: null,         // 编辑模式选中的点 {fma, entry, ptIndex, sprite, mesh}
+  editMode: false,      // 标注编辑模式（URL ?edit=1）
   isolated: null,       // 单骨隔离模式：仅显示该骨
   detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
@@ -164,6 +167,13 @@ async function boot() {
     state.keySet = new Set(store.getMarked());
     state.ann = await fetch('./data/annotations.json', { cache: 'no-cache' })
       .then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    state.editMode = new URLSearchParams(location.search).has('edit');
+    if (state.editMode) {
+      const eb = document.getElementById('editBar');
+      eb.classList.add('show');
+      eb.innerHTML = '标注编辑模式 —— 点击骨面：新增 · 点击标注选中后点骨面：移动 · <span id="annExport">导出标注数据</span>';
+      document.getElementById('annExport').onclick = exportAnnotations;
+    }
 
     // 模型是 Draco 压缩（3MB 级），解码器本地化，不依赖外网 CDN
     const draco = new DRACOLoader().setDecoderPath('./lib/draco/');
@@ -477,9 +487,18 @@ const ndc = new THREE.Vector2();
 function pick(clientX, clientY) {
   if (state.annSprites.length) {
     const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY);
-    if (hitsA.length) { showAnnInfo(hitsA[0].object); return; }
+    if (hitsA.length) {
+      if (state.editMode) { selectAnnPoint(hitsA[0].object); return; }
+      showAnnInfo(hitsA[0].object); return;
+    }
   }
   const hits = raycast(clientX, clientY);
+  if (state.editMode) {
+    if (!hits.length || hits[0].object.userData.fma !== state.selected) { selectAnnPoint(null); return; }
+    if (state.annSel) moveAnnSelTo(hits[0]);
+    else createAnnAt(hits[0]);
+    return;
+  }
   if (!hits.length) { clearSelection(); return; }
   const fma = hits[0].object.userData.fma;
   selectBone(fma);
@@ -806,6 +825,7 @@ function clearAnnSprites() {
 }
 function buildAnnSprites(fma) {
   clearAnnSprites();
+  if (state.editMode) { buildAnnSpritesEdit(fma); return; }
   const entries = (state.ann && (state.ann[fma] || state.ann[annPairOf(fma)])) || [];
   const meshes = state.byFma.get(fma) || [];
   for (const e of entries) {
@@ -814,30 +834,171 @@ function buildAnnSprites(fma) {
       const hit = meshes.filter(m => m.geometry.attributes.position.count === ANN_PART_VERTS[e.part]);
       if (hit.length) targets = hit;
     }
-    const variants = e.side ? [[e.rel, '（右）'], [[1 - e.rel[0], e.rel[1], e.rel[2]], '（左）']] : [[e.rel, '']];
-    for (const [rel, suffix] of variants) {
+    // 两种坐标来源：pts 为精确局部坐标；rel 为包围盒归一化坐标（展开后吸附）
+    const variants = e.pts
+      ? e.pts.map((p, i) => [{ pts: p }, e.pts.length > 1 ? (i === 0 ? '（右）' : '（左）') : ''])
+      : (e.side ? [[e.rel, '（右）'], [[1 - e.rel[0], e.rel[1], e.rel[2]], '（左）']] : [[e.rel, '']]);
+    for (const [rv, suffix] of variants) {
       for (const mesh of targets) {
         const geo = mesh.geometry;
         if (!geo.boundingBox) geo.computeBoundingBox();
         const bb = geo.boundingBox;
-        const p = [
-          bb.min.x + (bb.max.x - bb.min.x) * rel[0],
-          bb.min.y + (bb.max.y - bb.min.y) * rel[1],
-          bb.min.z + (bb.max.z - bb.min.z) * rel[2],
+        const p = rv.pts ? rv.pts.slice() : [
+          bb.min.x + (bb.max.x - bb.min.x) * rv[0],
+          bb.min.y + (bb.max.y - bb.min.y) * rv[1],
+          bb.min.z + (bb.max.z - bb.min.z) * rv[2],
         ];
-        const sp = annSnap(mesh, p);
-        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true });
+        const sp = rv.pts ? rv.pts.slice() : annSnap(mesh, p);
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false });
         const sprite = new THREE.Sprite(mat);
         sprite.position.set(sp[0], sp[1], sp[2]);
-        sprite.renderOrder = 50;
+        sprite.renderOrder = 990;
         sprite.userData.ann = { entry: e, name: e.name + suffix };
         mesh.add(sprite);
-        state.annSprites.push({ sprite, entry: e, name: sprite.userData.ann.name });
+        state.annSprites.push({ sprite, entry: e, name: sprite.userData.ann.name, mesh });
       }
     }
   }
   renderAnnList(entries);
 }
+/* ---- 编辑模式 ---- */
+function annEditFor(fma) {   // 把 base 条目懒转换为 pts 格式的工作副本
+  if (!state.annEdit) state.annEdit = {};
+  if (state.annEdit[fma]) return state.annEdit[fma];
+  const srcEntries = state.ann[fma] || state.ann[annPairOf(fma)] || [];
+  const meshes = state.byFma.get(fma) || [];
+  const out = [];
+  let n = 0;
+  for (const e of srcEntries) {
+    let targets = meshes;
+    if (e.part && ANN_PART_VERTS[e.part]) {
+      const hit = meshes.filter(m => m.geometry.attributes.position.count === ANN_PART_VERTS[e.part]);
+      if (hit.length) targets = hit;
+    }
+    // 两种坐标来源：pts 为精确局部坐标；rel 为包围盒归一化坐标（展开后吸附）
+    const variants = e.pts
+      ? e.pts.map((p, i) => [{ pts: p }, e.pts.length > 1 ? (i === 0 ? '（右）' : '（左）') : ''])
+      : (e.side ? [[e.rel, '（右）'], [[1 - e.rel[0], e.rel[1], e.rel[2]], '（左）']] : [[e.rel, '']]);
+    for (const [rv, suffix] of variants) {
+      for (const mesh of targets) {
+        const geo = mesh.geometry;
+        if (!geo.boundingBox) geo.computeBoundingBox();
+        const bb = geo.boundingBox;
+        const p = rv.pts ? rv.pts.slice() : [
+          bb.min.x + (bb.max.x - bb.min.x) * rv[0],
+          bb.min.y + (bb.max.y - bb.min.y) * rv[1],
+          bb.min.z + (bb.max.z - bb.min.z) * rv[2],
+        ];
+        const sp = rv.pts ? rv.pts.slice() : annSnap(mesh, p);
+        out.push({ id: e.id + '-' + (n++), name: e.name + suffix, en: e.en || '', desc: e.desc || '', detail: e.detail || '', pts: [sp] });
+        break;
+      }
+    }
+  }
+  state.annEdit[fma] = out;
+  return out;
+}
+function buildAnnSpritesEdit(fma) {
+  const entries = annEditFor(fma);
+  const meshes = state.byFma.get(fma) || [];
+  for (const e of entries) {
+    let targets = meshes;
+    if (e.part && ANN_PART_VERTS[e.part]) {
+      const hit = meshes.filter(m => m.geometry.attributes.position.count === ANN_PART_VERTS[e.part]);
+      if (hit.length) targets = hit;
+    }
+    for (let pi = 0; pi < e.pts.length; pi++) {
+      for (const mesh of targets) {
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false });
+        const sprite = new THREE.Sprite(mat);
+        sprite.position.set(e.pts[pi][0], e.pts[pi][1], e.pts[pi][2]);
+        sprite.renderOrder = 990;
+        const suffix = e.pts.length > 1 ? ' ' + (pi + 1) : '';
+        sprite.userData.ann = { entry: e, name: e.name + suffix, ptIndex: pi };
+        mesh.add(sprite);
+        state.annSprites.push({ sprite, entry: e, name: sprite.userData.ann.name, mesh, fma });
+      }
+    }
+  }
+  renderAnnList(entries);
+  refreshAnnEditForm();
+}
+function selectAnnPoint(sprite) {
+  state.annSel = sprite ? {
+    fma: sprite.userData.fma || state.selected,
+    entry: sprite.userData.ann.entry,
+    ptIndex: sprite.userData.ann.ptIndex ?? 0,
+    sprite, mesh: sprite.parent,
+  } : null;
+  for (const a of state.annSprites) a.sprite.material.color.set(0xffffff);
+  if (state.annSel) state.annSel.sprite.material.color.set(0xff4a2e);
+  refreshAnnEditForm();
+}
+function moveAnnSelTo(hit) {
+  if (!state.annSel) return;
+  const mesh = hit.object;
+  const local = mesh.worldToLocal(hit.point.clone());
+  const sp = annSnap(mesh, [local.x, local.y, local.z]);
+  state.annSel.entry.pts[state.annSel.ptIndex] = sp;
+  // 跨部件移动时重新挂载父级
+  if (state.annSel.sprite.parent !== mesh) {
+    state.annSel.sprite.parent.remove(state.annSel.sprite);
+    mesh.add(state.annSel.sprite);
+    state.annSel.mesh = mesh;
+  }
+  state.annSel.sprite.position.set(sp[0], sp[1], sp[2]);
+}
+function createAnnAt(hit) {
+  const fma = hit.object.userData.fma;
+  if (!fma) return;
+  const entries = annEditFor(fma);
+  const mesh = hit.object;
+  const local = mesh.worldToLocal(hit.point.clone());
+  const sp = annSnap(mesh, [local.x, local.y, local.z]);
+  const entry = { id: 'ann-' + Date.now(), name: '新标注', en: '', desc: '', detail: '', pts: [sp] };
+  entries.push(entry);
+  buildAnnSprites(state.selected);
+  const a = state.annSprites.find(x => x.entry === entry);
+  selectAnnPoint(a ? a.sprite : null);
+}
+function deleteAnnSel() {
+  if (!state.annSel) return;
+  const { fma, entry, ptIndex } = state.annSel;
+  entry.pts.splice(ptIndex, 1);
+  if (!entry.pts.length) {
+    const arr = (state.annEdit[fma] || []).filter(e => e !== entry);
+    state.annEdit[fma] = arr;
+  }
+  state.annSel = null;
+  buildAnnSprites(state.selected);
+  refreshAnnEditForm();
+}
+function refreshAnnEditForm() {
+  const sec = document.getElementById('annEditSec');
+  if (!sec) return;
+  if (!state.editMode || !state.annSel) { sec.hidden = true; return; }
+  sec.hidden = false;
+  const { entry } = state.annSel;
+  const nm = document.getElementById('annName'), en = document.getElementById('annEn'),
+        de = document.getElementById('annDesc'), dt = document.getElementById('annDetail');
+  if (document.activeElement !== nm) nm.value = entry.name;
+  if (document.activeElement !== en) en.value = entry.en || '';
+  if (document.activeElement !== de) de.value = entry.desc || '';
+  if (document.activeElement !== dt) dt.value = entry.detail || '';
+}
+function exportAnnotations() {
+  if (!state.annEdit) { loadTip('没有修改可导出'); return; }
+  const merged = {};
+  for (const [fma, entries] of Object.entries(state.ann)) merged[fma] = entries;
+  for (const [fma, entries] of Object.entries(state.annEdit)) merged[fma] = entries;
+  delete merged._说明;
+  const blob = new Blob([JSON.stringify(merged, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'annotations.json';
+  a.click();
+}
+
 function renderAnnList(entries) {
   const sec = $('annSec'), list = $('annList');
   if (!sec) return;
@@ -867,6 +1028,12 @@ function showAnnDesc(entry) {
   dd.className = 'ann-desc';
   dd.dataset.id = entry.id;
   dd.textContent = entry.desc;
+  if (entry.detail) {
+    const dt = document.createElement('div');
+    dt.className = 'ann-detail';
+    dt.textContent = entry.detail;
+    dd.appendChild(dt);
+  }
   list.appendChild(dd);
   list.querySelectorAll('.ann-chip').forEach(c => { if (c.textContent === entry.name) c.classList.add('on'); });
   for (const a of state.annSprites) a.sprite.material.color.set(a.entry === entry ? 0xff4a2e : 0xffffff);
@@ -1077,21 +1244,49 @@ function resetView() {
 }
 
 /* ============ 渲染循环 ============ */
+let frameCount = 0;
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   updateLabelPose();
-  // 标注点保持恒定屏幕大小
+  // 标注点保持恒定屏幕大小 + 遮挡检测（每 6 帧一次：被骨面挡住时变半透明）
   const tmpV = new THREE.Vector3();
+  const occFrame = (frameCount++ % 6 === 0);
   for (const a of state.annSprites) {
     a.sprite.getWorldPosition(tmpV);
     const s = camera.position.distanceTo(tmpV) * 0.022;
     a.sprite.scale.set(s, s, 1);
+    if (occFrame) {
+      const dir = tmpV.clone().sub(camera.position);
+      const dist = dir.length();
+      dir.normalize();
+      raycaster.set(camera.position, dir);
+      raycaster.far = dist - s * 0.4;
+      const hit = raycaster.intersectObject(a.mesh, false);
+      raycaster.far = Infinity;
+      a.sprite.material.opacity = hit.length ? 0.22 : 1.0;
+    }
   }
   renderer.render(scene, camera);
 }
 
 boot();
+
+/* 编辑模式表单绑定 */
+(function annFormBind() {
+  const map = { annName: 'name', annEn: 'en', annDesc: 'desc', annDetail: 'detail' };
+  for (const [id, field] of Object.entries(map)) {
+    document.getElementById(id).addEventListener('input', e => {
+      if (!state.annSel) return;
+      state.annSel.entry[field] = e.target.value;
+      if (field === 'name') {
+        for (const a of state.annSprites) if (a.entry === state.annSel.entry) a.name = e.target.value;
+        renderAnnList(state.annEdit[state.annSel.fma] || []);
+      }
+    });
+  }
+  document.getElementById('annDel').onclick = deleteAnnSel;
+})();
 
 /* 调试出口：控制台可直接查运行时状态（不影响功能） */
 window.__skel = { state, camera, scene, controls, THREE };
