@@ -27,6 +27,8 @@ const state = {
   editMode: false,      // 标注编辑模式（URL ?edit=1）
   isolated: null,       // 单骨隔离模式：仅显示该骨
   detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
+  annOp: 0.5,           // 标注点基础不透明度（用户可在工具面板调节，localStorage 持久化）
+  detailEdits: {},      // 用户在编辑模式修改的骨内容 {fma:{function,points,clinical}}（localStorage 持久化）
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
   homeDist: 0,          // 默认视距，重置视角时回到这里
   panRange: 1,          // 滑块满行程对应的世界单位
@@ -165,14 +167,27 @@ async function boot() {
     state.bones = bones;
     store.init();
     state.keySet = new Set(store.getMarked());
+    // 标注点不透明度与骨内容修改：用户本地偏好，读失败按默认值继续
+    try {
+      let op = parseFloat(localStorage.getItem('hs3d-ann-op'));
+      if (!isNaN(op)) {
+        if (op > 1) op = op / 100;   // 存的是滑块刻度（15–100），换算回 0–1
+        state.annOp = Math.min(1, Math.max(0.15, op));
+      }
+    } catch (e) {}
+    try {
+      state.detailEdits = JSON.parse(localStorage.getItem('hs3d-detail-edits') || '{}') || {};
+    } catch (e) { state.detailEdits = {}; }
     state.ann = await fetch('./data/annotations.json', { cache: 'no-cache' })
       .then(r => r.ok ? r.json() : {}).catch(() => ({}));
     state.editMode = new URLSearchParams(location.search).has('edit');
     if (state.editMode) {
       const eb = document.getElementById('editBar');
       eb.classList.add('show');
-      eb.innerHTML = '标注编辑模式 —— 点击骨面：新增 · 点击标注选中后点骨面：移动 · <span id="annExport">导出标注数据</span>';
+      eb.innerHTML = '标注编辑模式 —— 双击骨面：新增/移动 · 拖动标注可微调 · 单击选骨 · ' +
+        '<span id="annExport">导出标注数据</span> · <span id="dExport">导出内容修改</span>';
       document.getElementById('annExport').onclick = exportAnnotations;
+      document.getElementById('dExport').onclick = exportDetailEdits;
     }
 
     // 模型是 Draco 压缩（3MB 级），解码器本地化，不依赖外网 CDN
@@ -480,8 +495,29 @@ function bindUI() {
 
   const el = renderer.domElement;
   let downPos = null;
-  el.addEventListener('pointerdown', e => { downPos = { x: e.clientX, y: e.clientY }; });
+  el.addEventListener('pointerdown', e => {
+    downPos = { x: e.clientX, y: e.clientY };
+    // 编辑模式：按在标注点上先记为候选拖拽，移动超阈值才转入拖拽（否则仍按单击处理）
+    if (state.editMode && state.annSprites.length) {
+      const near = nearestAnnToScreen(e.clientX, e.clientY);
+      if (near) annDrag = { rec: near.rec, moved: false, sx: e.clientX, sy: e.clientY };
+    }
+  });
   el.addEventListener('pointerup', e => {
+    if (annDrag) {
+      const d = annDrag; annDrag = null;
+      if (d.moved) {
+        controls.enabled = true;
+        renderer.domElement.style.cursor = '';
+        // 松手吸附到最近顶点，保证点贴在骨面上
+        if (state.annSel) {
+          const mesh = state.annSel.mesh;
+          const sp = annSnap(mesh, state.annSel.entry.pts[state.annSel.ptIndex]);
+          state.annSel.entry.pts[state.annSel.ptIndex] = sp;
+          state.annSel.sprite.position.set(sp[0], sp[1], sp[2]);
+        }
+      }
+    }
     if (!downPos) return;
     const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
     if (moved < 5) pick(e.clientX, e.clientY);
@@ -489,19 +525,48 @@ function bindUI() {
   });
   el.addEventListener('pointermove', onMove);
   el.addEventListener('pointerleave', () => { hoverEl.classList.remove('show'); highlightHover(null); });
-  // 双击 3D 视图中的骨（或其名称标签）→ 进入隔离查看
+  // 双击：普通模式进入隔离查看；编辑模式改为 新增/移动标注点（隔离会打断编辑流）
   el.addEventListener('dblclick', e => {
     const hitsB = raycast(e.clientX, e.clientY);
-    if (hitsB.length) {
-      const fma = hitsB[0].object.userData.fma;
-      if (fma) { selectBone(fma); enterIsolate(fma); }
+    if (!hitsB.length) return;
+    const fma = hitsB[0].object.userData.fma;
+    if (!fma) return;
+    if (state.editMode) {
+      if (fma !== state.selected) { selectBone(fma); return; }   // 双击的是另一块骨：先选中它
+      if (state.annSel) moveAnnSelTo(hitsB[0]);                  // 已有选中的点：移动到双击处
+      else createAnnAt(hitsB[0]);                                // 没有选中点：在此新增一个标注
+      return;
     }
+    selectBone(fma); enterIsolate(fma);
   });
+
+  /* 标注点不透明度滑块（用户偏好，localStorage 持久化） */
+  const opEl = $('annOp');
+  if (opEl) {
+    opEl.value = Math.round(state.annOp * 100);
+    $('annOpVal').textContent = opEl.value + '%';
+    opEl.addEventListener('input', () => {
+      state.annOp = +opEl.value / 100;
+      $('annOpVal').textContent = opEl.value + '%';
+      try { localStorage.setItem('hs3d-ann-op', opEl.value); } catch (e) {}
+      // 立即生效（遮挡淡化的细调由渲染循环按 6 帧节奏接管）
+      for (const a of state.annSprites) {
+        const emphasized = (state.annSel && state.annSel.entry === a.entry) || a.hover;
+        a.sprite.material.opacity = emphasized ? 1.0 : state.annOp;
+      }
+    });
+  }
+
+  /* 骨内容编辑（编辑模式）：功能作用 / 知识点 / 临床关联 */
+  $('dEditBtn').onclick = startDEdit;
+  $('dSaveBtn').onclick = saveDEdit;
+  $('dCancelBtn').onclick = cancelDEdit;
 }
 
 /* ============ 射线拾取 ============ */
 const raycaster = new THREE.Raycaster();
 const ndc = new THREE.Vector2();
+let annDrag = null;   // 编辑模式拖拽中的标注点 {rec, moved, sx, sy}（bindUI 写入，onMove 消费）
 
 function pick(clientX, clientY) {
   const hits = raycast(clientX, clientY);
@@ -511,9 +576,10 @@ function pick(clientX, clientY) {
     const near = nearestAnnToScreen(clientX, clientY);
     if (near) {
       if (state.editMode) {
-        // 编辑模式：点中已选中的点 → 移动到点击处的精确表面位置；点中其他点 → 改选它
-        if (state.annSel && state.annSel.entry === near.rec.entry) moveAnnSelTo(hits[0]);
-        else selectAnnPoint(near.sprite);
+        // 编辑模式：点中已选中的同一点 → 取消选中；点中其他点 → 改选它（移动走拖拽/双击）
+        const samePt = state.annSel && state.annSel.entry === near.rec.entry &&
+          state.annSel.ptIndex === (near.rec.sprite.userData.ann.ptIndex ?? 0);
+        samePt ? clearAnnSel() : selectAnnPoint(near.sprite);
         return;
       }
       // 普通模式：选中该点（红色高亮 + 名称标签常驻），再点同一点取消
@@ -525,9 +591,12 @@ function pick(clientX, clientY) {
     }
   }
   if (state.editMode) {
-    if (!hits.length || hitFma !== state.selected) { selectAnnPoint(null); return; }
-    if (state.annSel) moveAnnSelTo(hits[0]);
-    else createAnnAt(hits[0]);
+    // 编辑模式：单击骨面 = 选中该骨（新增/移动只走双击与拖拽，避免误建点）
+    if (hits.length) {
+      if (hitFma !== state.selected) selectBone(hitFma);
+      return;   // 点在已选中的骨上：保留现场（拖拽/双击在这块骨上操作）
+    }
+    clearAnnSel();   // 点空白：只取消标注点选中，信息面板保留便于继续编辑
     return;
   }
   if (!hits.length) { clearSelection(); return; }
@@ -547,6 +616,20 @@ function raycast(clientX, clientY) {
 }
 
 function onMove(e) {
+  // 编辑模式：拖拽标注点沿骨面移动（移动超 4px 才算拖拽，单击仍走 pick）
+  if (annDrag) {
+    if (!annDrag.moved && Math.hypot(e.clientX - annDrag.sx, e.clientY - annDrag.sy) > 4) {
+      annDrag.moved = true;
+      controls.enabled = false;          // 拖点期间不让轨道控制器抢事件
+      selectAnnPoint(annDrag.rec.sprite);
+      renderer.domElement.style.cursor = 'grabbing';
+    }
+    if (annDrag.moved && state.annSel) {
+      const hits = raycast(e.clientX, e.clientY).filter(h => h.object.userData.fma === state.selected);
+      if (hits.length) moveAnnSelTo(hits[0], true);   // 拖拽中不吸附，松手再吸附
+    }
+    return;
+  }
   if (state.annSprites.length) {
     if (state.annSprites.length && state.selected) {
       const near = nearestAnnToScreen(e.clientX, e.clientY);
@@ -912,7 +995,7 @@ function clearAnnSel() {
   if (lbl) lbl.style.display = 'none';
   for (const a of state.annSprites) {
     a.sprite.material.color.set(0xffffff);
-    a.sprite.material.opacity = 0.5;
+    a.sprite.material.opacity = state.annOp;
   }
   const list = $('annList');
   if (list) {
@@ -954,7 +1037,7 @@ function buildAnnSprites(fma) {
           bb.min.z + (bb.max.z - bb.min.z) * rv[2],
         ];
         const sp = rv.pts ? rv.pts.slice() : annSnap(mesh, p);
-        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: 0.5 });
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: state.annOp });
         const sprite = new THREE.Sprite(mat);
         sprite.position.set(sp[0], sp[1], sp[2]);
         sprite.renderOrder = 990;
@@ -1014,7 +1097,7 @@ function buildAnnSpritesEdit(fma) {
     }
     for (let pi = 0; pi < e.pts.length; pi++) {
       for (const mesh of targets) {
-        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: 0.5 });
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true, depthTest: false, depthWrite: false, opacity: state.annOp });
         const sprite = new THREE.Sprite(mat);
         sprite.position.set(e.pts[pi][0], e.pts[pi][1], e.pts[pi][2]);
         sprite.renderOrder = 990;
@@ -1030,7 +1113,7 @@ function buildAnnSpritesEdit(fma) {
 }
 function selectAnnPoint(sprite) {
   const rec = sprite ? state.annSprites.find(r => r.hit === sprite || r.sprite === sprite) : null;
-  for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = 0.5; }
+  for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = state.annOp; }
   state.annSel = rec ? { fma: state.selected, entry: rec.entry, ptIndex: rec.sprite.userData.ann.ptIndex ?? 0, sprite: rec.sprite, mesh: rec.mesh } : null;
   if (state.annSel) {
     state.annSel.sprite.material.color.set(0xff4a2e);
@@ -1054,11 +1137,13 @@ function selectAnnPoint(sprite) {
   }
   refreshAnnEditForm();
 }
-function moveAnnSelTo(hit) {
+function moveAnnSelTo(hit, live = false) {
   if (!state.annSel) return;
   const mesh = hit.object;
   const local = mesh.worldToLocal(hit.point.clone());
-  const sp = annSnap(mesh, [local.x, local.y, local.z]);
+  const p = [local.x, local.y, local.z];
+  // 拖拽中用精确表面点保证跟手；单击/双击定位时直接吸附最近顶点
+  const sp = live ? p : annSnap(mesh, p);
   state.annSel.entry.pts[state.annSel.ptIndex] = sp;
   // 跨部件移动时重新挂载父级
   if (state.annSel.sprite.parent !== mesh) {
@@ -1079,7 +1164,7 @@ function createAnnAt(hit) {
   entries.push(entry);
   buildAnnSprites(state.selected);
   const rec = state.annSprites.find(x => x.entry === entry);
-  selectAnnPoint(rec ? rec.hit : null);
+  selectAnnPoint(rec ? rec.sprite : null);   // 新增后直接选中，右侧表单立即可命名
 }
 function deleteAnnSel() {
   if (!state.annSel) return;
@@ -1115,7 +1200,7 @@ function exportAnnotations() {
   const blob = new Blob([JSON.stringify(merged, null, 1)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  const fname = prompt('导出文件名（不含扩展名），可带版号：', 'annotations-v2');
+  const fname = prompt('导出文件名（不含扩展名），可带版号：', 'annotations-v3');
   if (!fname) return;
   a.download = fname.trim() + '.json';
   a.click();
@@ -1131,7 +1216,14 @@ function renderAnnList(entries) {
     const chip = document.createElement('span');
     chip.className = 'ann-chip';
     chip.textContent = e.name;
-    chip.onclick = () => showAnnDesc(e);
+    chip.onclick = () => {
+      showAnnDesc(e);
+      // 编辑模式：点列表项同时在模型上选中该标注点，便于定位与改名
+      if (state.editMode) {
+        const rec = state.annSprites.find(a => a.entry === e);
+        if (rec) selectAnnPoint(rec.sprite);
+      }
+    };
     list.appendChild(chip);
   }
 }
@@ -1143,7 +1235,7 @@ function showAnnDesc(entry) {
   if (old) old.remove();
   list.querySelectorAll('.ann-chip').forEach(c => c.classList.remove('on'));
   if (isOpen) {
-    for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = 0.5; }
+    for (const a of state.annSprites) { a.sprite.material.color.set(0xffffff); a.sprite.material.opacity = state.annOp; }
     return;
   }
   const dd = document.createElement('div');
@@ -1307,6 +1399,13 @@ function resetDetail() {
   box.classList.remove('open');
   $('moreBtn').classList.remove('open');
   $('moreBtn').textContent = '查看完整介绍 ▸';
+  // 复位内容编辑态（隐藏输入框、还原只读视图）
+  dEditing = false;
+  ['dFnE', 'dPtsE', 'dCliE'].forEach(id => { $(id).hidden = true; $(id).value = ''; });
+  $('dFn').hidden = false; $('dPts').hidden = false; $('dCli').hidden = false;
+  $('dEditBtn').hidden = false; $('dSaveBtn').hidden = true; $('dCancelBtn').hidden = true;
+  $('dEditRow').hidden = true;
+  $('dSavedTip').textContent = '';
 }
 
 async function toggleDetail() {
@@ -1324,19 +1423,21 @@ async function toggleDetail() {
   try {
     const details = await loadDetails();
     if (state.selected !== fma) return;          // 等待期间用户已切换选中骨
-    const d = details[fma];
-    if (d) {
-      $('dFn').textContent = d.function || '（暂无）';
+    const base = details[fma] || {};
+    const ed = state.detailEdits[fma] || {};     // 用户在编辑模式里的本地修改优先
+    if (base.function || ed.function || base.points || ed.points || base.clinical || ed.clinical) {
+      $('dFn').textContent = ed.function || base.function || '（暂无）';
       $('dPts').innerHTML = '';
-      (d.points || []).forEach(p => {
+      (ed.points || base.points || []).forEach(p => {
         const li = document.createElement('li');
         li.textContent = p;
         $('dPts').appendChild(li);
       });
-      $('dCli').textContent = d.clinical || '（暂无）';
+      $('dCli').textContent = ed.clinical || base.clinical || '（暂无）';
       box.classList.add('open');
       btn.classList.add('open');
       btn.textContent = '收起完整介绍 ▾';
+      $('dEditRow').hidden = !state.editMode;    // 内容编辑入口只在编辑模式出现
     } else {
       btn.textContent = '暂无该骨骼的完整介绍';
     }
@@ -1344,6 +1445,80 @@ async function toggleDetail() {
     if (state.selected !== fma) return;
     btn.textContent = '详情加载失败，请检查网络后重试';
   }
+}
+
+/* ============ 骨内容编辑（编辑模式）：功能作用 / 知识点 / 临床关联 ============ */
+let dEditing = false;
+function startDEdit() {
+  if (!state.editMode || !state.selected) return;
+  dEditing = true;
+  $('dFn').hidden = true; $('dPts').hidden = true; $('dCli').hidden = true;
+  $('dFnE').hidden = false; $('dPtsE').hidden = false; $('dCliE').hidden = false;
+  $('dFnE').value = $('dFn').textContent === '（暂无）' ? '' : $('dFn').textContent;
+  $('dPtsE').value = [...$('dPts').querySelectorAll('li')].map(li => li.textContent).join('\n');
+  $('dCliE').value = $('dCli').textContent === '（暂无）' ? '' : $('dCli').textContent;
+  $('dEditBtn').hidden = true; $('dSaveBtn').hidden = false; $('dCancelBtn').hidden = false;
+  $('dSavedTip').textContent = '';
+}
+function renderDetailView(fma) {
+  const ed = state.detailEdits[fma] || {};
+  $('dFn').textContent = ed.function || '（暂无）';
+  $('dPts').innerHTML = '';
+  (ed.points || []).forEach(p => {
+    const li = document.createElement('li');
+    li.textContent = p;
+    $('dPts').appendChild(li);
+  });
+  $('dCli').textContent = ed.clinical || '（暂无）';
+}
+function saveDEdit() {
+  if (!dEditing || !state.selected) return;
+  const fma = state.selected;
+  state.detailEdits[fma] = {
+    function: $('dFnE').value.trim(),
+    points: $('dPtsE').value.split('\n').map(s => s.trim()).filter(Boolean),
+    clinical: $('dCliE').value.trim(),
+  };
+  // 空内容视为未修改，不残留空壳
+  const e2 = state.detailEdits[fma];
+  if (!e2.function && !e2.points.length && !e2.clinical) delete state.detailEdits[fma];
+  try { localStorage.setItem('hs3d-detail-edits', JSON.stringify(state.detailEdits)); } catch (err) {}
+  dEditing = false;
+  $('dFnE').hidden = true; $('dPtsE').hidden = true; $('dCliE').hidden = true;
+  $('dFn').hidden = false; $('dPts').hidden = false; $('dCli').hidden = false;
+  $('dEditBtn').hidden = false; $('dSaveBtn').hidden = true; $('dCancelBtn').hidden = true;
+  renderDetailView(fma);
+  $('dSavedTip').textContent = '已保存 ✓ 导出后由开发者合入正式数据';
+  setTimeout(() => { $('dSavedTip').textContent = ''; }, 3000);
+}
+function cancelDEdit() {
+  if (!dEditing) return;
+  dEditing = false;
+  $('dFnE').hidden = true; $('dPtsE').hidden = true; $('dCliE').hidden = true;
+  $('dFn').hidden = false; $('dPts').hidden = false; $('dCli').hidden = false;
+  $('dEditBtn').hidden = false; $('dSaveBtn').hidden = true; $('dCancelBtn').hidden = true;
+}
+/* 导出骨内容修改（与标注数据分开，合入 bones-detail.json 用） */
+function exportDetailEdits() {
+  if (!Object.keys(state.detailEdits).length) { loadTip('还没有骨骼内容修改：展开完整介绍后点「✎ 编辑内容」'); return; }
+  const blob = new Blob([JSON.stringify(state.detailEdits, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const fname = prompt('导出文件名（不含扩展名），可带版号：', 'detail-edits-v1');
+  if (!fname) return;
+  a.download = fname.trim() + '.json';
+  a.click();
+}
+/* 轻提示（顶部浮层，2.5s 自动消失） */
+function loadTip(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:60;' +
+    'background:rgba(18,22,32,.95);border:1px solid rgba(120,140,180,.22);color:#ffd9a8;' +
+    'font-size:12px;padding:7px 14px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.4);' +
+    'max-width:min(80vw,520px);text-align:center';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
 }
 
 /* 垂直平移：相机与注视点同步上下移动，视线方向保持不变。
@@ -1373,27 +1548,28 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   updateLabelPose();
-  // 选中标注点的名称标签跟随其屏幕位置
+  // 选中标注点的名称标签跟随其屏幕位置（偏移出标点上方，避免遮住结构本身）
   const annLbl = document.getElementById('annLabel');
   if (annLbl && state.annSel && state.annSel.sprite) {
     const v = state.annSel.sprite.getWorldPosition(new THREE.Vector3());
     const p = v.project(camera);
     if (p.z < 1 && Math.abs(p.x) < 1.1 && Math.abs(p.y) < 1.1) {
       annLbl.style.display = 'block';
-      annLbl.style.left = ((p.x + 1) / 2 * innerWidth + 12) + 'px';
-      annLbl.style.top = ((1 - p.y) / 2 * innerHeight - 12) + 'px';
+      annLbl.style.left = ((p.x + 1) / 2 * innerWidth + 18) + 'px';
+      annLbl.style.top = ((1 - p.y) / 2 * innerHeight - 18) + 'px';
     } else {
       annLbl.style.display = 'none';
     }
   } else if (annLbl) {
     annLbl.style.display = 'none';
   }
-  // 标注点保持恒定屏幕大小 + 遮挡检测（每 6 帧一次：被骨面挡住时变半透明）
+  // 标注点保持恒定屏幕大小 + 遮挡检测（每 6 帧一次：被骨面挡住时变得更淡）
   const tmpV = new THREE.Vector3();
   const occFrame = (frameCount++ % 6 === 0);
   for (const a of state.annSprites) {
     a.sprite.getWorldPosition(tmpV);
-    const s = camera.position.distanceTo(tmpV) * 0.017;
+    // 0.017 的 2/3：标注圈缩小，减少对细小骨骼结构的遮挡
+    const s = camera.position.distanceTo(tmpV) * 0.0113;
     a.sprite.scale.set(s, s, 1);
     if (occFrame) {
       const dir = tmpV.clone().sub(camera.position);
@@ -1403,9 +1579,9 @@ function animate() {
       raycaster.far = dist - 0.002;
       const hit = raycaster.intersectObject(a.mesh, false);
       raycaster.far = Infinity;
-      // 默认半透明避免挡住小结构；被骨面挡住更淡；选中/悬停不透明
+      // 基础透明度由用户滑块控制；被骨面挡住再乘 0.32；选中/悬停不透明
       const emphasized = (state.annSel && state.annSel.entry === a.entry) || a.hover;
-      a.sprite.material.opacity = emphasized ? 1.0 : (hit.length ? 0.16 : 0.5);
+      a.sprite.material.opacity = emphasized ? 1.0 : (hit.length ? state.annOp * 0.32 : state.annOp);
     }
   }
   renderer.render(scene, camera);
@@ -1422,6 +1598,8 @@ boot();
       state.annSel.entry[field] = e.target.value;
       if (field === 'name') {
         for (const a of state.annSprites) if (a.entry === state.annSel.entry) a.name = e.target.value;
+        const lbl = document.getElementById('annLabel');
+        if (lbl && state.annSel) lbl.textContent = e.target.value;   // 浮动标签同步改名
         renderAnnList(state.annEdit[state.annSel.fma] || []);
       }
     });
@@ -1434,6 +1612,12 @@ window.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const ae = document.activeElement;
   if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return;   // 输入框内不劫持
+  // 编辑模式：Delete 删除当前选中的标注点
+  if (state.editMode && state.annSel && e.key === 'Delete') {
+    e.preventDefault();
+    deleteAnnSel();
+    return;
+  }
   const step = (state.panRange || 1) * 0.05;
   if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
     e.preventDefault();

@@ -126,7 +126,7 @@
     background:#3a2a10;color:#ffd9a8;font-size:12px;padding:8px 14px;border-radius:20px;
     border:1px solid #8a6a30;box-shadow:0 4px 14px rgba(0,0,0,.4)}
   #editBar.show{display:block}
-  #annExport{color:#7dcf8e;cursor:pointer;margin-left:6px;text-decoration:underline}
+  #annExport,#dExport{color:#7dcf8e;cursor:pointer;margin-left:6px;text-decoration:underline}
   #annEditSec{margin-top:8px;padding:8px;background:rgba(255,177,77,.07);border-radius:8px}
   #annEditSec input,#annEditSec textarea{width:100%;box-sizing:border-box;margin-bottom:6px;
     background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:6px;
@@ -135,6 +135,29 @@
   #annEditSec .row{display:flex;gap:8px;align-items:center}
   #annDel{color:#ff7a6e;cursor:pointer;font-size:11.5px;user-select:none}
   #annEditTip{font-size:10.5px;color:var(--dim);margin-top:4px;line-height:1.4}
+  /* 标注点不透明度滑块（工具面板） */
+  .op-row{display:flex;align-items:center;gap:8px;padding:7px 8px 3px;font-size:12.5px;
+    color:#c3ccdd;user-select:none}
+  .op-row .ic{font-size:13px;width:15px;text-align:center;opacity:.85}
+  #annOpVal{margin-left:auto;font-size:10.5px;color:var(--dim)}
+  #annOp{-webkit-appearance:none;appearance:none;width:calc(100% - 16px);height:4px;margin:0 8px 10px;
+    border-radius:3px;background:rgba(255,255,255,.15);cursor:pointer}
+  #annOp::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--accent2);box-shadow:0 0 0 3px rgba(77,163,255,.18)}
+  #annOp::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--accent2)}
+  /* 骨内容编辑（编辑模式） */
+  #detail textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:6px;color:var(--txt);font-size:12px;
+    line-height:1.6;padding:6px 8px;font-family:inherit;resize:vertical;outline:none}
+  #detail textarea:focus{border-color:var(--accent2)}
+  #dEditRow{display:flex;gap:12px;align-items:center;margin-top:10px;font-size:11.5px}
+  #dEditBtn{color:var(--accent2);cursor:pointer;user-select:none}
+  #dEditBtn:hover{text-decoration:underline}
+  #dSaveBtn{color:#7dcf8e;cursor:pointer;user-select:none}
+  #dSaveBtn:hover{text-decoration:underline}
+  #dCancelBtn{color:var(--dim);cursor:pointer;user-select:none}
+  #dCancelBtn:hover{text-decoration:underline}
+  #dSavedTip{font-size:10.5px;color:#7dcf8e;line-height:1.4}
   .ann-detail{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(255,177,77,.3);
     color:#e8dcc2;font-size:11.5px;line-height:1.6}
   #annSec{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
@@ -143,7 +166,8 @@
   #annFold{color:#8fa3c8;font-size:10px}
   #annLabel{position:fixed;z-index:20;display:none;pointer-events:none;
     padding:5px 10px;border-radius:7px;color:var(--txt);font-size:12px;white-space:nowrap;
-    background:rgba(18,22,32,.95);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+    background:rgba(18,22,32,.95);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.4);
+    transform:translateY(-100%)}
   #annList{display:flex;flex-wrap:wrap;gap:4px}
   .ann-chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11.5px;cursor:pointer;
     background:rgba(255,177,77,.10);color:#ffcf96;border:1px solid rgba(255,177,77,.28);user-select:none}
@@ -314,6 +338,8 @@
   <div class="tbtn" id="btnShowAll"><span class="ic">👁</span>恢复显示</div>
   <div class="tbtn" id="btnReset"><span class="ic">⟲</span>重置视角</div>
   <div class="tbtn" id="btnSpin"><span class="ic">↻</span>自动旋转</div>
+  <div class="op-row"><span class="ic">◔</span>标注点不透明度<span id="annOpVal">50%</span></div>
+  <input type="range" id="annOp" min="15" max="100" step="5" value="50">
   <div class="divider"></div>
   <h2>我的数据</h2>
   <div class="data-row">
@@ -333,9 +359,15 @@
   <div class="desc" id="desc">—</div>
   <div id="moreBtn">查看完整介绍 ▸</div>
   <div id="detail">
-    <div class="d-sec"><h4>功能作用</h4><p id="dFn">—</p></div>
-    <div class="d-sec"><h4>知识点</h4><ul id="dPts"></ul></div>
-    <div class="d-sec"><h4>临床关联</h4><p id="dCli">—</p></div>
+    <div class="d-sec"><h4>功能作用</h4><p id="dFn">—</p><textarea id="dFnE" rows="3" hidden></textarea></div>
+    <div class="d-sec"><h4>知识点</h4><ul id="dPts"></ul><textarea id="dPtsE" rows="5" hidden placeholder="每行一条"></textarea></div>
+    <div class="d-sec"><h4>临床关联</h4><p id="dCli">—</p><textarea id="dCliE" rows="3" hidden></textarea></div>
+    <div id="dEditRow" hidden>
+      <span id="dEditBtn">✎ 编辑内容</span>
+      <span id="dSaveBtn" hidden>保存</span>
+      <span id="dCancelBtn" hidden>取消</span>
+      <span id="dSavedTip"></span>
+    </div>
   </div>
   <div class="act-row">
     <span class="act-btn" id="actMark">★ <span class="act-txt">标记</span></span>
@@ -352,7 +384,7 @@
       <textarea id="annDetail" rows="4" placeholder="详细介绍（功能作用、临床关联、扩展知识点）"></textarea>
       <div class="row">
         <span id="annDel">✕ 删除此标注</span>
-        <span id="annEditTip">移动：先点选标注，再点击骨面上的新位置</span>
+        <span id="annEditTip">移动：拖动标注点，或双击骨面上的新位置</span>
       </div>
     </div>
   </div>
@@ -393,6 +425,6 @@
   }
 }
 </script>
-<script src="./app.js" type="module"></script>
+<script src="./app.js?v=20261019k" type="module"></script>
 </body>
 </html>
