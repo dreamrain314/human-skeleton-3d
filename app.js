@@ -165,7 +165,7 @@ async function boot() {
     const gltf = await new Promise((res, rej) => {
       // 正确的回调顺序: load(url, onLoad, onProgress, onError)
       // 版本参数随模型更新手动递增，避免 Pages 缓存导致用户拿到旧模型
-      new GLTFLoader().setDRACOLoader(draco).load('./models/skeleton.glb?v=20261019h', res,
+      new GLTFLoader().setDRACOLoader(draco).load('./models/skeleton.glb?v=20261019i', res,
         p => {
           if (p.total) {
             // Pages 对 glb 走 gzip 时 loaded 按解压字节计、total 是压缩大小，比值可能 >100%，需截断
