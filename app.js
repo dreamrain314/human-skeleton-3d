@@ -1437,12 +1437,12 @@ window.addEventListener('keydown', e => {
   const step = (state.panRange || 1) * 0.05;
   if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
     e.preventDefault();
-    applyPanY(state.panY + (e.key === 'ArrowUp' ? -step : step));
+    applyPanY(state.panY + (e.key === 'ArrowUp' ? step : -step));
     const vp = $('vpRange');
     if (vp) vp.value = (state.panY / state.panRange) * 100;
   } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     e.preventDefault();
-    orbitY(e.key === 'ArrowLeft' ? -0.12 : 0.12);   // 左=视角顺时针转（自上看上去）
+    orbitY(e.key === 'ArrowLeft' ? 0.12 : -0.12);
   }
 });
 
