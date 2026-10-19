@@ -60,7 +60,7 @@
       const doc = document.getElementById('doc');
       doc.innerHTML = window.mdRender(t);
       const h1 = doc.querySelector('h1');
-      if (h1) document.title = h1.textContent + ' · 人体骨骼 3D 交互模型';
+      if (h1) document.title = h1.textContent;   // h1 本身已是完整标题，直接采用
     })
     .catch(err => {
       const doc = document.getElementById('doc');
