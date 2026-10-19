@@ -1,0 +1,232 @@
+{
+  "_说明": "标注数据源。rel = [u,v,w] 为骨包围盒内 0~1 归一化坐标（x:0=右端,y:0=下端,z:0=背侧）。desc 为人卫《系统解剖学》第10版骨学章节的转写口径，非原文。成对骨只写右侧 FMA，生成器自动镜像出左侧。side:'R'/'L' 用于中线骨上的成对结构（生成器镜像补充另一侧）。part 用于胸骨三部件：manubrium/body/xiphoid。",
+  "FMA52748": [
+    { "id": "mental-foramen", "name": "颏孔", "en": "Mental foramen", "side": "R", "desc": "下颌体前外侧面的骨孔，约对第2前磨牙根下方，颏血管和颏神经由此穿出。", "rel": [0.26, 0.42, 0.96] },
+    { "id": "mental-protuberance", "name": "颏隆凸", "en": "Mental protuberance", "desc": "下颌体外面正中向前隆起的部分，构成颏部的外形。", "rel": [0.5, 0.14, 1.0] },
+    { "id": "coronoid-process", "name": "冠突", "en": "Coronoid process", "side": "R", "desc": "下颌支末端前方的三角形突起，为颞肌附着处。", "rel": [0.13, 0.9, 0.32] },
+    { "id": "condylar-process", "name": "髁突（下颌头）", "en": "Condylar process", "side": "R", "desc": "下颌支末端后方的突起，上端膨大为下颌头，与颞骨下颌窝相关节；头下方略细为下颌颈。", "rel": [0.05, 0.96, 0.03] },
+    { "id": "mandibular-angle", "name": "下颌角", "en": "Angle of mandible", "side": "R", "desc": "下颌支后缘与下颌底相交处，骨质较薄，容易骨折，体表可扪及。", "rel": [0.08, 0.22, 0.22] },
+    { "id": "mandibular-foramen", "name": "下颌孔", "en": "Mandibular foramen", "side": "R", "desc": "下颌支内面中央的骨孔，下牙槽神经和血管由此进入下颌管，孔前缘有下颌小舌。", "rel": [0.14, 0.6, 0.14] },
+    { "id": "masseteric-tuberosity", "name": "咬肌粗隆", "en": "Masseteric tuberosity", "side": "R", "desc": "下颌支外面后下部的粗糙骨面，为咬肌附着处。", "rel": [0.09, 0.34, 0.12] },
+    { "id": "mandibular-notch", "name": "下颌切迹", "en": "Mandibular notch", "side": "R", "desc": "冠突与髁突之间的凹陷。", "rel": [0.1, 0.82, 0.2] }
+  ],
+  "FMA52749": [
+    { "id": "body", "name": "舌骨体", "en": "Body of hyoid bone", "desc": "舌骨中间部，位于正中，与大角均可在体表扪到。", "rel": [0.5, 0.5, 0.9] },
+    { "id": "greater-horn", "name": "大角", "en": "Greater horn", "side": "R", "desc": "由体向后外延伸的长突。", "rel": [0.12, 0.45, 0.3] },
+    { "id": "lesser-horn", "name": "小角", "en": "Lesser horn", "side": "R", "desc": "由体向上伸出的短突。", "rel": [0.33, 0.68, 0.55] }
+  ],
+  "FMA12519": [
+    { "id": "anterior-arch", "name": "前弓", "en": "Anterior arch", "desc": "寰椎前部短弓，后面正中有齿突凹，与枢椎齿突相关节。", "rel": [0.5, 0.5, 0.93] },
+    { "id": "posterior-arch", "name": "后弓", "en": "Posterior arch", "desc": "寰椎后部长弓，上面有横行的椎动脉沟，有椎动脉通过。", "rel": [0.5, 0.5, 0.05] },
+    { "id": "lateral-mass", "name": "侧块", "en": "Lateral mass", "side": "R", "desc": "连接前后两弓的骨块，上面有椭圆形关节面与枕髁相关节，下面有圆形关节面接枢椎。", "rel": [0.2, 0.55, 0.5] },
+    { "id": "transverse-process", "name": "横突", "en": "Transverse process", "side": "R", "desc": "寰椎外侧的突起，内有横突孔。", "rel": [0.02, 0.5, 0.4] }
+  ],
+  "FMA12520": [
+    { "id": "dens", "name": "齿突", "en": "Dens", "desc": "枢椎椎体向上伸出的指状突起，原为寰椎椎体，与寰椎齿突凹相关节，头部旋转以此为轴。", "rel": [0.5, 0.93, 0.62] },
+    { "id": "vertebral-body", "name": "椎体", "en": "Vertebral body", "desc": "椎骨前方负重的主要部分，内部为松质。", "rel": [0.5, 0.3, 0.8] },
+    { "id": "spinous-process", "name": "棘突", "en": "Spinous process", "desc": "椎弓后方正中的突起，枢椎棘突较宽，为肌韧带附着处。", "rel": [0.5, 0.5, 0.03] },
+    { "id": "transverse-foramen", "name": "横突孔", "en": "Transverse foramen", "side": "R", "desc": "横突上的骨孔，有椎动脉和椎静脉通过。", "rel": [0.2, 0.6, 0.32] }
+  ],
+  "FMA12522": [
+    { "id": "vertebral-body", "name": "椎体", "en": "Vertebral body", "desc": "颈椎椎体较小，横断面呈椭圆形，是负重部分。", "rel": [0.5, 0.25, 0.85] },
+    { "id": "uncus", "name": "椎体钩", "en": "Uncus of vertebral body", "side": "R", "desc": "第3~7颈椎椎体上面侧缘的向上突起，与上位椎体唇缘构成钩椎关节（Luschka关节）；过度增生可致椎间孔狭窄。", "rel": [0.26, 0.42, 0.8] },
+    { "id": "spinous-process", "name": "棘突", "en": "Spinous process", "desc": "第2~6颈椎棘突较短，末端分叉。", "rel": [0.5, 0.55, 0.03] },
+    { "id": "transverse-foramen", "name": "横突孔", "en": "Transverse foramen", "side": "R", "desc": "颈椎横突上的骨孔，椎动脉由此向上穿行。", "rel": [0.16, 0.6, 0.3] }
+  ],
+  "FMA9945": [
+    { "id": "vertebral-body", "name": "椎体", "en": "Vertebral body", "desc": "胸椎椎体横断面呈心形，两侧面后份有上、下肋凹与肋头相关节。", "rel": [0.5, 0.12, 0.88] },
+    { "id": "spinous-process", "name": "棘突", "en": "Spinous process", "desc": "胸椎棘突较长，斜向后下方，相邻棘突呈叠瓦状排列。", "rel": [0.5, 0.42, 0.02] },
+    { "id": "transverse-process", "name": "横突", "en": "Transverse process", "side": "R", "desc": "伸向两侧的突起，末端前面有横突肋凹与肋结节相关节。", "rel": [0.05, 0.5, 0.25] },
+    { "id": "superior-costal-facet", "name": "上肋凹", "en": "Superior costal facet", "side": "R", "desc": "椎体侧面后份上缘处的半圆形浅凹，与肋头相关节。", "rel": [0.28, 0.28, 0.7] }
+  ],
+  "FMA13074": [
+    { "id": "vertebral-body", "name": "椎体", "en": "Vertebral body", "desc": "腰椎椎体粗壮，横断面呈肾形，是脊柱承重的主要部分。", "rel": [0.5, 0.1, 0.9] },
+    { "id": "spinous-process", "name": "棘突", "en": "Spinous process", "desc": "腰椎棘突呈板状水平伸向后，各棘突间隙较宽，临床于此行腰椎穿刺。", "rel": [0.5, 0.45, 0.02] },
+    { "id": "mamillary-process", "name": "乳突", "en": "Mamillary process", "side": "R", "desc": "腰椎上关节突后缘的卵圆形隆起。", "rel": [0.12, 0.72, 0.25] }
+  ],
+  "FMA16202": [
+    { "id": "promontory", "name": "岬", "en": "Promontory", "desc": "骶骨上缘中份向前隆凸处，是骨盆入口的重要标志。", "rel": [0.5, 0.92, 0.88] },
+    { "id": "transverse-lines", "name": "横线", "en": "Transverse lines", "desc": "骶骨盆面中部可见的4条横线，为5块骶椎融合的痕迹。", "rel": [0.5, 0.7, 0.82] },
+    { "id": "anterior-sacral-foramina", "name": "骶前孔", "en": "Anterior sacral foramina", "side": "R", "desc": "盆面横线两端的4对骨孔，骶神经前支由此穿出，通骶管。", "rel": [0.3, 0.74, 0.75] },
+    { "id": "median-sacral-crest", "name": "骶正中嵴", "en": "Median sacral crest", "desc": "骶骨背面正中线的纵嵴，由椎体棘突融合而成。", "rel": [0.5, 0.72, 0.1] },
+    { "id": "posterior-sacral-foramina", "name": "骶后孔", "en": "Posterior sacral foramina", "side": "R", "desc": "骶正中嵴外侧的4对骨孔，骶神经后支由此穿出。", "rel": [0.32, 0.72, 0.28] },
+    { "id": "sacral-hiatus", "name": "骶管裂孔", "en": "Sacral hiatus", "desc": "骶管下端的裂孔，骶管麻醉由此进针。", "rel": [0.5, 0.06, 0.28] },
+    { "id": "sacral-horn", "name": "骶角", "en": "Sacral horn", "side": "R", "desc": "骶管裂孔两侧向下突出的骨角，是骶管麻醉的体表定位标志。", "rel": [0.43, 0.09, 0.3] },
+    { "id": "auricular-surface", "name": "耳状面", "en": "Auricular surface", "side": "R", "desc": "骶骨外侧部上份的耳形关节面，与髂骨耳状面构成骶髂关节。", "rel": [0.03, 0.68, 0.38] }
+  ],
+  "FMA20377": [
+    { "id": "coccygeal-apex", "name": "尾骨尖", "en": "Coccygeal apex", "desc": "尾骨下端游离的尖端，由3~4块退化尾椎融合而成，上接骶骨。", "rel": [0.5, 0.08, 0.5] }
+  ],
+  "FMA7371": [
+    { "id": "jugular-notch", "name": "颈静脉切迹", "en": "Jugular notch", "part": "manubrium", "desc": "胸骨柄上缘中份的凹陷，其上方为胸骨上窝。", "rel": [0.5, 1.0, 0.8] },
+    { "id": "clavicular-notch", "name": "锁切迹", "en": "Clavicular notch", "part": "manubrium", "side": "R", "desc": "胸骨柄上外侧的关节面，与锁骨胸骨端相关节。", "rel": [0.08, 0.93, 0.75] },
+    { "id": "sternal-angle", "name": "胸骨角", "en": "Sternal angle", "part": "body", "desc": "柄与体连接处微向前突的横嵴，两侧平对第2肋，是计数肋的标志，向后平对第4胸椎体下缘。", "rel": [0.5, 0.97, 0.85] },
+    { "id": "costal-notches", "name": "肋切迹", "en": "Costal notches", "part": "body", "side": "R", "desc": "胸骨体外侧缘的切迹，与第2~7肋软骨相连。", "rel": [0.03, 0.55, 0.7] },
+    { "id": "xiphoid-process-tip", "name": "剑突", "en": "Xiphoid process", "part": "xiphoid", "desc": "胸骨下端扁薄的突起，形状变化较大，下端游离，位于两侧肋弓之间。", "rel": [0.5, 0.15, 0.75] }
+  ],
+  "FMA8175": [
+    { "id": "costal-head", "name": "肋头", "en": "Costal head", "desc": "肋后端的膨大，有关节面与胸椎的上、下肋凹相关节。", "rel": [0.96, 0.5, 0.06] },
+    { "id": "costal-neck", "name": "肋颈", "en": "Costal neck", "desc": "肋头外侧稍细的部分。", "rel": [0.9, 0.5, 0.1] },
+    { "id": "costal-tubercle", "name": "肋结节", "en": "Costal tubercle", "desc": "肋颈外侧的粗糙突起，与胸椎横突肋凹相关节。", "rel": [0.84, 0.55, 0.12] },
+    { "id": "costal-angle", "name": "肋角", "en": "Costal angle", "desc": "肋体后份的急转处。", "rel": [0.68, 0.5, 0.2] },
+    { "id": "costal-groove", "name": "肋沟", "en": "Costal groove", "desc": "肋内面近下缘处的沟，肋间神经和血管走行其中。", "rel": [0.45, 0.3, 0.45] }
+  ],
+  "FMA7857": [
+    { "id": "scalene-tubercle", "name": "前斜角肌结节", "en": "Tubercle for scalene", "desc": "第1肋内缘前份的粗糙隆起，为前斜角肌附着处，其前、后方分别有锁骨下静脉和动脉经过的压迹。", "rel": [0.35, 0.55, 0.6] }
+  ],
+  "FMA52734": [
+    { "id": "frontal-tuber", "name": "额结节", "en": "Frontal tuber", "side": "R", "desc": "额鳞中央的隆起，深面为额窦所在。", "rel": [0.3, 0.72, 0.92] },
+    { "id": "superciliary-arch", "name": "眉弓", "en": "Superciliary arch", "side": "R", "desc": "额结节下方与眶上缘平行的弓形隆起，其内侧份深面有额窦，是重要体表标志。", "rel": [0.32, 0.28, 0.97] },
+    { "id": "glabella", "name": "眉间", "en": "Glabella", "desc": "左右眉弓之间的平坦部。", "rel": [0.5, 0.22, 1.0] }
+  ],
+  "FMA52735": [
+    { "id": "foramen-magnum", "name": "枕骨大孔", "en": "Foramen magnum", "desc": "枕骨前下部的骨孔，脊髓在此与延髓相续，枕骨借此孔分为基底部、枕鳞和两侧部。", "rel": [0.5, 0.05, 0.45] },
+    { "id": "occipital-condyle", "name": "枕髁", "en": "Occipital condyle", "side": "R", "desc": "枕骨侧部下方的椭圆形关节面，与寰椎上关节面相关节。", "rel": [0.34, 0.07, 0.58] },
+    { "id": "external-occipital-protuberance", "name": "枕外隆凸", "en": "External occipital protuberance", "desc": "枕鳞中央向后最突出的隆起，是枕部重要体表标志。", "rel": [0.5, 0.55, 0.02] },
+    { "id": "superior-nuchal-line", "name": "上项线", "en": "Superior nuchal line", "side": "R", "desc": "枕外隆凸向两侧延伸的弓形骨嵴，其下方有平行的下项线。", "rel": [0.26, 0.5, 0.03] }
+  ],
+  "FMA52736": [
+    { "id": "hypophysial-fossa", "name": "垂体窝", "en": "Hypophysial fossa", "desc": "蝶鞍中央的凹陷，容纳垂体；窝前方为鞍结节，后方为鞍背。", "rel": [0.5, 0.78, 0.45] },
+    { "id": "optic-canal", "name": "视神经管", "en": "Optic canal", "side": "R", "desc": "小翼与体交界处的骨管，视神经和眼动脉由此通入眶腔。", "rel": [0.38, 0.82, 0.42] },
+    { "id": "superior-orbital-fissure", "name": "眶上裂", "en": "Superior orbital fissure", "side": "R", "desc": "小翼与大翼之间的裂隙，向后通颅中窝，有动眼神经等结构通过。", "rel": [0.42, 0.75, 0.32] },
+    { "id": "foramen-rotundum", "name": "圆孔", "en": "Foramen rotundum", "side": "R", "desc": "大翼根部的骨孔，三叉神经第二支（上颌神经）由此通过。", "rel": [0.33, 0.62, 0.38] },
+    { "id": "foramen-ovale", "name": "卵圆孔", "en": "Foramen ovale", "side": "R", "desc": "大翼根部的骨孔，三叉神经第三支（下颌神经）由此通过。", "rel": [0.26, 0.58, 0.32] },
+    { "id": "foramen-spinosum", "name": "棘孔", "en": "Foramen spinosum", "side": "R", "desc": "卵圆孔后外方较小的骨孔，脑膜中动脉由此入颅。", "rel": [0.2, 0.55, 0.3] }
+  ],
+  "FMA52740": [
+    { "id": "crista-galli", "name": "鸡冠", "en": "Crista galli", "desc": "筛板前份向上伸出的骨嵴，大脑镰附着于此。", "rel": [0.5, 0.82, 0.28] },
+    { "id": "cribriform-plate", "name": "筛板", "en": "Cribriform plate", "desc": "多孔的水平骨板，构成鼻腔的顶，嗅神经经筛孔入颅；薄而脆，外伤易骨折。", "rel": [0.35, 0.62, 0.38] },
+    { "id": "perpendicular-plate", "name": "垂直板", "en": "Perpendicular plate", "desc": "自筛板中线垂直下落的骨板，构成骨性鼻中隔的上部。", "rel": [0.5, 0.28, 0.5] }
+  ],
+  "FMA52738": [
+    { "id": "mandibular-fossa", "name": "下颌窝", "en": "Mandibular fossa", "desc": "颧突根部下方的深窝，与下颌头相关节。", "rel": [0.5, 0.22, 0.82] },
+    { "id": "articular-tubercle", "name": "关节结节", "en": "Articular tubercle", "desc": "下颌窝前缘的横行突起，防止下颌头向前脱位。", "rel": [0.55, 0.28, 0.88] },
+    { "id": "external-acoustic-pore", "name": "外耳门", "en": "External acoustic pore", "desc": "颞骨外侧的开口，向内通外耳道，颞骨以它为中心分鳞部、鼓部和岩部。", "rel": [0.42, 0.3, 0.58] },
+    { "id": "mastoid-process", "name": "乳突", "en": "Mastoid process", "desc": "外耳门后方的肥厚突起，内含乳突小房，是重要体表标志；根部的深面有茎乳孔。", "rel": [0.5, 0.1, 0.18] },
+    { "id": "styloid-process", "name": "茎突", "en": "Styloid process", "desc": "乳突前内侧细长的骨突，有肌肉和韧带附着。", "rel": [0.4, 0.06, 0.45] },
+    { "id": "stylomastoid-foramen", "name": "茎乳孔", "en": "Stylomastoid foramen", "desc": "茎突根部后方的骨孔，面神经由此出颅。", "rel": [0.45, 0.09, 0.36] },
+    { "id": "internal-acoustic-pore", "name": "内耳门", "en": "Internal acoustic pore", "desc": "岩部后面中央的开口，通内耳道，面神经和前庭蜗神经由此入内耳。", "rel": [0.6, 0.5, 0.22] },
+    { "id": "carotid-canal-opening", "name": "颈动脉管外口", "en": "External opening of carotid canal", "desc": "岩部下面中央的骨孔，颈内动脉由此入颈动脉管，先垂直上行再折向前内。", "rel": [0.45, 0.12, 0.55] },
+    { "id": "zygomatic-process", "name": "颧突", "en": "Zygomatic process", "desc": "鳞部前下部向前伸出的突起，与颧骨颞突构成颧弓。", "rel": [0.6, 0.42, 0.92] }
+  ],
+  "FMA53649": [
+    { "id": "infraorbital-foramen", "name": "眶下孔", "en": "Infraorbital foramen", "desc": "上颌体前面眶下缘下方的骨孔，有眶下血管和神经穿出。", "rel": [0.45, 0.72, 0.98] },
+    { "id": "canine-fossa", "name": "尖牙窝", "en": "Canine fossa", "desc": "眶下孔下方的凹陷，骨壁最薄，上颌窦手术多由此入路。", "rel": [0.4, 0.55, 1.0] },
+    { "id": "frontal-process", "name": "额突", "en": "Frontal process", "desc": "突向上方的骨突，接额骨、鼻骨和泪骨。", "rel": [0.78, 0.95, 0.6] },
+    { "id": "zygomatic-process-maxilla", "name": "颧突", "en": "Zygomatic process", "desc": "伸向外侧的骨突，接颧骨。", "rel": [0.03, 0.5, 0.72] },
+    { "id": "alveolar-process-maxilla", "name": "牙槽突", "en": "Alveolar process", "desc": "由体向下伸出的突起，下缘有牙槽容纳上颌牙根。", "rel": [0.45, 0.03, 0.85] },
+    { "id": "palatine-process", "name": "腭突", "en": "Palatine process", "desc": "由体向内侧水平伸出的骨板，于中线与对侧结合，组成骨腭的前份。", "rel": [0.6, 0.12, 0.12] }
+  ],
+  "FMA52892": [
+    { "id": "temporal-process-zygomatic", "name": "颞突", "en": "Temporal process", "desc": "颧骨向后伸出的突起，与颞骨颧突构成颧弓。", "rel": [0.08, 0.6, 0.12] }
+  ],
+  "FMA13322": [
+    { "id": "sternal-end", "name": "胸骨端", "en": "Sternal end", "desc": "锁骨内侧端，粗大，有关节面与胸骨柄的锁切迹相关节。", "rel": [0.97, 0.5, 0.5] },
+    { "id": "acromial-end", "name": "肩峰端", "en": "Acromial end", "desc": "锁骨外侧端，扁平，有小关节面与肩胛骨肩峰相关节。", "rel": [0.03, 0.5, 0.5] }
+  ],
+  "FMA13395": [
+    { "id": "spine-of-scapula", "name": "肩胛冈", "en": "Spine of scapula", "desc": "肩胛骨背侧面横行的骨嵴，将背面分为冈上窝和冈下窝，向外侧延为肩峰，体表可扪及。", "rel": [0.45, 0.58, 0.05] },
+    { "id": "acromion", "name": "肩峰", "en": "Acromion", "desc": "肩胛冈向外侧延伸的扁平突起，与锁骨肩峰端相接，是肩部最高点。", "rel": [0.02, 0.78, 0.12] },
+    { "id": "coracoid-process", "name": "喙突", "en": "Coracoid process", "desc": "上缘外侧份向前突出的指状骨突，为胸小肌等结构附着处。", "rel": [0.1, 0.6, 0.78] },
+    { "id": "glenoid-cavity", "name": "关节盂", "en": "Glenoid cavity", "desc": "外侧角朝外侧的梨形浅窝，与肱骨头相关节；盂上、下方分别有盂上、盂下结节。", "rel": [0.1, 0.42, 0.55] },
+    { "id": "subscapular-fossa", "name": "肩胛下窝", "en": "Subscapular fossa", "desc": "肩胛骨腹侧面（肋面）的大浅窝，与胸廓相对，肩胛下肌附着于此。", "rel": [0.5, 0.45, 0.88] },
+    { "id": "supraspinous-fossa", "name": "冈上窝", "en": "Supraspinous fossa", "desc": "肩胛冈上方的窝，冈上肌附着于此。", "rel": [0.35, 0.75, 0.15] },
+    { "id": "infraspinous-fossa", "name": "冈下窝", "en": "Infraspinous fossa", "desc": "肩胛冈下方的窝，冈下肌附着于此。", "rel": [0.45, 0.28, 0.1] },
+    { "id": "scapular-notch", "name": "肩胛切迹", "en": "Scapular notch", "desc": "上缘外侧份的切迹，肩胛上神经由此经过。", "rel": [0.16, 0.7, 0.42] },
+    { "id": "inferior-angle", "name": "下角", "en": "Inferior angle", "desc": "脊柱缘与腋缘的会合处，平对第7肋或第7肋间隙，是背部计数肋的标志。", "rel": [0.85, 0.03, 0.3] }
+  ],
+  "FMA23130": [
+    { "id": "head-of-humerus", "name": "肱骨头", "en": "Head of humerus", "desc": "上端朝向上后内方的半球形膨大，与肩胛骨关节盂相关节。", "rel": [0.62, 0.95, 0.35] },
+    { "id": "anatomical-neck", "name": "解剖颈", "en": "Anatomical neck", "desc": "肱骨头周围的环状浅沟，为关节囊附着处。", "rel": [0.55, 0.88, 0.4] },
+    { "id": "greater-tubercle", "name": "大结节", "en": "Greater tubercle", "desc": "肱骨头外侧的隆起，向下延为大结节嵴，体表可扪及。", "rel": [0.08, 0.9, 0.42] },
+    { "id": "lesser-tubercle", "name": "小结节", "en": "Lesser tubercle", "desc": "肱骨头前方的隆起，向下延为小结节嵴。", "rel": [0.42, 0.88, 0.62] },
+    { "id": "intertubercular-sulcus", "name": "结节间沟", "en": "Intertubercular sulcus", "desc": "大、小结节之间的纵沟，肱二头肌长头腱由此通过。", "rel": [0.28, 0.85, 0.52] },
+    { "id": "surgical-neck", "name": "外科颈", "en": "Surgical neck", "desc": "上端与体交界处稍细的部分，骨松质与骨皮质交界，较易发生骨折。", "rel": [0.4, 0.8, 0.45] },
+    { "id": "deltoid-tuberosity", "name": "三角肌粗隆", "en": "Deltoid tuberosity", "desc": "体中部外侧面的粗糙骨面，三角肌附着于此。", "rel": [0.08, 0.5, 0.32] },
+    { "id": "sulcus-radial-nerve", "name": "桡神经沟", "en": "Sulcus for radial nerve", "desc": "体后面自内上斜向外下的浅沟，桡神经和肱深动脉沿此沟经过，肱骨中部骨折可能伤及桡神经。", "rel": [0.5, 0.52, 0.03] },
+    { "id": "capitulum", "name": "肱骨小头", "en": "Capitulum of humerus", "desc": "下端外侧部前面的半球状突起，与桡骨头相关节。", "rel": [0.25, 0.06, 0.75] },
+    { "id": "trochlea", "name": "肱骨滑车", "en": "Trochlea of humerus", "desc": "下端内侧部的滑车状关节面，与尺骨滑车切迹相关节。", "rel": [0.62, 0.05, 0.75] },
+    { "id": "coronoid-fossa", "name": "冠突窝", "en": "Coronoid fossa", "desc": "滑车前上方的窝，屈肘时容纳尺骨冠突。", "rel": [0.45, 0.12, 0.72] },
+    { "id": "olecranon-fossa", "name": "鹰嘴窝", "en": "Olecranon fossa", "desc": "滑车后上方的窝，伸肘时容纳尺骨鹰嘴。", "rel": [0.45, 0.12, 0.15] },
+    { "id": "medial-epicondyle", "name": "内上髁", "en": "Medial epicondyle", "desc": "滑车内侧的突起，前臂屈肌总腱附着于此，体表可扪及。", "rel": [0.85, 0.08, 0.4] },
+    { "id": "lateral-epicondyle", "name": "外上髁", "en": "Lateral epicondyle", "desc": "肱骨小头外侧的突起，前臂伸肌总腱附着于此。", "rel": [0.08, 0.08, 0.42] },
+    { "id": "sulcus-ulnar-nerve", "name": "尺神经沟", "en": "Sulcus for ulnar nerve", "desc": "内上髁后方的浅沟，尺神经由此经过，此处撞击产生麻胀感。", "rel": [0.82, 0.04, 0.22] }
+  ],
+  "FMA23464": [
+    { "id": "head-of-radius", "name": "桡骨头", "en": "Head of radius", "desc": "上端膨大，上面有关节凹与肱骨小头相关节，周围环状关节面与尺骨桡切迹相关节。", "rel": [0.5, 0.97, 0.5] },
+    { "id": "neck-of-radius", "name": "桡骨颈", "en": "Neck of radius", "desc": "桡骨头下方略细的部分。", "rel": [0.5, 0.9, 0.5] },
+    { "id": "radial-tuberosity", "name": "桡骨粗隆", "en": "Radial tuberosity", "desc": "颈内下侧的突起，肱二头肌腱抵止于此。", "rel": [0.7, 0.84, 0.55] },
+    { "id": "styloid-process-radius", "name": "桡骨茎突", "en": "Styloid process of radius", "desc": "下端外侧向下突出的骨突，体表可扪及；尺骨茎突较其高约1cm。", "rel": [0.1, 0.04, 0.5] },
+    { "id": "ulnar-notch", "name": "尺切迹", "en": "Ulnar notch", "desc": "下端内侧的弧形关节面，与尺骨头相关节。", "rel": [0.8, 0.06, 0.4] }
+  ],
+  "FMA23467": [
+    { "id": "olecranon", "name": "鹰嘴", "en": "Olecranon", "desc": "滑车切迹后上方的突起，伸肘时嵌入肱骨鹰嘴窝，是肘后区最显著的隆起。", "rel": [0.4, 0.97, 0.08] },
+    { "id": "trochlear-notch", "name": "滑车切迹", "en": "Trochlear notch", "desc": "上端前面的半圆形深凹，与肱骨滑车相关节。", "rel": [0.5, 0.93, 0.42] },
+    { "id": "coronoid-process-ulna", "name": "冠突", "en": "Coronoid process", "desc": "滑车切迹前下方的突起，外侧面有桡切迹与桡骨头相关节。", "rel": [0.58, 0.86, 0.72] },
+    { "id": "ulnar-tuberosity", "name": "尺骨粗隆", "en": "Ulnar tuberosity", "desc": "冠突下方的粗糙隆起，肱肌附着于此。", "rel": [0.6, 0.78, 0.62] },
+    { "id": "head-of-ulna", "name": "尺骨头", "en": "Head of ulna", "desc": "下端膨大，前、外、后有环状关节面与桡骨尺切迹相关节。", "rel": [0.5, 0.06, 0.5] },
+    { "id": "styloid-process-ulna", "name": "尺骨茎突", "en": "Styloid process of ulna", "desc": "尺骨头后内侧的锥状突起，正常较桡骨茎突高约1cm。", "rel": [0.62, 0.03, 0.35] }
+  ],
+  "FMA16586": [
+    { "id": "iliac-crest", "name": "髂嵴", "en": "Iliac crest", "desc": "髂骨翼上缘的弓形骨嵴，全长可扪及，两侧最高点连线平第4腰椎棘突，是腰椎穿刺定位标志。", "rel": [0.5, 0.97, 0.45] },
+    { "id": "asis", "name": "髂前上棘", "en": "Anterior superior iliac spine", "desc": "髂嵴前端的骨突，重要体表标志，也是骨髓穿刺常用部位之一。", "rel": [0.28, 0.92, 0.88] },
+    { "id": "psis", "name": "髂后上棘", "en": "Posterior superior iliac spine", "desc": "髂嵴后端的骨突，体表呈凹陷，其附近为骨髓穿刺常用部位。", "rel": [0.75, 0.95, 0.1] },
+    { "id": "iliac-tubercle", "name": "髂结节", "en": "Tubercle of iliac crest", "desc": "髂前上棘后方5~7cm处髂嵴外唇的突起。", "rel": [0.42, 0.95, 0.62] },
+    { "id": "greater-sciatic-notch", "name": "坐骨大切迹", "en": "Greater sciatic notch", "desc": "髂后下棘与坐骨棘之间的深切迹，梨状肌等结构由此出骨盆。", "rel": [0.72, 0.76, 0.22] },
+    { "id": "iliac-fossa", "name": "髂窝", "en": "Iliac fossa", "desc": "髂骨翼内面的浅窝，构成大骨盆的侧壁，窝下界为弓状线。", "rel": [0.82, 0.8, 0.5] },
+    { "id": "arcuate-line", "name": "弓状线", "en": "Arcuate line", "desc": "髂窝下界的圆钝骨嵴，是大、小骨盆的分界（骨盆入口缘）的一部分。", "rel": [0.7, 0.58, 0.55] },
+    { "id": "auricular-surface-ilium", "name": "耳状面（髂骨）", "en": "Auricular surface of ilium", "desc": "髂骨翼后下方的粗糙耳形关节面，与骶骨耳状面构成骶髂关节。", "rel": [0.97, 0.66, 0.28] },
+    { "id": "acetabulum", "name": "髋臼", "en": "Acetabulum", "desc": "由髂、坐、耻三骨体合成的深窝，容纳股骨头；窝内半月形关节面称月状面，中央凹陷为髋臼窝。", "rel": [0.04, 0.33, 0.62] },
+    { "id": "obturator-foramen", "name": "闭孔", "en": "Obturator foramen", "desc": "耻骨与坐骨围成的大孔，活体由闭孔膜封闭，孔上缘有闭孔沟。", "rel": [0.45, 0.14, 0.68] },
+    { "id": "ischial-spine", "name": "坐骨棘", "en": "Ischial spine", "desc": "坐骨体后缘的锐突，棘上、下方分别为坐骨大、小切迹，是骨盆内诊的重要标志。", "rel": [0.76, 0.32, 0.35] },
+    { "id": "ischial-tuberosity", "name": "坐骨结节", "en": "Ischial tuberosity", "desc": "坐骨体与坐骨支移行处后部的粗糙隆起，坐位时承受体重，可在体表扪及。", "rel": [0.58, 0.04, 0.38] },
+    { "id": "pubic-tubercle", "name": "耻骨结节", "en": "Pubic tubercle", "desc": "耻骨梳前端的突起，位于腹股沟韧带内侧端下方，体表可扪及。", "rel": [0.38, 0.42, 0.95] },
+    { "id": "pecten-pubis", "name": "耻骨梳", "en": "Pecten pubis", "desc": "耻骨上支上面的锐嵴，向后移行于弓状线，向前终于耻骨结节。", "rel": [0.55, 0.5, 0.62] },
+    { "id": "symphysial-surface", "name": "耻骨联合面", "en": "Symphysial surface", "desc": "耻骨上、下支移行处内侧的椭圆形粗糙面，两侧借纤维软骨相连构成耻骨联合。", "rel": [0.96, 0.3, 0.9] }
+  ],
+  "FMA24474": [
+    { "id": "head-of-femur", "name": "股骨头", "en": "Head of femur", "desc": "上端朝向内上方的球形膨大，与髋臼相关节，头中央稍下有股骨头凹。", "rel": [0.88, 0.97, 0.5] },
+    { "id": "fovea-of-femoral-head", "name": "股骨头凹", "en": "Fovea of femoral head", "desc": "股骨头中央稍下的小凹，为股骨头韧带附着处。", "rel": [0.85, 0.92, 0.45] },
+    { "id": "neck-of-femur", "name": "股骨颈", "en": "Neck of femur", "desc": "头下外侧的狭细部分，与体形成颈干角（男约132°，女约127°），老年人易在此发生骨折。", "rel": [0.66, 0.92, 0.5] },
+    { "id": "greater-trochanter", "name": "大转子", "en": "Greater trochanter", "desc": "颈体连接处上外侧的方形隆起，内侧面有转子窝，是重要体表标志，可在体表扪及。", "rel": [0.1, 0.9, 0.45] },
+    { "id": "lesser-trochanter", "name": "小转子", "en": "Lesser trochanter", "desc": "颈体连接处内下方的锥状隆起，有髂腰肌附着。", "rel": [0.74, 0.85, 0.25] },
+    { "id": "gluteal-tuberosity", "name": "臀肌粗隆", "en": "Gluteal tuberosity", "desc": "粗线上端向外上延续的粗糙骨面，臀大肌附着于此。", "rel": [0.3, 0.76, 0.05] },
+    { "id": "linea-aspera", "name": "粗线", "en": "Linea aspera", "desc": "股骨体后面的纵行骨嵴，为多条大腿肌附着处，其中点附近有向上的滋养孔。", "rel": [0.35, 0.5, 0.02] },
+    { "id": "medial-condyle-femur", "name": "内侧髁", "en": "Medial condyle", "desc": "下端内侧的后突膨大，下面与胫骨相关节。", "rel": [0.78, 0.05, 0.35] },
+    { "id": "lateral-condyle-femur", "name": "外侧髁", "en": "Lateral condyle", "desc": "下端外侧的后突膨大，下面与胫骨相关节。", "rel": [0.22, 0.05, 0.35] },
+    { "id": "patellar-surface", "name": "髌面", "en": "Patellar surface", "desc": "两髁前方相连的关节面，与髌骨相关节。", "rel": [0.5, 0.09, 0.78] },
+    { "id": "intercondylar-fossa", "name": "髁间窝", "en": "Intercondylar fossa", "desc": "两髁后份之间的深窝，膝交叉韧带附着于此。", "rel": [0.5, 0.06, 0.15] },
+    { "id": "adductor-tubercle", "name": "收肌结节", "en": "Adductor tubercle", "desc": "内上髁上方的小突起，内收肌腱附着于此。", "rel": [0.9, 0.13, 0.3] }
+  ],
+  "FMA24486": [
+    { "id": "patellar-front", "name": "前面", "en": "Anterior surface", "desc": "髌骨前面粗糙，被股四头肌腱包被；髌骨是人体最大的籽骨。", "rel": [0.5, 0.5, 0.05] },
+    { "id": "patellar-articular", "name": "关节面", "en": "Articular surface", "desc": "髌骨后面的光滑关节面，与股骨髌面相关节。", "rel": [0.5, 0.5, 0.95] }
+  ],
+  "FMA24477": [
+    { "id": "medial-condyle-tibia", "name": "内侧髁", "en": "Medial condyle", "desc": "胫骨上端内侧的膨大，上面有关节面与股骨内侧髁相关节。", "rel": [0.78, 0.95, 0.45] },
+    { "id": "lateral-condyle-tibia", "name": "外侧髁", "en": "Lateral condyle", "desc": "胫骨上端外侧的膨大，后下方有腓关节面接腓骨头。", "rel": [0.22, 0.95, 0.45] },
+    { "id": "intercondylar-eminence", "name": "髁间隆起", "en": "Intercondylar eminence", "desc": "两髁上面关节面之间向上的粗糙隆起，膝交叉韧带附着于此。", "rel": [0.5, 0.92, 0.45] },
+    { "id": "tibial-tuberosity", "name": "胫骨粗隆", "en": "Tibial tuberosity", "desc": "上端前面的隆起，髌韧带附着于此，位于髌骨下缘约四横指处。", "rel": [0.5, 0.8, 0.98] },
+    { "id": "anterior-border-tibia", "name": "前缘（胫骨前嵴）", "en": "Anterior border", "desc": "胫骨体三棱柱的锐缘，与平滑的内侧面直接位于皮下。", "rel": [0.42, 0.5, 0.98] },
+    { "id": "medial-malleolus", "name": "内踝", "en": "Medial malleolus", "desc": "下端内下方的突起，与距骨相关节，外踝低于内踝。", "rel": [0.88, 0.03, 0.45] },
+    { "id": "fibular-notch", "name": "腓切迹", "en": "Fibular notch", "desc": "下端外侧面的切迹，与腓骨下端相接。", "rel": [0.1, 0.05, 0.4] }
+  ],
+  "FMA24480": [
+    { "id": "head-of-fibula", "name": "腓骨头", "en": "Head of fibula", "desc": "上端稍膨大，有关节面与胫骨腓关节面相关节，体表可扪及。", "rel": [0.5, 0.96, 0.5] },
+    { "id": "neck-of-fibula", "name": "腓骨颈", "en": "Neck of fibula", "desc": "腓骨头下方缩窄的部分，腓总神经绕行于此，位置表浅易受损伤。", "rel": [0.5, 0.89, 0.5] },
+    { "id": "lateral-malleolus", "name": "外踝", "en": "Lateral malleolus", "desc": "下端膨大形成的突起，内侧面有关节面与距骨相关节，低于内踝。", "rel": [0.3, 0.04, 0.5] }
+  ],
+  "FMA24497": [
+    { "id": "calcaneal-tuberosity", "name": "跟骨结节", "en": "Calcaneal tuberosity", "desc": "跟骨后端的隆凸，跟腱附着于此，是足跟着地的主体部分。", "rel": [0.92, 0.1, 0.45] }
+  ],
+  "FMA24482": [
+    { "id": "trochlea-of-talus", "name": "距骨滑车", "en": "Trochlea of talus", "desc": "距骨上面前宽后窄的关节面，与内、外踝和胫骨下关节面相关节。", "rel": [0.5, 0.88, 0.5] },
+    { "id": "head-of-talus", "name": "距骨头", "en": "Head of talus", "desc": "距骨前端，与足舟骨相关节。", "rel": [0.5, 0.35, 0.95] }
+  ],
+  "FMA24500": [
+    { "id": "navicular-tuberosity", "name": "舟骨粗隆", "en": "Tuberosity of navicular bone", "desc": "距骨头内下方的隆起，是重要的体表标志。", "rel": [0.82, 0.18, 0.5] }
+  ],
+  "FMA24515": [
+    { "id": "tuberosity-of-5th-metatarsal", "name": "第5跖骨粗隆", "en": "Tuberosity of 5th metatarsal", "desc": "第5跖骨底向后外侧的突出，体表可扪及，腓骨短肌腱附着于此。", "rel": [0.08, 0.3, 0.35] }
+  ]
+}

@@ -19,6 +19,9 @@ const state = {
   onlyKey: false,       // 仅看标记：隐藏未标记骨（叠加在区域显隐之上）
   keySet: new Set(),    // 用户自定义标记集（来自 store，localStorage 持久化）
   hiddenSet: new Set(), // 会话级：用户手动隐藏的骨（不持久化）
+  ann: null,            // FMA -> [结构标注条目]（data/annotations.json）
+  annPair: null,        // 成对骨 FMA 映射（右↔左），懒构建
+  annSprites: [],       // 当前显示的标注点 {sprite, entry, name}
   isolated: null,       // 单骨隔离模式：仅显示该骨
   detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
@@ -159,6 +162,8 @@ async function boot() {
     state.bones = bones;
     store.init();
     state.keySet = new Set(store.getMarked());
+    state.ann = await fetch('./data/annotations.json', { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : {}).catch(() => ({}));
 
     // 模型是 Draco 压缩（3MB 级），解码器本地化，不依赖外网 CDN
     const draco = new DRACOLoader().setDecoderPath('./lib/draco/');
@@ -470,21 +475,40 @@ const raycaster = new THREE.Raycaster();
 const ndc = new THREE.Vector2();
 
 function pick(clientX, clientY) {
+  if (state.annSprites.length) {
+    const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY);
+    if (hitsA.length) { showAnnInfo(hitsA[0].object); return; }
+  }
   const hits = raycast(clientX, clientY);
   if (!hits.length) { clearSelection(); return; }
   const fma = hits[0].object.userData.fma;
   selectBone(fma);
 }
 
-function raycast(clientX, clientY) {
+function raycastList(list, clientX, clientY) {
   ndc.x = (clientX / innerWidth) * 2 - 1;
   ndc.y = -(clientY / innerHeight) * 2 + 1;
   raycaster.setFromCamera(ndc, camera);
+  return raycaster.intersectObjects(list, false);
+}
+function raycast(clientX, clientY) {
   const targets = state.meshes.filter(m => m.mesh.visible).map(m => m.mesh);
-  return raycaster.intersectObjects(targets, false);
+  return raycastList(targets, clientX, clientY);
 }
 
 function onMove(e) {
+  if (state.annSprites.length) {
+    const hitsA = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY);
+    if (hitsA.length) {
+      highlightHover(null);
+      renderer.domElement.style.cursor = 'pointer';
+      hoverEl.textContent = hitsA[0].object.userData.ann.name;
+      hoverEl.style.left = (e.clientX + 14) + 'px';
+      hoverEl.style.top = (e.clientY + 14) + 'px';
+      hoverEl.classList.add('show');
+      return;
+    }
+  }
   const hits = raycast(e.clientX, e.clientY);
   if (!hits.length) {
     hoverEl.classList.remove('show'); highlightHover(null);
@@ -556,6 +580,7 @@ function selectBone(fma) {
     $('enName').style.display = b.en ? '' : 'none';
     $('desc').textContent = b.desc;
     $('fma').textContent = 'FMA ' + fma.replace('FMA', '');
+  buildAnnSprites(fma);
   } else {
     $('cn').textContent = fma;
     $('latin').textContent = ''; $('enName').textContent = '';
@@ -661,6 +686,7 @@ function exitIsolate() {
 
 function clearSelection(alsoHidePanel = true) {
   state.selected = null;
+  clearAnnSprites();
   updateMaterials();   // 统一还原全部骨骼的底色/透明度/自发光
   if (alsoHidePanel) {
     infoEl.classList.remove('show');
@@ -728,6 +754,128 @@ function makeLabel(text) {
   sp.userData.cssW = w;   // 药丸屏幕尺寸（CSS px），每帧据此换算世界尺寸
   sp.userData.cssH = h;
   return sp;
+}
+
+/* ============ 结构标注 ============ */
+const ANN_PART_VERTS = { manubrium: 1425, body: 2634, xiphoid: 495 };   // 胸骨三部件按顶点数识别
+let annTex = null;
+function annTexture() {
+  if (annTex) return annTex;
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d');
+  g.beginPath(); g.arc(32, 32, 20, 0, Math.PI * 2);
+  g.fillStyle = '#ffb14d'; g.fill();
+  g.lineWidth = 5; g.strokeStyle = 'rgba(45,32,10,.85)'; g.stroke();
+  annTex = new THREE.CanvasTexture(c);
+  return annTex;
+}
+function annPairOf(fma) {   // 成对骨 右↔左 FMA 映射（cn 配对，与管线同规则）
+  if (!state.annPair) {
+    state.annPair = {};
+    const byBase = {};
+    for (const [k, b] of Object.entries(state.bones)) {
+      if (!/[（(][左右][)）]/.test(b.cn) && !/^[左右]/.test(b.cn)) continue;
+      const base = b.cn.replace(/（[左右]）/g, '').replace(/^[左右]/, '');
+      (byBase[base] = byBase[base] || []).push(k);
+    }
+    for (const g of Object.values(byBase)) {
+      if (g.length !== 2) continue;
+      const l = g.find(f => state.bones[f].cn.includes('左'));
+      const r = g.find(f => !state.bones[f].cn.includes('左'));
+      state.annPair[r] = l; state.annPair[l] = r;
+    }
+  }
+  return state.annPair[fma] || null;
+}
+function annSnap(mesh, p) {   // 吸附到该网格最近顶点，保证标注点贴在骨面上
+  const pos = mesh.geometry.attributes.position;
+  let best = Infinity, out = p;
+  for (let i = 0; i < pos.count; i++) {
+    const dx = pos.getX(i) - p[0], dy = pos.getY(i) - p[1], dz = pos.getZ(i) - p[2];
+    const d = dx * dx + dy * dy + dz * dz;
+    if (d < best) { best = d; out = [pos.getX(i), pos.getY(i), pos.getZ(i)]; }
+  }
+  return out;
+}
+function clearAnnSprites() {
+  for (const a of state.annSprites) {
+    a.sprite.parent.remove(a.sprite);
+    a.sprite.material.dispose();
+  }
+  state.annSprites = [];
+}
+function buildAnnSprites(fma) {
+  clearAnnSprites();
+  const entries = (state.ann && (state.ann[fma] || state.ann[annPairOf(fma)])) || [];
+  const meshes = state.byFma.get(fma) || [];
+  for (const e of entries) {
+    let targets = meshes;
+    if (e.part && ANN_PART_VERTS[e.part]) {
+      const hit = meshes.filter(m => m.geometry.attributes.position.count === ANN_PART_VERTS[e.part]);
+      if (hit.length) targets = hit;
+    }
+    const variants = e.side ? [[e.rel, '（右）'], [[1 - e.rel[0], e.rel[1], e.rel[2]], '（左）']] : [[e.rel, '']];
+    for (const [rel, suffix] of variants) {
+      for (const mesh of targets) {
+        const geo = mesh.geometry;
+        if (!geo.boundingBox) geo.computeBoundingBox();
+        const bb = geo.boundingBox;
+        const p = [
+          bb.min.x + (bb.max.x - bb.min.x) * rel[0],
+          bb.min.y + (bb.max.y - bb.min.y) * rel[1],
+          bb.min.z + (bb.max.z - bb.min.z) * rel[2],
+        ];
+        const sp = annSnap(mesh, p);
+        const mat = new THREE.SpriteMaterial({ map: annTexture(), transparent: true });
+        const sprite = new THREE.Sprite(mat);
+        sprite.position.set(sp[0], sp[1], sp[2]);
+        sprite.renderOrder = 50;
+        sprite.userData.ann = { entry: e, name: e.name + suffix };
+        mesh.add(sprite);
+        state.annSprites.push({ sprite, entry: e, name: sprite.userData.ann.name });
+      }
+    }
+  }
+  renderAnnList(entries);
+}
+function renderAnnList(entries) {
+  const sec = $('annSec'), list = $('annList');
+  if (!sec) return;
+  if (!entries.length) { sec.hidden = true; list.innerHTML = ''; return; }
+  sec.hidden = false;
+  list.innerHTML = '';
+  for (const e of entries) {
+    const chip = document.createElement('span');
+    chip.className = 'ann-chip';
+    chip.textContent = e.name;
+    chip.onclick = () => showAnnDesc(e);
+    list.appendChild(chip);
+  }
+}
+function showAnnDesc(entry) {
+  const list = $('annList');
+  if (!list) return;
+  const old = list.querySelector('.ann-desc');
+  const isOpen = old && old.dataset.id === entry.id;
+  if (old) old.remove();
+  list.querySelectorAll('.ann-chip').forEach(c => c.classList.remove('on'));
+  if (isOpen) {
+    for (const a of state.annSprites) a.sprite.material.color.set(0xffffff);
+    return;
+  }
+  const dd = document.createElement('div');
+  dd.className = 'ann-desc';
+  dd.dataset.id = entry.id;
+  dd.textContent = entry.desc;
+  list.appendChild(dd);
+  list.querySelectorAll('.ann-chip').forEach(c => { if (c.textContent === entry.name) c.classList.add('on'); });
+  for (const a of state.annSprites) a.sprite.material.color.set(a.entry === entry ? 0xff4a2e : 0xffffff);
+}
+function showAnnInfo(sprite) {
+  const a = state.annSprites.find(x => x.sprite === sprite);
+  if (!a) return;
+  showAnnDesc(a.entry);
+  // 相机不看走：仅高亮点位（面板中显示描述）
 }
 
 function placeLabel(fma) {
@@ -933,6 +1081,13 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   updateLabelPose();
+  // 标注点保持恒定屏幕大小
+  const tmpV = new THREE.Vector3();
+  for (const a of state.annSprites) {
+    a.sprite.getWorldPosition(tmpV);
+    const s = camera.position.distanceTo(tmpV) * 0.022;
+    a.sprite.scale.set(s, s, 1);
+  }
   renderer.render(scene, camera);
 }
 
