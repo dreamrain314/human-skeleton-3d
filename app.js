@@ -483,9 +483,6 @@ function bindUI() {
   el.addEventListener('pointerleave', () => { hoverEl.classList.remove('show'); highlightHover(null); });
   // 双击 3D 视图中的骨（或其名称标签）→ 进入隔离查看
   el.addEventListener('dblclick', e => {
-    const hits = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY)
-      .filter(h => annSpriteHitValid(h));
-    if (hits.length) { if (state.selected) enterIsolate(state.selected); return; }
     const hitsB = raycast(e.clientX, e.clientY);
     if (hitsB.length) {
       const fma = hitsB[0].object.userData.fma;
@@ -499,27 +496,29 @@ const raycaster = new THREE.Raycaster();
 const ndc = new THREE.Vector2();
 
 function pick(clientX, clientY) {
-  if (state.annSprites.length) {
-    const hitsA = raycastList(state.annSprites.map(a => a.sprite), clientX, clientY)
-      .filter(h => annSpriteHitValid(h));
-    if (hitsA.length) {
-      if (state.editMode) { selectAnnPoint(hitsA[0].object); return; }
-      const hitsPre = raycast(clientX, clientY);
-      // 点到的骨与当前选中骨不同（点在前面挡住它）时，优先切换骨
-      if (!hitsPre.length || hitsPre[0].object.userData.fma === state.selected) {
-        showAnnInfo(hitsA[0].object); return;
+  const hits = raycast(clientX, clientY);
+  const hitFma = hits.length ? hits[0].object.userData.fma : null;
+  // 标注点就近吸附：点到的是选中骨（或其配对骨）表面，且离某标注点足够近
+  if (state.annSprites.length && hitFma === state.selected) {
+    const near = nearestAnnToScreen(clientX, clientY);
+    if (near) {
+      if (state.editMode) {
+        // 编辑模式：点中已选中的点 → 移动到点击处的精确表面位置；点中其他点 → 改选它
+        if (state.annSel && state.annSel.entry === near.rec.entry) moveAnnSelTo(hits[0]);
+        else selectAnnPoint(near.sprite);
+        return;
       }
+      showAnnInfo(near.sprite); return;
     }
   }
-  const hits = raycast(clientX, clientY);
   if (state.editMode) {
-    if (!hits.length || hits[0].object.userData.fma !== state.selected) { selectAnnPoint(null); return; }
+    if (!hits.length || hitFma !== state.selected) { selectAnnPoint(null); return; }
     if (state.annSel) moveAnnSelTo(hits[0]);
     else createAnnAt(hits[0]);
     return;
   }
   if (!hits.length) { clearSelection(); return; }
-  const fma = hits[0].object.userData.fma;
+  const fma = hitFma;
   selectBone(fma);
 }
 
@@ -536,19 +535,20 @@ function raycast(clientX, clientY) {
 
 function onMove(e) {
   if (state.annSprites.length) {
-    const hitsA = raycastList(state.annSprites.map(a => a.sprite), e.clientX, e.clientY)
-      .filter(h => annSpriteHitValid(h));
-    if (hitsA.length) {
+    if (state.annSprites.length && state.selected) {
+      const near = nearestAnnToScreen(e.clientX, e.clientY);
       highlightHover(null);
-      renderer.domElement.style.cursor = 'pointer';
-      hoverEl.textContent = hitsA[0].object.userData.ann.name;
-      hoverEl.style.left = (e.clientX + 14) + 'px';
-      hoverEl.style.top = (e.clientY + 14) + 'px';
-      hoverEl.classList.add('show');
-      for (const a of state.annSprites) a.hover = (a.sprite === hitsA[0].object);
-      return;
+      for (const a of state.annSprites) a.hover = false;
+      if (near) {
+        near.rec.hover = true;
+        renderer.domElement.style.cursor = 'pointer';
+        hoverEl.textContent = near.rec.name;
+        hoverEl.style.left = (e.clientX + 14) + 'px';
+        hoverEl.style.top = (e.clientY + 14) + 'px';
+        hoverEl.classList.add('show');
+        return;
+      }
     }
-    for (const a of state.annSprites) a.hover = false;
   }
   const hits = raycast(e.clientX, e.clientY);
   if (!hits.length) {
@@ -811,6 +811,22 @@ function boneBoxOf(fma) {
   }
   return box;
 }
+/* 就近吸附：屏幕点击位置与选中骨各标注点的距离，返回阈值内的最近者 */
+const ANN_SNAP_PX = 48;   // 吸附半径（屏幕像素）
+function nearestAnnToScreen(clientX, clientY, opts = {}) {
+  let best = null;
+  for (const rec of state.annSprites) {
+    if (opts.skipSel && state.annSel && rec.entry === state.annSel.entry && rec.sprite === state.annSel.sprite) continue;
+    const wp = rec.sprite.getWorldPosition(new THREE.Vector3());
+    if (!opts.ignoreOcclusion && !annSpritePickable(rec.sprite)) continue;   // 被骨面挡住的不吸附
+    const p = wp.clone().project(camera);
+    if (p.z > 1) continue;
+    const sx = (p.x + 1) / 2 * innerWidth, sy = (1 - p.y) / 2 * innerHeight;
+    const d = Math.hypot(sx - clientX, sy - clientY);
+    if (d <= ANN_SNAP_PX && (!best || d < best.d)) best = { rec, d, sprite: rec.sprite };
+  }
+  return best;
+}
 /* 标注点是否可被拾取：从相机到点的连线上不被任何可见骨面抢先命中 */
 function annSpritePickable(sprite) {
   const wp = sprite.getWorldPosition(new THREE.Vector3());
@@ -824,18 +840,7 @@ function annSpritePickable(sprite) {
   raycaster.far = Infinity;
   return hit.length === 0;
 }
-/* 命中点有效性：射线须穿过标注圆的可见范围（贴片四角透明区域不算），且未被骨面遮挡 */
-function annSpriteHitValid(hit) {
-  const sprite = hit.object;
-  const wp = sprite.getWorldPosition(new THREE.Vector3());
-  const toCam = wp.clone().sub(camera.position);
-  const dist = toCam.length();
-  const along = hit.distance ?? dist;
-  const perp = Math.sqrt(Math.max(dist * dist - along * along, 0));
-  const worldR = sprite.scale.x * 0.45;      // 点击热区略大于可见圆（可见圆约 0.31），好点不难戳
-  if (perp > worldR) return false;
-  return annSpritePickable(sprite);
-}
+
 
 /* ============ 结构标注 ============ */
 const ANN_PART_VERTS = { manubrium: 1425, body: 2634, xiphoid: 495 };   // 胸骨三部件按顶点数识别
@@ -1020,8 +1025,8 @@ function createAnnAt(hit) {
   const entry = { id: 'ann-' + Date.now(), name: '新标注', en: '', desc: '', detail: '', pts: [sp] };
   entries.push(entry);
   buildAnnSprites(state.selected);
-  const a = state.annSprites.find(x => x.entry === entry);
-  selectAnnPoint(a ? a.sprite : null);
+  const rec = state.annSprites.find(x => x.entry === entry);
+  selectAnnPoint(rec ? rec.hit : null);
 }
 function deleteAnnSel() {
   if (!state.annSel) return;
@@ -1331,7 +1336,7 @@ function animate() {
       const hit = raycaster.intersectObject(a.mesh, false);
       raycaster.far = Infinity;
       // 默认半透明避免挡住小结构；被骨面挡住更淡；选中/悬停不透明
-      const emphasized = (state.annSel && state.annSel.sprite === a.sprite) || a.hover;
+      const emphasized = (state.annSel && state.annSel.entry === a.entry) || a.hover;
       a.sprite.material.opacity = emphasized ? 1.0 : (hit.length ? 0.16 : 0.5);
     }
   }
