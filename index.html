@@ -140,11 +140,12 @@
     color:#c3ccdd;user-select:none}
   .op-row .ic{font-size:13px;width:15px;text-align:center;opacity:.85}
   #annOpVal{margin-left:auto;font-size:10.5px;color:var(--dim)}
-  #annOp{-webkit-appearance:none;appearance:none;width:calc(100% - 16px);height:4px;margin:0 8px 10px;
+  #annOp,#clipPos{-webkit-appearance:none;appearance:none;width:calc(100% - 16px);height:4px;margin:0 8px 10px;
     border-radius:3px;background:rgba(255,255,255,.15);cursor:pointer}
-  #annOp::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  #annOp::-webkit-slider-thumb,#clipPos::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
     background:var(--accent2);box-shadow:0 0 0 3px rgba(77,163,255,.18)}
-  #annOp::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--accent2)}
+  #annOp::-moz-range-thumb,#clipPos::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--accent2)}
+  #clipPos:disabled{opacity:.35;cursor:default}
   /* 骨内容编辑（编辑模式） */
   #detail textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);
     border:1px solid var(--line);border-radius:6px;color:var(--txt);font-size:12px;
@@ -341,6 +342,15 @@
   <div class="op-row"><span class="ic">◔</span>标注点不透明度<span id="annOpVal">50%</span></div>
   <input type="range" id="annOp" min="15" max="100" step="5" value="50">
   <div class="divider"></div>
+  <h2>剖面剖切</h2>
+  <div class="tbtn" id="clipY"><span class="ic">▬</span>横断面（上下切）</div>
+  <div class="tbtn" id="clipX"><span class="ic">▬</span>矢状面（左右切）</div>
+  <div class="tbtn" id="clipZ"><span class="ic">▬</span>冠状面（前后切）</div>
+  <div class="op-row"><span class="ic">✂</span>剖面位置<span id="clipPosVal">50%</span></div>
+  <input type="range" id="clipPos" min="0" max="100" step="1" value="50" disabled>
+  <div class="tbtn" id="clipInv"><span class="ic">⇅</span>保留另一侧</div>
+  <div class="tbtn" id="clipOff"><span class="ic">✕</span>关闭剖切</div>
+  <div class="divider"></div>
   <h2>我的数据</h2>
   <div class="data-row">
     <span class="data-btn" id="btnExport">导出</span>
@@ -425,6 +435,6 @@
   }
 }
 </script>
-<script src="./app.js?v=20261020a" type="module"></script>
+<script src="./app.js?v=20261020b" type="module"></script>
 </body>
 </html>

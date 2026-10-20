@@ -29,6 +29,8 @@ const state = {
   detailCache: null,    // bones-detail.json 的加载 Promise（懒加载）
   annOp: 0.5,           // 标注点基础不透明度（用户可在工具面板调节，localStorage 持久化）
   detailEdits: {},      // 用户在编辑模式修改的骨内容 {fma:{function,points,clinical}}（localStorage 持久化）
+  clip: { axis: null, pos: 0.5, invert: false },   // 剖面剖切：轴 + 位置(0-1) + 保留另一侧
+  modelBox: null,       // 模型整体包围盒（世界坐标，boot 居中后记录），剖切位置以此为参考
   panY: 0,              // 当前垂直偏移（世界单位），只由右侧滑块驱动
   homeDist: 0,          // 默认视距，重置视角时回到这里
   panRange: 1,          // 滑块满行程对应的世界单位
@@ -244,6 +246,9 @@ async function boot() {
     const size = box.getSize(new THREE.Vector3());
     model.position.sub(center);
     scene.add(model);
+    // 居中后的世界包围盒：剖面剖切的坐标参考
+    model.updateMatrixWorld(true);
+    state.modelBox = new THREE.Box3().setFromObject(model);
 
     const maxDim = Math.max(size.x, size.y, size.z);
     controls.minDistance = maxDim * 0.01;   // 允许凑近到听小骨等毫米级细节（near=0.01 之上留有余量）
@@ -562,6 +567,37 @@ function bindUI() {
   $('dEditBtn').onclick = startDEdit;
   $('dSaveBtn').onclick = saveDEdit;
   $('dCancelBtn').onclick = cancelDEdit;
+
+  /* 剖面剖切：横断 / 矢状 / 冠状，互斥；再点同一切面 = 关闭 */
+  const clipBtns = { y: $('clipY'), x: $('clipX'), z: $('clipZ') };
+  const clipPos = $('clipPos');
+  const setClipUI = () => {
+    const c = state.clip;
+    for (const [ax, btn] of Object.entries(clipBtns)) btn.classList.toggle('on', c.axis === ax);
+    $('clipInv').classList.toggle('on', !!(c.axis && c.invert));
+    clipPos.disabled = !c.axis;
+  };
+  for (const [ax, btn] of Object.entries(clipBtns)) {
+    btn.onclick = () => {
+      state.clip.axis = state.clip.axis === ax ? null : ax;
+      setClipUI(); updateClip();
+    };
+  }
+  $('clipInv').onclick = () => {
+    if (!state.clip.axis) return;
+    state.clip.invert = !state.clip.invert;
+    setClipUI(); updateClip();
+  };
+  clipPos.addEventListener('input', () => {
+    state.clip.pos = +clipPos.value / 100;
+    $('clipPosVal').textContent = clipPos.value + '%';
+    updateClip();
+  });
+  $('clipOff').onclick = () => {
+    state.clip.axis = null; state.clip.invert = false; state.clip.pos = 0.5;
+    clipPos.value = 50; $('clipPosVal').textContent = '50%';
+    setClipUI(); updateClip();
+  };
 }
 
 /* ============ 射线拾取 ============ */
@@ -1541,6 +1577,71 @@ function resetView() {
   controls.target.set(0, 0, 0);
   camera.position.set(0, 0, state.homeDist);  // 视距一并回到默认值
   controls.update();
+}
+
+/* ============ 剖面剖切（横断 / 矢状 / 冠状） ============
+   用材质级 clipping plane 实现：切掉的骨壳露出内壁（DoubleSide 渲染），
+   配半透明蓝面指示剖面位置。教学上对应系统解剖学的三大切面。 */
+const CLIP_NORMALS = {
+  y: new THREE.Vector3(0, -1, 0),   // 横断面：默认保留下方
+  x: new THREE.Vector3(-1, 0, 0),   // 矢状面：默认保留左半
+  z: new THREE.Vector3(0, 0, -1),   // 冠状面：默认保留后半
+};
+let clipHelper = null;
+
+function clipPlane() {
+  const c = state.clip;
+  if (!c.axis || !state.modelBox) return null;
+  const n = CLIP_NORMALS[c.axis].clone();
+  if (c.invert) n.negate();
+  const min = state.modelBox.min[c.axis], max = state.modelBox.max[c.axis];
+  const p = min + (max - min) * c.pos;
+  const ref = new THREE.Vector3();
+  ref[c.axis] = p;
+  // Three.js 裁掉 n·x + constant < 0 的部分，即保留 n·x >= n·ref 的一侧
+  return new THREE.Plane(n, -n.dot(ref));
+}
+
+function updateClip() {
+  const plane = clipPlane();
+  state.meshes.forEach(({ mesh }) => {
+    const had = !!(mesh.material.clippingPlanes && mesh.material.clippingPlanes.length);
+    // 裁剪面数量变化会改着色器编译产物（NUM_CLIPPING_PLANES），必须置 needsUpdate
+    const needRecompile = had !== !!plane;
+    mesh.material.clippingPlanes = plane ? [plane] : null;
+    mesh.material.side = plane ? THREE.DoubleSide : THREE.FrontSide;
+    if (needRecompile) mesh.material.needsUpdate = true;
+  });
+  renderer.localClippingEnabled = !!plane;
+  updateClipHelper();
+}
+
+function updateClipHelper() {
+  if (clipHelper) {
+    scene.remove(clipHelper);
+    clipHelper.geometry.dispose();
+    clipHelper.material.dispose();
+    clipHelper = null;
+  }
+  const c = state.clip;
+  if (!c.axis || !state.modelBox) return;
+  const size = state.modelBox.getSize(new THREE.Vector3());
+  // 平面几何默认躺在 XY 面，按轴旋转到对应方位；跨度略放大盖住切缘
+  const dims = { x: [size.z, size.y], y: [size.x, size.z], z: [size.x, size.y] }[c.axis];
+  clipHelper = new THREE.Mesh(
+    new THREE.PlaneGeometry(dims[0] * 1.08, dims[1] * 1.08),
+    new THREE.MeshBasicMaterial({
+      color: 0x4da3ff, transparent: true, opacity: 0.1,
+      side: THREE.DoubleSide, depthWrite: false,
+    })
+  );
+  const min = state.modelBox.min[c.axis], max = state.modelBox.max[c.axis];
+  const p = min + (max - min) * c.pos;
+  if (c.axis === 'y') { clipHelper.rotation.x = -Math.PI / 2; clipHelper.position.y = p; }
+  else if (c.axis === 'x') { clipHelper.rotation.y = Math.PI / 2; clipHelper.position.x = p; }
+  else { clipHelper.position.z = p; }
+  clipHelper.renderOrder = 5;
+  scene.add(clipHelper);
 }
 
 /* ============ 渲染循环 ============ */
